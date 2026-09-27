@@ -146,10 +146,10 @@ Diisi dengan deskripsi umum perangkat lunak untuk mendukung proses bisnis yang t
 
 ## 2.4 Batasan Perangkat Lunak
 Batasan yang harus dituliskan, di antaranya:
-1. *P/L harus memakai file data/API dari sistem lain (sebutkan, misal Payment Gateway dummy).*
-2. *P/L harus memakai format data yang sama dengan sistem lain.*
-3. *P/L harus berfungsi pada platform tertentu (misal: web browser modern, atau desktop Windows dan Linux).*
-4. *...*
+1. Cakupan pengguna dalam P/L ini hanya terbatas untuk civitas ITB dan memiliki surel resmi berdomain @itb.ac.id.
+2. P/L tidak mendukung pembayaran secara digital, seluruh proses pembayaran melalui skema COD dan merupakan tanggung jawab antara penjual dan pembeli.
+3. Peran P/L terbatas hanya sebagai penghubung antara penjual dan pembeli, P/L tidak bertanggung jawab atas kondisi atau keaslian barang yang ditawarkan.
+4. Akses untuk ruang percakapan hanya terbatas untuk kedua pihak yang bertransaksi, dan setiap pesan terenkripsi sehingga hanya kedua pihak tersebut yang dapat melihat isi pesan. 
 
 ## 2.5 Lingkungan Operasi Perangkat Lunak
 Spesifikasi *operating system* atau lingkungan yang dibutuhkan P/L untuk beroperasi. Bagian ini digunakan untuk memastikan pengguna memiliki spesifikasi yang cukup untuk menjalankan P/L. Misalnya mencakup komponen server, client, OS, DBMS, tetapi tidak menutupi kemungkinan komponen lain.
