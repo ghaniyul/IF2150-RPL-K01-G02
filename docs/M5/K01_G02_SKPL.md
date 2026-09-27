@@ -81,21 +81,31 @@ Tabel 1.3. Definisi Istilah dan Singkatan
 | *Bcrypt / Hash* | *Fungsi algoritma kriptografi satu arah yang digunakan untuk mengacak dan menyamarkan kata sandi (password) pengguna sebelum disimpan di basis data, sehingga kerahasiaannya terjaga dan tidak dapat dibaca dalam bentuk teks murni (plain-text).* |
 | *Log Audit* | *Catatan rekam jejak digital di dalam basis data sistem yang bersifat permanen, anti-ubah (immutable), dan kronologis untuk melacak kapan dan siapa admin yang melakukan tindakan moderasi tertentu.* |
 ## 1.4 Aturan Penomoran
-Tuliskan aturan penomoran (ID) yang digunakan dalam dokumen ini. Gunakan pola ID yang **sama** dengan yang sudah dipakai pada dokumen-dokumen sebelumnya, jangan membuat pola baru di dokumen ini.
+Aturan penomoran (ID) pada dokumen ini mengikuti pola yang telah digunakan pada dokumen *Requirement Gathering* (Tugas 2), *Use Case & Scenario Use Case* (Tugas 3), dan *Class Diagram* (Tugas 4). Setiap ID terdiri atas awalan huruf yang menunjukkan jenis artefak dan diikuti dua digit angka urut yang dimulai dari 01 (XX = 01, 02, 03, dst.).
 
 Tabel 1.4. Aturan Penomoran
 
 | Hal/Bagian | Penomoran | Keterangan |
 | :--- | :--- | :--- |
-| *Kebutuhan Fungsional* | *KFXX* | |
-| *Kebutuhan Non-Fungsional* | *KNFXX* | |
-| *Aktor* | *AXX* | |
-| *Use Case* | *UCXX* | |
-| *Kelas* | *CXX* | |
-| *...* | *...* |
+| *Kebutuhan (Pemetaan Kebutuhan)* | *RXX* | *R = Requirement. Menandai kebutuhan hasil pemetaan pada dokumen Requirement Gathering (R01–R27) dan dirujuk pada kolom "Kebutuhan" Tabel 3.1 serta kolom "ID Kebutuhan" Tabel 3.2.* |
+| *Kebutuhan Fungsional* | *KFXX* | *KF = Kebutuhan Fungsional. Digunakan pada Tabel 3.1 (KF01–KF56).* |
+| *Kebutuhan Non-Fungsional* | *KNFXX* | *KNF = Kebutuhan Non-Fungsional. Digunakan pada Tabel 3.2 (KNF01–KNF04).* |
+| *Aktor* | *AXX* | *A = Aktor. Digunakan pada BAB 4.1 (A01–A03).* |
+| *Use Case* | *UCXX* | *UC = Use Case. Digunakan pada BAB 4.2 hingga BAB 6 (UC01–UC24).* |
+| *Kelas* | *CXX* | *C = Class. Digunakan pada BAB 5 dan BAB 6 (C01–C40), dengan pembagian C01–C12 untuk kelas boundary, C13–C22 untuk kelas control, dan C23–C40 untuk kelas entity.* |
 
 ## 1.5 Referensi
-Dokumentasi P/L yang dirujuk oleh dokumen ini. Referensi dapat berupa buku, panduan, ataupun dokumentasi lain yang dipakai dalam pengembangan P/L ini.
+Berikut adalah dokumentasi P/L dan sumber lain yang dirujuk dalam penyusunan dokumen ini.
+
+1. Kelompok 2 K01, *IF2150 Rekayasa Perangkat Lunak – Tugas 1: Topic Brainstorming*, Institut Teknologi Bandung, 2026.
+2. Kelompok 2 K01, *IF2150 Rekayasa Perangkat Lunak – Tugas 2: Requirement Gathering (ITBELI)*, Institut Teknologi Bandung, 2026.
+3. Kelompok 2 K01, *IF2150 Rekayasa Perangkat Lunak – Tugas 3: Use Case & Scenario Use Case (ITBELI)*, Institut Teknologi Bandung, 2026.
+4. Kelompok 2 K01, *IF2150 Rekayasa Perangkat Lunak – Tugas 4: Class Diagram (ITBELI)*, Institut Teknologi Bandung, 2026.
+5. A. Mavin, P. Wilkinson, A. Harwood, dan M. Novak, "Easy Approach to Requirements Syntax (EARS)," dalam *17th IEEE International Requirements Engineering Conference (RE'09)*, 2009, hlm. 317–322. https://ieeexplore.ieee.org/document/5328509/
+6. Undang-Undang Republik Indonesia Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi.
+7. N. Provos dan D. Mazières, "A Future-Adaptable Password Scheme," dalam *Proceedings of the 1999 USENIX Annual Technical Conference*, 1999.
+8. M. Jones, J. Bradley, dan N. Sakimura, "JSON Web Token (JWT)," RFC 7519, Internet Engineering Task Force (IETF), 2015. https://www.rfc-editor.org/rfc/rfc7519
+9. Perangkat pemodelan UML: draw.io (https://www.drawio.com/), StarUML (https://staruml.io/), dan PlantText/PlantUML (https://www.planttext.com/).
 
 ## 1.6 Deskripsi Umum Dokumen (Ikhtisar)
 BAB 2 membahas mengenai deskripsi umum sistem dan perangkat lunak dari berbagai perspektif aktor, kebutuhan pengguna, batasan perangkat lunak, dan lingkungan operasi dimana perangkat lunak tersebut dapat dijalankan. 
@@ -252,11 +262,13 @@ Tabel 3.2. Kebutuhan Non-Fungsional
 # BAB 4: Pemodelan Use Case
 
 ## 4.1 Identifikasi Aktor
-Salin ulang daftar aktor final dari BAB 3.1 dokumen *Use Case & Scenario Use Case* atau *Class Diagram*. Tambahkan ID Aktor mengikuti Aturan Penomoran pada 1.4.
+Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI beserta perannya. ID Aktor mengikuti Aturan Penomoran pada 1.4.
+
 | ID Aktor | Aktor | Deskripsi |
 | :--- | :--- | :--- |
-| *A01* | *Pelanggan* | *Pengguna yang memesan produk, mengelola keranjang, dan menyelesaikan pembayaran melalui sistem.* |
-| *...* | *...* | *...* |
+| *A01* | *Penjual (Mahasiswa ITB)* | *Pengguna yang berniat untuk menjual barang preloved miliknya. Mengutamakan kemudahan proses listing, jangkauan listing kepada pembeli, dan reliabilitas sistem. Berwenang membuat, melihat, mengubah, menghapus, dan menandai terjual listing miliknya sendiri, berkomunikasi dengan pembeli melalui ruang percakapan, serta mengirimkan laporan.* |
+| *A02* | *Pembeli (Mahasiswa ITB)* | *Pengguna yang berniat untuk membeli barang preloved. Mengutamakan keamanan transaksi, pencarian yang jelas dan informasi yang jelas, dan reliabilitas sistem. Berwenang melihat, mencari, dan menyaring katalog listing, melihat detail listing, menghubungi penjual melalui ruang percakapan, serta mengirimkan laporan.* |
+| *A03* | *Admin* | *Pihak yang mengelola platform. Mengutamakan reliabilitas sistem, kemudahan untuk tracking masalah atau bug, sistem report/laporan yang mudah diverifikasi dan ditangani. Berwenang melihat dan menyaring daftar laporan, mengubah status penanganan laporan, menghapus listing yang dilaporkan, serta memblokir dan membuka blokir akun pengguna, tanpa memiliki akses terhadap isi percakapan pribadi antarpengguna.* |
 
 
 ## 4.2 Identifikasi Use Case
