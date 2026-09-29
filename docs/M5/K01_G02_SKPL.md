@@ -95,17 +95,17 @@ Tabel 1.4. Aturan Penomoran
 | *Kelas* | *CXX* | *C = Class. Digunakan pada BAB 5 dan BAB 6 (C01–C40), dengan pembagian C01–C12 untuk kelas boundary, C13–C22 untuk kelas control, dan C23–C40 untuk kelas entity.* |
 
 ## 1.5 Referensi
-Berikut adalah dokumentasi P/L dan sumber lain yang dirujuk dalam penyusunan dokumen ini.
+Berikut adalah referensi yang dirujuk dalam penyusunan dokumen ini.
 
-1. Kelompok 2 K01, *IF2150 Rekayasa Perangkat Lunak – Tugas 1: Topic Brainstorming*, Institut Teknologi Bandung, 2026.
-2. Kelompok 2 K01, *IF2150 Rekayasa Perangkat Lunak – Tugas 2: Requirement Gathering (ITBELI)*, Institut Teknologi Bandung, 2026.
-3. Kelompok 2 K01, *IF2150 Rekayasa Perangkat Lunak – Tugas 3: Use Case & Scenario Use Case (ITBELI)*, Institut Teknologi Bandung, 2026.
-4. Kelompok 2 K01, *IF2150 Rekayasa Perangkat Lunak – Tugas 4: Class Diagram (ITBELI)*, Institut Teknologi Bandung, 2026.
-5. A. Mavin, P. Wilkinson, A. Harwood, dan M. Novak, "Easy Approach to Requirements Syntax (EARS)," dalam *17th IEEE International Requirements Engineering Conference (RE'09)*, 2009, hlm. 317–322. https://ieeexplore.ieee.org/document/5328509/
-6. Undang-Undang Republik Indonesia Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi.
-7. N. Provos dan D. Mazières, "A Future-Adaptable Password Scheme," dalam *Proceedings of the 1999 USENIX Annual Technical Conference*, 1999.
-8. M. Jones, J. Bradley, dan N. Sakimura, "JSON Web Token (JWT)," RFC 7519, Internet Engineering Task Force (IETF), 2015. https://www.rfc-editor.org/rfc/rfc7519
-9. Perangkat pemodelan UML: draw.io (https://www.drawio.com/), StarUML (https://staruml.io/), dan PlantText/PlantUML (https://www.planttext.com/).
+1. Tim Pengajar IF2150, *Materi Perkuliahan (Slide) IF2150 Rekayasa Perangkat Lunak*, Sekolah Teknik Elektro dan Informatika, Institut Teknologi Bandung, Tahun Ajaran 2026/2027.
+2. I. Sommerville, *Software Engineering*, 10th ed. Boston: Pearson, 2016.
+3. A. Mavin, P. Wilkinson, A. Harwood, dan M. Novak, "Easy Approach to Requirements Syntax (EARS)," dalam *17th IEEE International Requirements Engineering Conference (RE'09)*, 2009, hlm. 317 – 322. https://ieeexplore.ieee.org/document/5328509/
+4. M. Fowler, *UML Distilled: A Brief Guide to the Standard Object Modeling Language*, 3rd ed. Boston: Addison-Wesley, 2004.
+5. Visual Paradigm, *Mastering UML: A Complete Guide to Use Case and Class Diagrams for Software Design*. https://www.visual-paradigm.com/guide/mastering-uml-a-complete-guide-to-use-case-and-class-diagrams-for-software-design/
+6. PlantUML, *Activity Diagram - Syntax and Features*. https://plantuml.com/activity-diagram-beta
+7. Undang-Undang Republik Indonesia Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi. https://peraturan.bpk.go.id/Details/229798/uu-no-27-tahun-2022
+8. United Nations, *Sustainable Development Goals. Goal 12: Ensure sustainable consumption and production patterns*. https://sdgs.un.org/goals/goal12
+9. Kementerian Lingkungan Hidup dan Kehutanan, *Sistem Informasi Pengelolaan Sampah Nasional (SIPSN). Data Timbulan Sampah*. https://sipsn.menlhk.go.id/sipsn/public/data/timbulan
 
 ## 1.6 Deskripsi Umum Dokumen (Ikhtisar)
 BAB 2 membahas mengenai deskripsi umum sistem dan perangkat lunak dari berbagai perspektif aktor, kebutuhan pengguna, batasan perangkat lunak, dan lingkungan operasi dimana perangkat lunak tersebut dapat dijalankan. 
