@@ -141,9 +141,11 @@ Secara keseluruhan, alur kerja sistem yang diinginkan dimulai dari pendaftaran d
 </p>
 
 ## 2.2 Deskripsi Umum Perangkat Lunak
-Diisi dengan deskripsi umum perangkat lunak untuk mendukung proses bisnis yang telah diuraikan pada sub-bab sebelumnya. Uraian harus menunjukkan lingkup perangkat lunak, mencakup keterkaitan perangkat lunak dengan sistem lain di luar (misalnya *Payment Gateway* atau layanan pihak ketiga lain yang dipakai).
+ITBELI merupakan aplikasi lokapasar (marketplace) eksklusif berbasis percakapan (chat-based) yang dirancang khusus untuk memfasilitasi aktivitas jual beli di lingkungan sivitas akademika Institut Teknologi Bandung (ITB). Lingkup utama perangkat lunak ini berfokus pada fitur pengelolaan katalog barang dan penyediaan ruang percakapan waktu-nyata (real-time chat) sebagai sarana tunggal bagi pengguna untuk melakukan interaksi, tawar-menawar harga, dan kesepakatan titik temu.
 
-*Contoh narasi:* "*[Nama P/L]* merupakan aplikasi *[deskripsi singkat]* yang berinteraksi dengan *Payment Gateway (dummy)* untuk memproses otorisasi pembayaran. Sistem menerima input dari *Pelanggan* melalui antarmuka aplikasi dan mengirimkan permintaan transaksi ke *Payment Gateway* setiap kali pelanggan melakukan checkout."
+Untuk menjaga keamanan dan memvalidasi keanggotaan komunitas, sistem ini terisolasi dan membatasi akses secara ketat, di mana pendaftaran akun dan otentikasi hanya dapat dilakukan oleh pengguna yang memiliki alamat surel berdomain resmi ITB. Pengguna dalam platform ini bersifat dinamis, sehingga satu akun dapat berperan ganda secara bergantian sebagai pembeli maupun penjual.
+
+Terkait keterkaitannya dengan sistem transaksional di luar perangkat lunak, ITBeli sengaja dirancang untuk tidak berinteraksi dengan Payment Gateway (seperti dompet digital atau transfer bank otomatis) maupun antarmuka pemrograman aplikasi (API) dari penyedia layanan logistik pihak ketiga. Perangkat lunak ini hanya memfasilitasi tahapan pra-transaksi. Seluruh proses penyelesaian transaksi pembayaran dan serah terima barang sepenuhnya berada di luar cakupan sistem, dan akan dieksekusi secara luring (offline) melalui mekanisme Cash on Delivery (COD) di wilayah kampus sesuai kesepakatan akhir penjual dan pembeli di dalam ruang percakapan.
 
 ## 2.3 Pengguna dan Kebutuhan Pengguna Perangkat Lunak
 
