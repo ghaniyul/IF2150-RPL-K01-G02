@@ -4,32 +4,33 @@
 
 | Informasi | Keterangan |
 | --- | --- |
-| **Hari** | *\[Hari\]* |
-| **Tanggal** | *\[DD/MM/YYYY\]* |
-| **Kelas** | *\[Kelas\]* |
-| **Nomor Kelompok** | *\[Nomor Kelompok\]*  |
-| **Nama Kelompok** | *\[Nama Kelompok\]*  |
-| **Nama Perangkat Lunak** | *\[Nama P/L\]*  |
-| **Dokumen** | *\[Nama Dokumen yang diasistensikan\]*  |
+| **Hari** | *Senin* |
+| **Tanggal** | *\[28/09/2026\]* |
+| **Kelas** | *K1* |
+| **Nomor Kelompok** | *G02*  |
+| **Nama Kelompok** | *Indeks A*  |
+| **Nama Perangkat Lunak** | *ITBELI*  |
+| **Dokumen** | *K01_G02_SKPL*  |
 
 ### Anggota Kelompok
 
 | NIM | Nama |
 | --- | --- |
-| *\[NIM 1\]* | *\[Nama Anggota 1\]* |
-| *\[NIM 2\]* | *\[Nama Anggota 2\]* |
-| *\[NIM 3\]* | *\[Nama Anggota 3\]* |
-| *\[NIM 4\]* | *\[Nama Anggota 4\]* |
-| *\[NIM 5\]* | *\[Nama Anggota 5\]* |
+| *13525124* | *Sulthan Dhiyazka Suwandi* |
+| *13525034* | *Dhanesworo Muhammad Datiputro* |
+| *13525115* | *Nazhif Hilmi Kistijantoro* |
+| *13525121* | *I Made Adi Kusuma Ardana* |
+| *13525106* | *Ghaniyul Amri Caulava* |
 
 ### Catatan
 
 | Catatan |
 | --- |
-| 1. *\[Berikan catatan hasil asistensi\]*  |
-| 2. ... |
-| 3. ... |
-| 4. ... |
+| 1. Untuk bagian diagram kelasnya, dibikin konsisten antara per bagian dengan yang keseluruhan  |
+| 2. Buat lingkungan operasi sistem, bagian client ditulis aja chromium based web browser.  |
+| 3. Nanti pas implementasi, boleh local aja asalkan bisa diakses dengan device lain yang internetnya sama. Tapi untuk databasenya tidak boleh lokal karena harus konsisten. Sarannya pakai supabase. |
+| 4. Referensi diambil yang dari sumber lain saja, bukan dari dokumen milestone sebelumnya. |
+| 5. Traceability dibenerin lagi. |
 
 **Notes for this section:**  
 *Catatan dapat dituliskan dalam bentuk paragraf atau poin-poin, disesuaikan saja.* 
@@ -38,7 +39,7 @@
 
 <!-- ![](./assets/foto-asistensi.jpg) -->
 <p align="center">
-  <img src="./assets/foto-asistensi.jpg" width="100%">
+  <img src="./assets/foto-asistensi-m5.png" width="100%">
 </p>
 
 <p align="center">
