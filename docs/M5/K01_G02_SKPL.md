@@ -1224,7 +1224,7 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 | *C04* | *FormulirBarang* | *Antarmuka untuk memasukkan, mengubah, dan melengkapi data barang beserta unggahan foto.* |
 | *C14* | *BarangController* | *Mengelola proses perubahan detail barang.* |
 | *C25* | *Penjual* | *Pengguna pemilik barang untuk dijual yang ingin mengubah informasi maupun foto pada listing miliknya.* |
-| *C28* | *SesiLogin* | *Memverifikasi identitas penjual yang ingin mengubah detail barang.* |
+| *C23* | *AkunController* | *Akun controller penjual pemilik listing.* |
 | *C29* | *Barang* | *Menyediakan seluruh atribut barang untuk disunting, memvalidasi kelengkapan isian wajib, dan menyimpan perubahan ke pangkalan data.* |
 | *C30* | *FotoBarang* | *Mengelola pembaruan berkas foto (validasi format dan batas ukuran) serta memastikan total foto tidak melebihi 5 berkas.* | 
 | *C31* | *Kategori* | *Menyediakan rujukan daftar kategori tetap dan memastikan kategori baru yang dipilih berasal dari daftar yang sah.* | 
@@ -1245,7 +1245,7 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 | *C04* | *FormulirBarang* | *barang, barangController* | *drawBarang(), onClickUpdate()* |
 | *C14* | *BarangController* | *listBarang* | *updateBarang()* |
 | *C25* | *Penjual* | *idPengguna, nama* | *getId()* | 
-| *C28* | *SesiLogin* | *idSesi, idPengguna, token* | *verifikasiAkses()* | 
+| *C23* | *AkunController* | *-* | *getIdAkunDariSesi(), getDaftarBarangAkun()* | 
 | *C29* | *Barang* | *idBarang, idPenjual, judul, harga, deskripsiKondisi, idKategori, idLokasi, status, waktuUbah* | *setJudul(), setHarga(), setDeskripsi(), setStatus()* | 
 | *C30* | *FotoBarang* | *idFoto, idListing, namaBerkas, format, ukuran, urutan, pathBerkas* | *perbaruiGaleri()* | 
 | *C31* | *Kategori* | *idKategori, namaKategori* | *getDaftarKategori(), setKategor()* | 
@@ -1262,7 +1262,7 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 | *C04* | *FormulirBarang* | *Antarmuka untuk menghapus data barang beserta unggahan foto.* |
 | *C14* | *BarangController* | *Mengelola proses penghapusan  barang.* |
 | *C25* | *Penjual* | *Pemilik listing yang menginisiasi aksi penghapusan permanen atas listing miliknya.* | 
-| *C28* | *SesiLogin* | *Mengidentifikasi token sesi penjual dan memverifikasi hak akses penghapusan.* | 
+| *C23* | *AkunController* | *Akun controller penjual pemilik listing.* |
 | *C29* | *Barang* | *Menghapus data listing secara permanen dari pangkalan data sistem.* | 
 
 #### Diagram Kelas
@@ -1280,7 +1280,7 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 | *C04* | *FormulirBarang* | *barang, barangController* | *drawBarang(), onClickDelete()* |
 | *C14* | *BarangController* | *listBarang* | *deleteBarang()* |
 | *C25* | *Penjual* | *idPengguna, nama* | *getId()* | 
-| *C28* | *SesiLogin* | *idSesi, idPengguna, token* | *verifikasiAkses()* | 
+| *C23* | *AkunController* | *-* | *getIdAkunDariSesi(), getDaftarBarangAkun()* | 
 | *C29* | *Barang* | *idListing, idPenjual* | *deleteFoto(), deleteBarang()* | 
 
 ### 5.2.11 Use Case UC11
@@ -1294,7 +1294,7 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 | *C04* | *FormulirBarang* | *Antarmuka untuk memasukkan, mengubah, dan melengkapi data barang beserta unggahan foto.* |
 | *C14* | *BarangController* | *Mengelola proses perubahan status barang dan menyembunyikannya dari hasil pencarian umum untuk barang dengan status terjual.* |
 | *C25* | *Penjual* | *Pengguna pemilik barang yang menekan tombol aksi untuk menandai sebuah barang yang telah laku.* | 
-| *C28* | *SesiLogin* | *Memverifikasi kepemilikan penjual atas listing tersebut sebelum aksi diizinkan.* | 
+| *C23* | *AkunController* | *Akun controller penjual pemilik listing.* |
 | *C29* | *Barang* | *Memeriksa nilai status terkini, memperbarui status menjadi "Terjual"* |
 
 #### Diagram Kelas
@@ -1312,7 +1312,7 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 | *C04* | *FormulirBarang* | *barang, barangController* | *onClickStatus()* |
 | *C14* | *BarangController* | *listBarang* | *updateBarang()* |
 | *C25* | *Penjual* | *idPengguna, nama* | *getId()* | 
-| *C28* | *SesiLogin* | *idSesi, idPengguna, token* | *verifikasiAkses()* | 
+| *C23* | *AkunController* | *-* | *getIdAkunDariSesi(), getDaftarBarangAkun()* | 
 | *C29* | *Barang* | *idListing, idPenjual* | *setStatus()* | 
 
 ### 5.2.12 Use Case UC12
@@ -1326,7 +1326,7 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 | *C04* | *FormulirBarang* | *Antarmuka untuk memasukkan, mengubah, dan melengkapi data barang beserta unggahan foto.* |
 | *C14* | *BarangController* | *Mengelola proses perubahan status barang dan menampilkan pada hasil pencarian umum untuk barang yang belum terjual.* |
 | *C25* | *Penjual* | *Pengguna pemilik barang yang menekan tombol aksi untuk update status barang.* | 
-| *C28* | *SesiLogin* | *Memverifikasi kepemilikan penjual atas barang tersebut sebelum aksi diizinkan.* | 
+| *C23* | *AkunController* | *Akun controller penjual pemilik listing.* |
 | *C29* | *Barang* | *Memeriksa nilai status terkini, memperbarui status menjadi "Belum Terjual".* | 
 
 #### Diagram Kelas
@@ -1344,7 +1344,7 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 | *C04* | *FormulirBarang* | *barang, barangController* | *onClickStatus()* |
 | *C14* | *BarangController* | *listBarang* | *updateBarang()* |
 | *C25* | *Penjual* | *idPengguna, nama* | *getId()* | 
-| *C28* | *SesiLogin* | *idSesi, idPengguna, token* | *verifikasiAkses()* | 
+| *C23* | *AkunController* | *-* | *getIdAkunDariSesi(), getDaftarBarangAkun()* | 
 | *C29* | *Barang* | *idListing, idPenjual* | *setStatus()* | 
 
 ### 5.2.13 Use Case UC13
@@ -1388,6 +1388,8 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 | *C05* | *HalamanKatalog* | *Antarmuka utama untuk menampilkan katalog barang.* |
 | *C06* | *KartuProduk* | *Antarmuka untuk satuan barang yang ada di dalam halaman katalog.* |
 | *C15* | *KatalogController* | *Mengatur barang apa saja yang dimunculkan pada halaman katalog.* | 
+| *C16* | *PencarianController* | *Mengatur pencarian barang berdasarkan kata kunci.* | 
+| *C17* | *FilterController* | *Mengatur pencarian barang berdasarkan harga, kategori, dan lokasi COD.* | 
 | *C29* | *Barang* | *Data barang yang akan ditunjukkan, barang dengan status terjual tidak ditampilkan.* | 
 | *C31* | *Kategori* | *Entitas referensi yang menyimpan klasifikasi atau jenis barang yang digunakan pada katalog, input barang, pencarian, dan filter.* | 
 | *C32* | *LokasiCOD* | *Entitas referensi yang menyimpan daftar titik temu COD yang tersedia pada lingkungan multikampus, memungkinkan filter terhadap lokasi COD.* | 
@@ -1407,6 +1409,8 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 | *C05* | *HalamanKatalog* | *listProduk* | *showKatalog()* |
 | *C06* | *KartuProduk* | *barang* | *showBarang()* |
 | *C15* | *KatalogController* | *listProduk* | *getProduk(), filterPrice(), filterCategory(), filterLocation(), sortPrice()* |
+| *C16* | *PencarianController* | *-* | *search()* | 
+| *C17* | *FilterController* | *-* | *filterCategory(), filterPrice(), filterLocation()* |
 | *C29* | *Barang* | *idBarang, idPenjual, judul, harga, deskripsiKondisi* | *getJudul(), getHarga(), getDeskripsi(), getStatus()* | 
 | *C31* | *Kategori* | *idKategori, namaKategori* | *getDaftarKategori(), getKategori()* | 
 | *C32* | *LokasiCOD* | *idLokasi, namaLokasi, kampus* | *getDaftarLokasi(), getLokasi()* | 
