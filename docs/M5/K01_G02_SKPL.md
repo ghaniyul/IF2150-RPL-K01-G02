@@ -1881,51 +1881,193 @@ Secara keseluruhan diagram memuat **40 kelas** dengan **3 relasi generalisasi**,
 ---
 
 # BAB 6: Traceability
-Salin ulang tabel Traceability dari BAB 5 dokumen *Class Diagram*, cocokkan setiap Kebutuhan Fungsional, Use Case, dan Kelas yang saling terkait.
+
+## 6.1 Konsep dan Metodologi Keterlacakan
+Matriks keterlacakan (*traceability matrix*) merupakan instrumen kendali mutu rekayasa perangkat lunak yang menjamin konsistensi vertikal dan horizontal antara spesifikasi kebutuhan fungsional, pemodelan interaksi aktor (*use case*), dan perancangan kelas struktural (*class diagram*). Dokumen ini menerapkan prinsip *bidirectional traceability*:
+1. ***Forward Traceability* (Keterlacakan Maju):** Memastikan setiap butir Kebutuhan Fungsional (KF01–KF56) terefleksikan secara utuh ke dalam sekurang-kurangnya satu Use Case (UC01–UC24) dan direalisasikan oleh kombinasi kelas *Boundary*, *Control*, dan *Entity* yang relevan tanpa ada kebutuhan yang terabaikan (*zero orphan requirements*).
+2. ***Backward Traceability* (Keterlacakan Balik):** Memastikan setiap kelas (C01–C40) yang dirancang pada arsitektur sistem memiliki justifikasi fungsional yang valid terhadap use case dan kebutuhan pengguna, guna mencegah adanya fitur atau kode yang tidak dibutuhkan (*zero gold plating / dead code*).
+
+Struktur keterlacakan ini mengadopsi pola arsitektur *Boundary-Control-Entity* (BCE):
+- **Lapis *Boundary* (C01–C12):** Komponen antarmuka pengguna (*presentation layer*) yang berinteraksi langsung dengan aktor.
+- **Lapis *Control* (C13–C22):** Komponen pemroses logika bisnis, koordinator alur kerja, validasi aturan institusional, dan enkripsi data (*business logic layer*).
+- **Lapis *Entity* (C23–C40):** Komponen persistensi data (*data access/persistence layer*) yang memodelkan informasi inti sistem ITBELI.
+
+---
+
+## 6.2 Tabel Inti Keterlacakan (Class to UC and KF)
+Tabel 6.1 merupakan tabel inti keterlacakan yang memetakan seluruh kelas (C01–C40) terhadap Use Case operasional dan Kebutuhan Fungsional yang didukungnya secara komprehensif.
+
+### Tabel 6.1. Tabel Inti Keterlacakan Sistem ITBELI
 
 | ID Kelas | ID Use Case | ID KF |
 | :--- | :--- | :--- |
-| *C01* | *UC01, UC02, UC03, UC04* | *KF01, KF03, KF05, KF08, KF11* |
-| *C02* | *UC05* | *KF04, KF20* |
-| *C03* | *UC08, UC10, UC11, UC12* | *KF16, KF21, KF22, KF41, KF42* |
-| *C04* | *UC07, UC09* | *KF15, KF18, KF19* |
-| *C05* | *UC13, UC14* | *KF25, KF26, KF27, KF28, KF29* |
-| *C06* | *UC05, UC08, UC13, UC14, UC15* | *KF20, KF25, KF26, KF30* |
-| *C07* | *UC15, UC16, UC19* | *KF30, KF31, KF37* |
-| *C08* | *UC16, UC17, UC18* | *KF31, KF33, KF35* |
-| *C09* | *UC17, UC22, UC23* | *KF34, KF52* |
-| *C10* | *UC19* | *KF43, KF44* |
-| *C11* | *UC20, UC21, UC22, UC23, UC24* | *KF45, KF46, KF47, KF50, KF55, KF56* |
-| *C12* | *UC06* | *KF38, KF39* |
-| *C13* | *UC01, UC02, UC03, UC04, UC05* | *KF01, KF02, KF03, KF04, KF05, KF06, KF07, KF08, KF09, KF10, KF11, KF12* |
-| *C14* | *UC07, UC08, UC09, UC10, UC11, UC12* | *KF15, KF16, KF17, KF18, KF19, KF21, KF22, KF40, KF41, KF42* |
-| *C15* | *UC13, UC14* | *KF25, KF27, KF54* |
-| *C16* | *UC14* | *KF27* |
-| *C17* | *UC14* | *KF26, KF28, KF29* |
-| *C18* | *UC16, UC17, UC18* | *KF31, KF32, KF33, KF34, KF35, KF36* |
-| *C19* | *UC01, UC02, UC17, UC22, UC23* | *KF06, KF34, KF52* |
-| *C20* | *UC19* | *KF37, KF43, KF44* |
-| *C21* | *UC20, UC21, UC22, UC23, UC24* | *KF45, KF46, KF47, KF48, KF49, KF50, KF51, KF52, KF53, KF55* |
-| *C22* | *UC06* | *KF38, KF39* |
-| *C23* | *UC01, UC02, UC03, UC04, UC05, UC13, UC14, UC15, UC16, UC19, UC20, UC21, UC22, UC23, UC24* | *KF01, KF02, KF03, KF04, KF09, KF10, KF51, KF53* |
-| *C24* | *UC05, UC13, UC14, UC15, UC16, UC17, UC18, UC19* | *KF02, KF09, KF25, KF31, KF37, KF53* |
-| *C25* | *UC05, UC07, UC08, UC09, UC10, UC11, UC12, UC16, UC17, UC18* | *KF02, KF09, KF15, KF20, KF21, KF22, KF31, KF53* |
-| *C26* | *UC20, UC21, UC22, UC23, UC24* | *KF10, KF45, KF46, KF47, KF50, KF55, KF56* |
-| *C27* | *UC01, UC02* | *KF05, KF06* |
-| *C28* | *UC03, UC04, UC05, UC07, UC08, UC09, UC10, UC11, UC12, UC16, UC17, UC18, UC19, UC20, UC21, UC22, UC23, UC24* | *KF08, KF11, KF12* |
-| *C29* | *UC05, UC07, UC08, UC09, UC10, UC11, UC12, UC13, UC14, UC15, UC16, UC19, UC22, UC23, UC24* | *KF15, KF16, KF20, KF21, KF22, KF30, KF40, KF41, KF42, KF50, KF54* |
-| *C30* | *UC07, UC09, UC15* | *KF23, KF24, KF30* |
-| *C31* | *UC07, UC09, UC13, UC14* | *KF19, KF26* |
-| *C32* | *UC07, UC09, UC14* | *KF19, KF26* |
-| *C33* | *UC16, UC17, UC18, UC19* | *KF31, KF33, KF35, KF37* |
-| *C34* | *UC16, UC17, UC18* | *KF32, KF34, KF36* |
-| *C35* | *UC01, UC02, UC17, UC22, UC23* | *KF06, KF34, KF52* |
-| *C36* | *UC19, UC20, UC21, UC22, UC23* | *KF37, KF43, KF44, KF45, KF46, KF47* |
-| *C37* | *UC19, UC20* | *KF43, KF44, KF45* |
-| *C38* | *UC19, UC21, UC22, UC23, UC24* | *KF48, KF49, KF55* |
-| *C39* | *UC22, UC23, UC24* | *KF48, KF55* |
-| *C40* | *UC01, UC05, UC06, UC16, UC17* | *KF38, KF39* |
+| **C01** | UC01, UC02, UC03, UC04 | KF01, KF02, KF03, KF05, KF06, KF07, KF08, KF09, KF10, KF11, KF12, KF13, KF14, KF39, KF53 |
+| **C02** | UC05 | KF04, KF39 |
+| **C03** | UC08, UC10, UC11, UC12 | KF20, KF21, KF22, KF40, KF41, KF42 |
+| **C04** | UC07, UC09 | KF15, KF16, KF18, KF19, KF21, KF22, KF23, KF24 |
+| **C05** | UC13, UC14 | KF25, KF26, KF27, KF28, KF29, KF30, KF42, KF54 |
+| **C06** | UC05, UC08, UC13, UC14, UC15 | KF04, KF17, KF20, KF25, KF26, KF27, KF28, KF30, KF42 |
+| **C07** | UC15, UC16, UC19 | KF17, KF30, KF31, KF37, KF43 |
+| **C08** | UC16, UC17, UC18 | KF31, KF32, KF33, KF34, KF35, KF36, KF37, KF39 |
+| **C09** | UC17, UC22, UC23 | KF34, KF52 |
+| **C10** | UC19 | KF37, KF43, KF44 |
+| **C11** | UC20, UC21, UC22, UC23, UC24 | KF45, KF46, KF47, KF48, KF50, KF51, KF55, KF56 |
+| **C12** | UC06 | KF13, KF38, KF39 |
+| **C13** | UC01, UC02, UC03, UC04, UC05 | KF01, KF02, KF03, KF04, KF05, KF06, KF07, KF08, KF09, KF10, KF11, KF12, KF13, KF14, KF39, KF53 |
+| **C14** | UC07, UC08, UC09, UC10, UC11, UC12 | KF15, KF16, KF17, KF18, KF19, KF20, KF21, KF22, KF23, KF24, KF40, KF41, KF42 |
+| **C15** | UC13, UC14 | KF25, KF26, KF27, KF28, KF29, KF30, KF42, KF54 |
+| **C16** | UC14 | KF25, KF29 |
+| **C17** | UC14 | KF26, KF29 |
+| **C18** | UC16, UC17, UC18 | KF31, KF32, KF33, KF34, KF35, KF36, KF39 |
+| **C19** | UC01, UC02, UC17, UC22, UC23 | KF06, KF34, KF52 |
+| **C20** | UC19 | KF37, KF43, KF44, KF48 |
+| **C21** | UC20, UC21, UC22, UC23, UC24 | KF45, KF46, KF47, KF48, KF49, KF50, KF51, KF52, KF53, KF54, KF55, KF56 |
+| **C22** | UC06 | KF13, KF38, KF39 |
+| **C23** | UC01, UC02, UC03, UC04, UC05, UC13, UC14, UC15, UC16, UC19, UC20, UC21, UC22, UC23, UC24 | KF01, KF02, KF03, KF04, KF05, KF07, KF08, KF09, KF10, KF11, KF12, KF14, KF30, KF31, KF35, KF37, KF45, KF51, KF52, KF53, KF54, KF56 |
+| **C24** | UC05, UC13, UC14, UC15, UC16, UC17, UC18, UC19 | KF02, KF04, KF09, KF25, KF26, KF27, KF28, KF29, KF30, KF31, KF32, KF33, KF34, KF35, KF37, KF43, KF53 |
+| **C25** | UC05, UC07, UC08, UC09, UC10, UC11, UC12, UC16, UC17, UC18 | KF02, KF04, KF09, KF15, KF16, KF17, KF20, KF21, KF22, KF31, KF32, KF33, KF34, KF35, KF40, KF41, KF42, KF52, KF53 |
+| **C26** | UC20, UC21, UC22, UC23, UC24 | KF10, KF35, KF45, KF46, KF47, KF48, KF50, KF51, KF55, KF56 |
+| **C27** | UC01, UC02 | KF05, KF06, KF07, KF08 |
+| **C28** | UC03, UC04, UC05, UC07, UC08, UC09, UC10, UC11, UC12, UC16, UC17, UC18, UC19, UC20, UC21, UC22, UC23, UC24 | KF03, KF08, KF11, KF12, KF22, KF35, KF53, KF56 |
+| **C29** | UC05, UC07, UC08, UC09, UC10, UC11, UC12, UC13, UC14, UC15, UC16, UC19, UC22, UC23, UC24 | KF04, KF15, KF16, KF17, KF18, KF19, KF20, KF21, KF22, KF25, KF26, KF27, KF28, KF30, KF31, KF40, KF41, KF42, KF50, KF54 |
+| **C30** | UC07, UC09, UC15 | KF17, KF23, KF24 |
+| **C31** | UC07, UC09, UC13, UC14 | KF15, KF19, KF26 |
+| **C32** | UC07, UC09, UC14 | KF15, KF17, KF26 |
+| **C33** | UC16, UC17, UC18, UC19 | KF31, KF32, KF33, KF35, KF36, KF37 |
+| **C34** | UC16, UC17, UC18 | KF32, KF33, KF34, KF36 |
+| **C35** | UC01, UC02, UC17, UC22, UC23 | KF06, KF34, KF52 |
+| **C36** | UC19, UC20, UC21, UC22, UC23 | KF37, KF43, KF44, KF45, KF46, KF47, KF48 |
+| **C37** | UC19, UC20 | KF44, KF45 |
+| **C38** | UC19, UC21, UC22, UC23, UC24 | KF48, KF49 |
+| **C39** | UC22, UC23, UC24 | KF50, KF51, KF55 |
+| **C40** | UC01, UC05, UC06, UC16, UC17 | KF13, KF14, KF38, KF39 |
 
+---
+
+## 6.3 Penjabaran Rinci Tanggung Jawab Kelas dan Realisasi Kebutuhan
+Bagian ini menjabarkan secara operasional bagaimana setiap kelas pada Tabel 6.1 menjalankan fungsinya dalam arsitektur perangkat lunak untuk memenuhi kebutuhan fungsional terkait.
+
+### 6.3.1 Kelas Boundary (Antarmuka Pengguna)
+1. **C01 HalamanOtentikasi:** Berfungsi sebagai gerbang interaksi pengguna untuk pendaftaran akun, input OTP verifikasi, login, dan logout. Menampilkan formulir pendaftaran (KF01), pesan kesalahan domain non-ITB (KF05), input kode OTP beserta hitung mundur 15 menit (KF06, KF07), opsi kirim ulang bagi akun belum terverifikasi (KF08), tautan ToS/kebijakan privasi (KF13, KF39), formulir login (KF03), pemutusan sesi logout (KF12), serta pesan akun ditangguhkan saat diblokir (KF53).
+2. **C02 HalamanProfil:** Menampilkan data identitas pengguna berupa nama, NIM, surel @itb.ac.id, dan daftar listing yang dimiliki (KF04). Menyediakan menu pengaturan akun yang memuat tautan menuju dokumen Kebijakan Privasi (KF39).
+3. **C03 HalamanListingPenjual:** Antarmuka dasbor inventaris penjual yang menyajikan seluruh listing miliknya yang terbagi atas tab "Tersedia" dan riwayat "Terjual" (KF20, KF42). Menyediakan kendali aksi pengubahan (KF21), penghapusan listing (KF21, KF22), penandaan barang terjual (KF40), dan pembatalan tanda terjual (KF41).
+4. **C04 FormulirBarang:** Antarmuka formulir terpadu untuk membuat listing baru dan memperbarui listing yang ada (KF15, KF21). Bertanggung jawab melakukan validasi visual terhadap isian wajib (KF18), menyediakan dropdown pilihan kategori tetap institusi (KF19), serta membatasi pemilihan berkas foto maksimal 5 berkas berformat JPG/PNG berukuran ≤ 5 MB (KF23, KF24).
+5. **C05 HalamanKatalog:** Antarmuka etalase belanja publik yang menampilkan daftar barang "Tersedia" dari penjual aktif (KF30). Menyediakan bilah pencarian kata kunci (KF25), kontrol filter multi-kategori, harga, dan lokasi COD (KF26), kontrol pengurutan (KF27), mekanisme navigasi paginasi maksimal 20 listing per halaman (KF28), serta status visual barang tidak ditemukan (KF29).
+6. **C06 KartuProduk:** Komponen visual modular yang menampilkan ringkasan informasi barang (foto *thumbnail*, judul, harga, kategori, titik temu COD, dan status ketersediaan) yang digunakan secara konsisten pada halaman profil (KF04), dasbor penjual (KF20), katalog publik (KF28, KF30), dan hasil pencarian/penyaringan (KF25, KF26).
+7. **C07 HalamanDetailBarang:** Menyajikan rincian menyeluruh komoditas barang (seluruh foto dalam bentuk *carousel*, deskripsi kondisi lengkap, kategori, lokasi COD, dan identitas penjual) (KF17, KF30). Menyediakan tombol "Hubungi Penjual" untuk membuka ruang obrolan (KF31) serta tombol "Laporkan" untuk mengadukan listing bermasalah (KF37, KF43).
+8. **C08 HalamanPercakapan:** Menyajikan antarmuka daftar obrolan (*inbox*) dan ruang percakapan waktu-nyata (*chat room*). Menampilkan gelembung pesan terurut kronologis beserta waktu kirim (KF32), ringkasan pesan terakhir dan identitas lawan bicara (KF33), indikator unread (KF34), isolasi akses privat antar-dua pihak (KF35), serta tautan Kebijakan Privasi (KF39).
+9. **C09 PanelNotifikasi:** Komponen lencana dan daftar notifikasi yang menampilkan pembaruan jumlah pesan belum dibaca secara *real-time* (KF34), serta pemberitahuan resmi sistem saat listing dihapus atau akun dibekukan oleh tindakan moderasi admin (KF52).
+10. **C10 FormulirLaporan:** Antarmuka pengajuan aduan yang menyediakan pilihan kategori pelanggaran (penipuan, konten tidak pantas, *bug*), isian teks alasan, komponen unggah berkas bukti tangkapan layar (KF43, KF44), serta secara otomatis mengisolasi aduan chat agar tidak melampirkan teks percakapan (KF37).
+11. **C11 DasborAdmin:** Antarmuka operasional khusus staf admin untuk melihat tabel seluruh laporan aduan (KF45), menyaring laporan berdasarkan status (Baru, Diproses, Selesai) (KF46), mengubah status penanganan laporan (KF47), mengeksekusi penghapusan listing bermasalah (KF50), mengeksekusi blokir/buka blokir akun (KF51), serta membatasi akses bagi peran non-admin (KF56).
+12. **C12 HalamanDokumenLegal:** Menampilkan teks lengkap Syarat Ketentuan dan Kebijakan Privasi dengan penegasan klausul tertulis bahwa isi obrolan terenkripsi dan tidak dapat diakses admin maupun pengembang (KF13, KF38, KF39).
+
+### 6.3.2 Kelas Control (Logika Bisnis dan Pengendali)
+1. **C13 AkunController:** Mengendalikan seluruh alur registrasi, validasi domain @itb.ac.id, pengecekan keunikan surel, *hashing* kata sandi bcrypt, verifikasi OTP, manajemen sesi token JWT 24 jam, pemutusan sesi logout, pengambilan data profil, serta penolakan login bagi akun yang ditangguhkan (KF01–KF14, KF39, KF53).
+2. **C14 BarangController:** Mengatur logika operasional barang: validasi kelengkapan isian formulir, validasi format/ukuran/kuota berkas foto, verifikasi kepemilikan listing sebelum manipulasi data diizinkan, penyimpanan status awal "Tersedia", serta pembaruan status ketersediaan barang (KF15–KF24, KF40–KF42).
+3. **C15 KatalogController:** Mengatur pengambilan data listing publik dari basis data, menerapkan paginasi 20 item per halaman, menjalankan algoritma pengurutan (waktu unggah, harga terendah/tertinggi), dan memastikan hanya listing "Tersedia" dari pemilik yang tidak diblokir yang ditayangkan (KF25–KF30, KF42, KF54).
+4. **C16 PencarianController:** Memproses kueri penelusuran pengguna dengan melakukan normalisasi string teks dan pencocokan pola (*case-insensitive*) terhadap atribut judul dan deskripsi barang pada basis data (KF25, KF29).
+5. **C17 FilterController:** Memvalidasi parameter penyaringan (memastikan batas harga minimum tidak melebihi harga maksimum) dan menyusun kueri filter komposit berdasarkan kategori dan lokasi titik temu COD kampus ITB (KF26, KF29).
+6. **C18 PercakapanController:** Mengelola pembuatan ruang obrolan baru, memverifikasi bahwa pengakses adalah salah satu dari dua peserta yang sah, mengeksekusi algoritma enkripsi simetris sebelum teks disimpan ke basis data, mendekripsi pesan saat disajikan ke peserta sah, serta mengelola pembacaan pesan (KF31–KF36, KF39).
+7. **C19 NotifikasiController:** Mengelola pengiriman pesan notifikasi otomatis, meliputi pengiriman kode OTP pendaftaran via surel kampus (KF06), pengiriman notifikasi obrolan baru di latar belakang (KF34), serta pengiriman pemberitahuan resmi tindakan sanksi admin (KF52).
+8. **C20 LaporanController:** Memvalidasi formulir aduan pengguna, menjamin bahwa laporan atas ruang percakapan hanya menyertakan metadata (ID obrolan, waktu, identitas) tanpa menyertakan teks pesan, memproses penyimpanan berkas bukti, dan memicu pencatatan ke LogAudit (KF37, KF43, KF44, KF48).
+9. **C21 ModerasiController:** Pusat eksekusi kontrol administratif: memeriksa otorisasi peran admin, mengambil dan menyaring laporan, memperbarui status aduan, menghapus listing yang melanggar, memblokir/membuka blokir akun pengguna beserta efek *cascade* pada listing miliknya, serta menuliskan catatan ke LogAdmin dan LogAudit (KF45–KF56).
+10. **C22 DokumenLegalController:** Bertanggung jawab mengambil naskah resmi Syarat Ketentuan dan Kebijakan Privasi versi terbaru dari direktori penyimpanan dan menyajikannya ke lapisan antarmuka (KF13, KF38, KF39).
+
+### 6.3.3 Kelas Entity (Struktur Data dan Persistensi)
+1. **C23 Akun:** Entitas data pengguna utama yang menyimpan NIM, surel @itb.ac.id, nama, *hash* kata sandi bcrypt, status verifikasi surel, status pemblokiran, dan peran pengguna (KF01–KF05, KF07–KF12, KF14, KF30, KF31, KF35, KF37, KF45, KF51–KF54, KF56).
+2. **C24 Pembeli:** Peran spesialisasi dari Akun yang merepresentasikan mahasiswa dalam mencari barang, menyaring katalog, memulai percakapan negosiasi COD, dan mengirimkan laporan (KF02, KF04, KF09, KF25–KF35, KF37, KF43, KF53).
+3. **C25 Penjual:** Peran spesialisasi dari Akun yang merepresentasikan pemilik barang yang berhak membuat, mengubah, menghapus, dan menandai status listing miliknya, serta merespons obrolan pembeli (KF02, KF04, KF09, KF15–KF17, KF20–KF22, KF31–KF35, KF40–KF42, KF52, KF53).
+4. **C26 Admin:** Peran spesialisasi dari Akun yang memiliki hak akses untuk memoderasi platform, memeriksa aduan, menindak akun dan barang yang bermasalah, serta menuliskan catatan log audit tanpa memiliki akses ke pesan obrolan (KF10, KF35, KF45–KF48, KF50, KF51, KF55, KF56).
+5. **C27 TokenVerifikasi:** Menyimpan data kode verifikasi unik pendaftaran akun, stempel waktu pembuatan, waktu kedaluwarsa 15 menit, serta status keterpakaian kode (KF05–KF08).
+6. **C28 SesiLogin:** Menyimpan rekaman status otentikasi aktif berbasis token (JWT) dengan durasi hidup maksimum 24 jam sebagai dasar otorisasi identitas pengguna pada setiap permintaan data (KF03, KF08, KF11, KF12, KF22, KF35, KF53, KF56).
+7. **C29 Barang:** Entitas komoditas yang menyimpan judul, deskripsi kondisi, harga, status ketersediaan (Tersedia/Terjual/Dihapus), waktu unggah/ubah, serta relasi ke penjual, kategori, dan lokasi COD (KF04, KF15–KF22, KF25–KF28, KF30, KF31, KF40–KF42, KF50, KF54).
+8. **C30 FotoBarang:** Menyimpan berkas gambar barang (URI penyimpanan, tipe berkas JPG/PNG, ukuran berkas ≤ 5 MB, nomor indeks urutan foto) dengan kardinalitas 1 hingga 5 foto per barang (KF17, KF23, KF24).
+9. **C31 Kategori:** Entitas referensi baku (*master data*) yang menyimpan 6 daftar klasifikasi kategori barang tetap di lingkungan ITB (KF15, KF19, KF26).
+10. **C32 LokasiCOD:** Entitas referensi baku titik temu fisik transaksi COD di wilayah kampus ITB (Ganesha, Jatinangor, Cirebon) (KF15, KF17, KF26).
+11. **C33 Percakapan:** Entitas sesi komunikasi privat yang menghubungkan tepat satu pembeli, satu penjual, dan satu barang rujukan (KF31–KF33, KF35–KF37).
+12. **C34 Pesan:** Entitas pesan atomik yang menyimpan teks terenkripsi (*ciphertext*), cap waktu pengiriman, status keterbacaan, dan ID pengirim (KF32–KF34, KF36).
+13. **C35 Notifikasi:** Menyimpan catatan pemberitahuan in-app bagi pengguna terkait kode verifikasi, obrolan baru, atau tindakan moderasi admin (KF06, KF34, KF52).
+14. **C36 Laporan:** Menyimpan entitas aduan pelanggaran yang diajukan pengguna: kategori laporan, teks alasan, objek terlapor, stempel waktu, dan status penyelesaian (KF37, KF43–KF48).
+15. **C37 BuktiLaporan:** Menyimpan metadata dan berkas gambar tangkapan layar yang wajib dilampirkan pada formulir laporan (KF44, KF45).
+16. **C38 LogAudit:** Tabel rekaman kepatuhan sistem yang bersifat *append-only* (kebal modifikasi dan penghapusan) untuk mencatat kronologi waktu, pelaku, dan aksi penanganan laporan (KF48, KF49).
+17. **C39 LogAdmin:** Tabel catatan tindakan operasional staf admin yang merangkum identitas admin, tipe aksi moderasi, target sanksi, waktu, dan alasan penindakan (KF50, KF51, KF55).
+18. **C40 DokumenLegal:** Menyimpan naskah yuridis Syarat Penggunaan dan Kebijakan Privasi beserta nomor versi dan klausul perlindungan privasi percakapan (KF13, KF14, KF38, KF39).
+
+---
+
+## 6.4 Matriks Realisasi Kebutuhan Fungsional (KF to UC and Classes)
+Tabel 6.2 menyajikan pemetaan balik dari seluruh 56 butir Kebutuhan Fungsional (KF01–KF56) menuju Use Case operasional dan kombinasi kelas Boundary, Control, dan Entity pembangunnya.
+
+### Tabel 6.2. Matriks Realisasi Kebutuhan Fungsional (RTM)
+
+| ID KF | Ringkasan Kebutuhan Fungsional | ID UC | Kelas Boundary | Kelas Control | Kelas Entity |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **KF01** | Formulir registrasi akun mahasiswa (nama, NIM, surel @itb.ac.id, kata sandi). | UC01 | C01 | C13 | C23 |
+| **KF02** | Pembuatan akun baru dengan penetapan status default "Belum Terverifikasi". | UC01 | C01 | C13 | C23, C24, C25 |
+| **KF03** | Autentikasi surel & kata sandi pada login untuk memberikan akses masuk. | UC03 | C01 | C13 | C23, C28 |
+| **KF04** | Penyajian data identitas profil (nama, NIM, surel) dan daftar listing milik sendiri. | UC05 | C02, C06 | C13 | C23, C24, C25, C28, C29 |
+| **KF05** | Penolakan registrasi surel non-itb.ac.id atau surel yang telah terdaftar. | UC01 | C01 | C13 | C23, C27 |
+| **KF06** | Pembangkitan kode verifikasi berbatas waktu 15 menit ke surel pendaftar. | UC01, UC02 | C01 | C13, C19 | C27, C35 |
+| **KF07** | Pengubahan status akun menjadi "Terverifikasi" saat kode OTP cocok dan valid. | UC02 | C01 | C13 | C23, C27 |
+| **KF08** | Penolakan login akun belum terverifikasi beserta tombol pengiriman ulang kode. | UC02, UC03 | C01 | C13 | C23, C27, C28 |
+| **KF09** | Penyimpanan kata sandi akun wajib menggunakan algoritma *hash* bcrypt. | UC01 | C01 | C13 | C23, C24, C25 |
+| **KF10** | Verifikasi login dengan membandingkan nilai *hash* masukan terhadap basis data. | UC03 | C01 | C13 | C23, C26, C28 |
+| **KF11** | Pembentukan sesi bertoken (JWT) dengan masa berlaku maksimum 24 jam. | UC03 | C01 | C13 | C23, C28 |
+| **KF12** | Penghapusan dan pencabutan (*revoke*) token sesi saat pengguna logout. | UC04 | C01 | C13 | C23, C28 |
+| **KF13** | Penayangan klausul Kebijakan Privasi dan ToS pada antarmuka registrasi. | UC01, UC06 | C01, C12 | C13, C22 | C40 |
+| **KF14** | Pembatalan registrasi jika calon pengguna tidak menyetujui dokumen legal. | UC01 | C01 | C13 | C23, C40 |
+| **KF15** | Formulir pembuatan listing (judul, harga, kondisi, kategori, lokasi COD, foto). | UC07 | C04 | C14 | C25, C28, C29, C31, C32 |
+| **KF16** | Penerbitan listing baru berstatus "Tersedia" langsung ke katalog utama. | UC07 | C04 | C14 | C25, C28, C29 |
+| **KF17** | Halaman detail menyajikan foto lengkap, data barang, dan identitas penjual. | UC15 | C06, C07 | C14 | C25, C29, C30, C31, C32 |
+| **KF18** | Penolakan publikasi dan penandaan visual jika kolom wajib listing kosong. | UC07, UC09 | C04 | C14 | C29 |
+| **KF19** | Pilihan kategori barang terbatas pada 6 kategori baku kampus ITB. | UC07, UC09 | C04 | C14 | C29, C31 |
+| **KF20** | Halaman daftar listing penjual menampilkan seluruh barang dan statusnya. | UC08 | C03, C06 | C14 | C25, C28, C29 |
+| **KF21** | Eksekusi penyimpanan perubahan data atau penghapusan listing milik sendiri. | UC09, UC10 | C03, C04 | C14 | C25, C28, C29, C30 |
+| **KF22** | Penolakan manipulasi/penghapusan listing dari akun yang bukan pemilik sah. | UC09, UC10 | C03, C04 | C14 | C25, C28, C29 |
+| **KF23** | Penerimaan unggahan foto listing khusus JPG/PNG, maks 5 MB, maks 5 foto. | UC07, UC09 | C04 | C14 | C29, C30 |
+| **KF24** | Penolakan dan pesan galat spesifik atas pelanggaran ketentuan unggah foto. | UC07, UC09 | C04 | C14 | C29, C30 |
+| **KF25** | Pencocokan kata kunci pencarian terhadap judul dan deskripsi barang. | UC14 | C05, C06 | C15, C16 | C24, C29 |
+| **KF26** | Penerapan filter kategori, rentang batas harga, dan lokasi titik temu COD. | UC14 | C05, C06 | C15, C17 | C24, C29, C31, C32 |
+| **KF27** | Pengurutan hasil berdasarkan waktu terbaru, harga terendah, atau tertinggi. | UC14 | C05, C06 | C15 | C24, C29 |
+| **KF28** | Pembatasan tampilan katalog maks 20 listing per halaman dan kontrol paginasi. | UC13, UC14 | C05, C06 | C15 | C24, C29 |
+| **KF29** | Penayangan pesan visual barang tidak ditemukan saat hasil kueri nihil. | UC14 | C05 | C15, C16, C17 | C24 |
+| **KF30** | Katalog hanya memuat listing "Tersedia" dari pemilik yang tidak diblokir. | UC13, UC14 | C05, C06, C07 | C15 | C23, C24, C29 |
+| **KF31** | Tombol "Hubungi Penjual" membuka ruang obrolan privat untuk listing terkait. | UC16 | C07, C08 | C18 | C23, C24, C25, C28, C29, C33 |
+| **KF32** | Pengiriman pesan teks tersimpan dan tampil berurutan beserta cap waktu. | UC17 | C08 | C18 | C24, C25, C28, C33, C34 |
+| **KF33** | Daftar percakapan memuat cuplikan pesan terakhir dan identitas lawan bicara. | UC18 | C08 | C18 | C24, C25, C28, C33, C34 |
+| **KF34** | Notifikasi pesan baru di latar belakang dan pembaruan lencana pesan belum dibaca. | UC17, UC18 | C08, C09 | C18, C19 | C24, C25, C34, C35 |
+| **KF35** | Larangan akses ruang percakapan bagi pihak ketiga, termasuk akun admin. | UC16, UC17, UC18 | C08 | C18 | C23, C24, C25, C26, C28, C33 |
+| **KF36** | Penyimpanan isi pesan pada basis data wajib dalam format terenkripsi. | UC17 | C08 | C18 | C33, C34 |
+| **KF37** | Laporan percakapan hanya menyertakan ID obrolan, waktu, dan identitas pelapor. | UC19 | C07, C08, C10 | C20 | C23, C24, C33, C36 |
+| **KF38** | Pernyataan tertulis pada Kebijakan Privasi bahwa pesan tidak dapat diakses admin. | UC06 | C12 | C22 | C40 |
+| **KF39** | Tautan Kebijakan Privasi pada registrasi, profil, dan ruang obrolan. | UC01, UC05, UC06, UC16, UC17 | C01, C02, C08, C12 | C13, C18, C22 | C40 |
+| **KF40** | Aksi "Tandai Terjual" mengubah status listing ketersediaan menjadi "Terjual". | UC11 | C03, C04 | C14 | C25, C28, C29 |
+| **KF41** | Aksi pembatalan tanda terjual memulihkan status listing menjadi "Tersedia". | UC12 | C03, C04 | C14 | C25, C28, C29 |
+| **KF42** | Listing "Terjual" disembunyikan dari katalog, namun tetap ada di riwayat akun. | UC08, UC11, UC12, UC13 | C03, C05, C06 | C14, C15 | C25, C29 |
+| **KF43** | Formulir laporan memuat opsi jenis pelanggaran (*fraud*, sara, *bug*) dan alasan. | UC19 | C07, C10 | C20 | C23, C24, C36 |
+| **KF44** | Pengunggahan dan penyimpanan berkas bukti tangkapan layar bersama laporan. | UC19 | C10 | C20 | C36, C37 |
+| **KF45** | Admin dapat melihat tabel daftar laporan aduan beserta seluruh atributnya. | UC20 | C11 | C21 | C23, C26, C28, C36, C37 |
+| **KF46** | Penyaringan daftar laporan berdasarkan status Baru, Diproses, atau Selesai. | UC20 | C11 | C21 | C26, C28, C36 |
+| **KF47** | Pembaruan status penanganan aduan tersimpan beserta stempel perubahannya. | UC21 | C11 | C21 | C26, C28, C36 |
+| **KF48** | Pencatatan penerimaan laporan dan tindak lanjut admin ke dalam log audit. | UC19, UC21, UC22, UC23 | C11 | C20, C21 | C26, C28, C36, C38 |
+| **KF49** | Penjaminan sifat anti-ubah dan anti-hapus (*immutable*) pada tabel log audit. | UC21, UC22, UC23 | — | C21 | C38 |
+| **KF50** | Eksekusi penghapusan listing bermasalah oleh admin disertai pencatatan alasan. | UC22 | C11 | C21 | C26, C28, C29, C39 |
+| **KF51** | Eksekusi pemblokiran atau pembukaan blokir akun pengguna oleh admin. | UC23, UC24 | C11 | C21 | C23, C26, C28, C39 |
+| **KF52** | Pengiriman notifikasi resmi beserta alasan atas penghapusan barang/blokir akun. | UC22, UC23 | C09, C11 | C19, C21 | C23, C25, C35 |
+| **KF53** | Penolakan proses login bagi akun berstatus diblokir beserta pesan penangguhan. | UC03, UC23 | C01 | C13, C21 | C23, C24, C25, C28 |
+| **KF54** | Penonaktifan seluruh listing milik akun terblokir dari katalog publik. | UC13, UC23, UC24 | C05, C11 | C15, C21 | C23, C29 |
+| **KF55** | Pencatatan tindakan moderasi (pelaku, aksi, objek, waktu, alasan) ke log admin. | UC22, UC23, UC24 | C11 | C21 | C26, C28, C39 |
+| **KF56** | Penolakan hak akses halaman dan fungsionalitas moderasi bagi peran non-admin. | UC20, UC21, UC22, UC23, UC24 | C11 | C21 | C23, C26, C28 |
+
+---
+
+## 6.5 Analisis Integritas dan Kelengkapan Keterlacakan
+Evaluasi integritas struktural terhadap Tabel 6.1 dan Tabel 6.2 membuktikan bahwa spesifikasi sistem ITBELI memenuhi standar kualitas rekayasa perangkat lunak:
+
+1. **Metrik Cakupan Kebutuhan Fungsional (100%):** Seluruh 56 butir kebutuhan fungsional (KF01–KF56) terpetakan secara lengkap ke sekurang-kurangnya satu Use Case operasional dan direalisasikan oleh kombinasi kelas BCE yang kohesif. Tidak ada kebutuhan fungsional yang menggantung (*zero orphan requirements*).
+2. **Metrik Cakupan Use Case (100%):** Seluruh 24 Use Case (UC01–UC24) memiliki rujukan kebutuhan fungsional dan realisasi kelas batas (*boundary*), kendali (*control*), dan data (*entity*) yang konsisten dengan Diagram Kelas Keseluruhan pada BAB 5.
+3. **Metrik Utilisasi Kelas (100%):** Seluruh 40 kelas rancangan (12 *boundary*, 10 *control*, 18 *entity*) memiliki peran yang terjustifikasi secara eksplisit dalam mendukung kebutuhan sistem. Tidak ditemukan kelas buangan yang tidak berelasi (*zero dead code / unused classes*).
+4. **Kepatuhan Terhadap Batasan Sistem:** Pemetaan pada kelas percakapan (C08, C18, C33, C34) membuktikan keterlacakan ketat terhadap batasan privasi sistem dan KNF03, di mana akses admin diputus secara arsitektural (KF35, KF38) dan isi pesan wajib disimpan dalam format sandi terenkripsi (KF36).
 
 # Referensi
 - Diagram UML: [https://www.drawio.com/](https://www.drawio.com/), [https://staruml.io/](https://staruml.io/)
