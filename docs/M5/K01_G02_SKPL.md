@@ -30,10 +30,10 @@ Dipersiapkan oleh:
 
 | Revisi | Deskripsi |
 | :--- | :--- |
-| *A* | *Deskripsikan perubahan yang dilakukan dari dokumen sebelumnya pada dokumen ini. Jika tidak terdapat perubahan, harap kosongkan tabel.* |
-| *B* |  |
-| *C* |  |
-| ... |  |
+| *A* | *Menambahkan BAB 1 dan BAB 2 (pendahuluan, deskripsi sistem, deskripsi perangkat lunak, pengguna, batasan, dan lingkungan operasi) serta menyatukan kebutuhan, use case, diagram kelas, dan traceability dari dokumen Requirement Gathering, Use Case, dan Class Diagram ke dalam format SKPL.* |
+| *B* | *Diagram kelas UC10–UC12 disesuaikan dengan skenario use case: aksi hapus, tandai terjual, dan batalkan penandaan terjual dilakukan dari C03 HalamanListingPenjual (sebelumnya C04 FormulirBarang), dan verifikasi kepemilikan listing pada UC09–UC12 memakai C28 SesiLogin seperti pada UC07–UC08.* |
+| *C* | *Seluruh diagram kelas per use case digambar ulang dengan notasi yang seragam dan diselaraskan dengan diagram kelas keseluruhan: nama atribut dan metode diseragamkan, kelas yang terlibat dilengkapi (UC15–UC17, UC19, UC21–UC24), serta ditambahkan dependensi C20 LaporanController ke C28 SesiLogin dan C21 ModerasiController ke C26 Admin. Diagram kelas keseluruhan digambar ulang dari gabungan diagram per use case.* |
+| *D* | *Tabel traceability (BAB 6) disusun ulang berdasarkan diagram kelas per use case dan tabel 4.2, dilengkapi pemeriksaan balik per kebutuhan fungsional. Kolom ID Use Case pada 5.1 disesuaikan dengan diagram per use case.* |
 
 <br>
 <br>
@@ -106,6 +106,8 @@ Berikut adalah referensi yang dirujuk dalam penyusunan dokumen ini.
 7. Undang-Undang Republik Indonesia Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi. https://peraturan.bpk.go.id/Details/229798/uu-no-27-tahun-2022
 8. United Nations, *Sustainable Development Goals. Goal 12: Ensure sustainable consumption and production patterns*. https://sdgs.un.org/goals/goal12
 9. Kementerian Lingkungan Hidup dan Kehutanan, *Sistem Informasi Pengelolaan Sampah Nasional (SIPSN). Data Timbulan Sampah*. https://sipsn.menlhk.go.id/sipsn/public/data/timbulan
+10. Supabase, *Supabase Documentation*. https://supabase.com/docs
+11. MDN Web Docs, *Secure Contexts*. https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts
 
 ## 1.6 Deskripsi Umum Dokumen (Ikhtisar)
 BAB 2 membahas mengenai deskripsi umum sistem dan perangkat lunak dari berbagai perspektif aktor, kebutuhan pengguna, batasan perangkat lunak, dan lingkungan operasi dimana perangkat lunak tersebut dapat dijalankan. 
@@ -114,7 +116,9 @@ BAB 3 membahas kebutuhan perangkat lunak dengan lebih detil.
 
 BAB 4 membahas pemodelan use case untuk perangkat lunak.
 
-BAB 5 membahas traceability antara kelas, use case, dan kebutuhan fungsional yang terdapat pada dokumen ini. 
+BAB 5 membahas pemodelan kelas, meliputi identifikasi kelas, diagram kelas per use case, dan diagram kelas keseluruhan.
+
+BAB 6 membahas traceability antara kelas, use case, dan kebutuhan fungsional yang terdapat pada dokumen ini.
 
 ---
 
@@ -164,15 +168,22 @@ Batasan yang harus dituliskan, di antaranya:
 4. Akses untuk ruang percakapan hanya terbatas untuk kedua pihak yang bertransaksi, dan setiap pesan terenkripsi sehingga hanya kedua pihak tersebut yang dapat melihat isi pesan. 
 
 ## 2.5 Lingkungan Operasi Perangkat Lunak
-Spesifikasi *operating system* atau lingkungan yang dibutuhkan P/L untuk beroperasi. Bagian ini digunakan untuk memastikan pengguna memiliki spesifikasi yang cukup untuk menjalankan P/L. Misalnya mencakup komponen server, client, OS, DBMS, tetapi tidak menutupi kemungkinan komponen lain.
+ITBELI berjalan sebagai aplikasi web dengan arsitektur klien-server. Server aplikasi dijalankan secara lokal pada komputer milik tim pengembang dan dapat diakses oleh perangkat lain yang terhubung ke jaringan yang sama. Basis data dan penyimpanan berkas tidak ditempatkan secara lokal, melainkan pada layanan *cloud* Supabase, sehingga seluruh perangkat membaca dan menulis data dari satu sumber yang sama dan konsisten. Pengguna cukup membuka ITBELI melalui peramban tanpa memasang aplikasi tambahan.
+
+Tabel 2.5. Lingkungan Operasi Perangkat Lunak
 
 | Komponen | Spesifikasi |
 | :--- | :--- |
-| *Server* | *[contoh: Node.js v20, dijalankan pada layanan cloud]* |
-| *Client* | *[contoh: Web Browser modern (Chrome, Firefox terbaru)]* |
-| *DBMS* | *[contoh: PostgreSQL 15]* |
-| *OS* | *[contoh: Cross-platform (Windows/Linux/MacOS) melalui browser]* |
-| *...* | *...* |
+| Server | Satu komputer atau laptop milik tim pengembang yang menjalankan server web ITBELI (penyaji halaman antarmuka dan logika bisnis) menggunakan Node.js versi LTS (22.x atau lebih baru). Server dijalankan secara lokal, bukan pada layanan *hosting cloud*, dan harus tetap menyala selama sistem digunakan. |
+| OS Server | Windows 10/11, macOS, atau distribusi Linux 64-bit (misalnya Ubuntu 22.04 LTS atau lebih baru). |
+| DBMS | PostgreSQL terkelola pada layanan *cloud* Supabase. Basis data tidak dijalankan secara lokal agar data tetap konsisten bagi seluruh perangkat dan anggota tim. Server terhubung ke Supabase melalui koneksi terenkripsi (TLS), dan kunci akses Supabase yang berhak penuh (*service role key*) hanya disimpan di sisi server. |
+| Penyimpanan Berkas | Supabase Storage untuk menyimpan foto listing (JPG/PNG, maksimum 5 MB per berkas dan 5 foto per listing) serta berkas bukti tangkapan layar pada laporan. |
+| Layanan Surel | Layanan pengiriman surel berbasis SMTP dengan TLS untuk mengirim kode verifikasi berbatas waktu 15 menit ke alamat surel @itb.ac.id pendaftar serta pemberitahuan tindakan moderasi kepada pengguna. |
+| Jaringan | Server dan perangkat klien terhubung ke jaringan lokal yang sama (Wi-Fi, LAN, atau *hotspot*). Klien mengakses ITBELI melalui alamat IP lokal server beserta port aplikasi (contoh: `https://192.168.1.10:3000`), sehingga *firewall* pada server harus mengizinkan koneksi masuk ke port tersebut. Server dan klien juga memerlukan koneksi internet untuk mengakses layanan Supabase dan layanan surel. |
+| Protokol | HTTPS dengan sertifikat TLS yang dipercaya oleh perangkat klien (misalnya sertifikat lokal yang dibuat menggunakan mkcert lalu dipasang pada perangkat klien). Koneksi aman ini diperlukan karena peramban hanya mengaktifkan *Service Worker* dan notifikasi *push* pada *secure context*, sedangkan kedua fitur tersebut dibutuhkan untuk mengirim notifikasi pesan baru ketika aplikasi sedang tidak dibuka (KF34). HTTPS juga melindungi kata sandi dan token sesi selama pengiriman data. |
+| Client | Peramban web berbasis Chromium (*Chromium-based web browser*) versi stabil terbaru, seperti Google Chrome, Microsoft Edge, Brave, atau Opera, dengan JavaScript, *cookie* dan penyimpanan lokal, serta izin notifikasi dalam keadaan aktif. |
+| Perangkat Klien | Laptop, PC, tablet, atau ponsel pintar yang mampu menjalankan versi stabil terbaru peramban berbasis Chromium. |
+| OS Klien | Windows 10/11, macOS, Linux, ChromeOS, dan Android 10 atau lebih baru. Perangkat iOS dan iPadOS tidak termasuk lingkungan yang didukung karena seluruh peramban pada sistem operasi tersebut menggunakan mesin WebKit, bukan Chromium. |
 
 ---
 
@@ -904,15 +915,15 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 | **C03** | *HalamanListingPenjual* | *Antarmuka dasbor penjual untuk melihat seluruh listing miliknya yang dikelompokkan berdasarkan status, beserta tombol aksi hapus, tandai terjual, dan batalkan penandaan terjual.* | *UC08, UC10, UC11, UC12* |
 | **C04** | *FormulirBarang* | *Antarmuka untuk memasukkan, mengubah, dan melengkapi data barang beserta unggahan foto.* | *UC07, UC09* |
 | **C05** | *HalamanKatalog* | *Antarmuka utama untuk menampilkan katalog barang, pencarian, filter, dan navigasi daftar barang.* | *UC13, UC14* |
-| **C06** | *KartuProduk* | *Komponen antarmuka yang menampilkan ringkasan informasi barang pada katalog atau daftar barang.* | *UC05, UC08, UC13, UC14, UC15* |
+| **C06** | *KartuProduk* | *Komponen antarmuka yang menampilkan ringkasan informasi barang pada katalog atau daftar barang.* | *UC05, UC08, UC13, UC14* |
 | **C07** | *HalamanDetailBarang* | *Antarmuka untuk menampilkan detail spesifikasi, foto, status, dan informasi lengkap suatu barang, beserta tombol "Hubungi Penjual" dan aksi pelaporan.* | *UC15, UC16, UC19* |
 | **C08** | *HalamanPercakapan* | *Antarmuka daftar percakapan dan ruang percakapan yang digunakan pengguna untuk melakukan komunikasi dan negosiasi.* | *UC16, UC17, UC18* |
-| **C09** | *PanelNotifikasi* | *Komponen antarmuka yang menampilkan daftar pemberitahuan kepada pengguna beserta penanda jumlah pesan atau notifikasi yang belum dibaca.* | *UC17, UC22, UC23* |
+| **C09** | *PanelNotifikasi* | *Komponen antarmuka yang menampilkan daftar pemberitahuan kepada pengguna beserta penanda jumlah pesan atau notifikasi yang belum dibaca.* | *UC17* |
 | **C10** | *FormulirLaporan* | *Antarmuka untuk membuat laporan atau aduan dan mengunggah bukti pendukung.* | *UC19* |
 | **C11** | *DasborAdmin* | *Antarmuka panel admin untuk memantau, memeriksa, dan menangani aktivitas moderasi sistem.* | *UC20, UC21, UC22, UC23, UC24* |
 | **C12** | *HalamanDokumenLegal* | *Antarmuka untuk menampilkan dokumen legal seperti Terms of Service dan Kebijakan Privasi.* | *UC06* |
 | **C13** | *AkunController* | *Pengelola alur proses akun, termasuk validasi domain ITB, registrasi, verifikasi OTP, login, logout, pengelolaan sesi, dan pengelolaan profil.* | *UC01, UC02, UC03, UC04, UC05* |
-| **C14** | *BarangController* | *Pengelola proses pembuatan, pengubahan, penghapusan, validasi, verifikasi kepemilikan, dan perubahan status barang.* | *UC07, UC08, UC09, UC10, UC11, UC12* |
+| **C14** | *BarangController* | *Pengelola proses pembuatan, pengubahan, penghapusan, validasi, verifikasi kepemilikan, dan perubahan status barang.* | *UC07, UC08, UC09, UC10, UC11, UC12, UC15* |
 | **C15** | *KatalogController* | *Pengelola pengambilan daftar barang, pagination, sorting, dan penyajian data katalog kepada boundary.* | *UC13, UC14* |
 | **C16** | *PencarianController* | *Pengelola proses pencarian barang berdasarkan kata kunci pada informasi barang yang tersedia.* | *UC14* |
 | **C17** | *FilterController* | *Pengelola proses penyaringan barang berdasarkan kategori, harga, lokasi, dan kriteria lainnya serta validasi parameter filter.* | *UC14* |
@@ -921,27 +932,28 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 | **C20** | *LaporanController* | *Pengelola proses pembuatan laporan pengguna, validasi data dan bukti, serta penyimpanan laporan untuk proses moderasi.* | *UC19* |
 | **C21** | *ModerasiController* | *Pengelola proses moderasi admin, pemeriksaan laporan, tindakan terhadap barang atau akun, dan pencatatan aktivitas audit.* | *UC20, UC21, UC22, UC23, UC24* |
 | **C22** | *DokumenLegalController* | *Pengelola pengambilan dan penyajian dokumen legal kepada pengguna.* | *UC06* |
-| **C23** | *Akun* | *Entitas utama yang menyimpan data identitas, kredensial, status akun, dan informasi dasar pengguna sistem.* | *UC01, UC02, UC03, UC04, UC05, UC13, UC14, UC15, UC16, UC19, UC20, UC21, UC22, UC23, UC24* |
-| **C24** | *Pembeli* | *Entitas role pengguna yang menggunakan sistem untuk mencari, melihat, dan berinteraksi terkait barang yang tersedia.* | *UC05, UC13, UC14, UC15, UC16, UC17, UC18, UC19* |
-| **C25** | *Penjual* | *Entitas role pengguna yang memiliki dan mengelola barang yang ditawarkan pada sistem.* | *UC05, UC07, UC08, UC09, UC10, UC11, UC12, UC16, UC17, UC18* |
+| **C23** | *Akun* | *Entitas utama yang menyimpan data identitas, kredensial, status akun, dan informasi dasar pengguna sistem.* | *UC01, UC02, UC03, UC04, UC05, UC17, UC19, UC23, UC24* |
+| **C24** | *Pembeli* | *Entitas role pengguna yang menggunakan sistem untuk mencari, melihat, dan berinteraksi terkait barang yang tersedia.* | *UC05, UC16* |
+| **C25** | *Penjual* | *Entitas role pengguna yang memiliki dan mengelola barang yang ditawarkan pada sistem.* | *UC05, UC07, UC08, UC09, UC10, UC11, UC12, UC15, UC16* |
 | **C26** | *Admin* | *Entitas role pengguna yang memiliki hak akses administrasi dan moderasi sistem.* | *UC20, UC21, UC22, UC23, UC24* |
 | **C27** | *TokenVerifikasi* | *Entitas penyimpanan token atau OTP verifikasi beserta waktu kedaluwarsa dan status penggunaannya.* | *UC01, UC02* |
-| **C28** | *SesiLogin* | *Entitas yang menyimpan sesi login aktif pengguna berupa token sesi, akun pemilik, waktu mulai, dan waktu kedaluwarsa (paling lama 24 jam). Menjadi dasar identifikasi pengguna dan verifikasi kepemilikan pada setiap aksi yang memerlukan login, dan dihapus saat logout.* | *UC03, UC04, UC05, UC07, UC08, UC09, UC10, UC11, UC12, UC16, UC17, UC18, UC19, UC20, UC21, UC22, UC23, UC24* |
+| **C28** | *SesiLogin* | *Entitas yang menyimpan sesi login aktif pengguna berupa token sesi, akun pemilik, waktu mulai, dan waktu kedaluwarsa (paling lama 24 jam). Menjadi dasar identifikasi pengguna dan verifikasi kepemilikan pada setiap aksi yang memerlukan login, dan dihapus saat logout.* | *UC03, UC04, UC05, UC07, UC08, UC09, UC10, UC11, UC12, UC16, UC17, UC18, UC19* |
 | **C29** | *Barang* | *Entitas utama yang menyimpan informasi barang, deskripsi, harga, kondisi, status ketersediaan, pemilik, kategori, dan lokasi COD.* | *UC05, UC07, UC08, UC09, UC10, UC11, UC12, UC13, UC14, UC15, UC16, UC19, UC22, UC23, UC24* |
 | **C30** | *FotoBarang* | *Entitas yang menyimpan metadata foto barang seperti lokasi file, urutan foto, dan keterkaitannya dengan barang.* | *UC07, UC09, UC15* |
-| **C31** | *Kategori* | *Entitas referensi yang menyimpan klasifikasi atau jenis barang yang digunakan pada katalog, input barang, pencarian, dan filter.* | *UC07, UC09, UC13, UC14* |
-| **C32** | *LokasiCOD* | *Entitas referensi yang menyimpan daftar titik temu COD yang tersedia pada lingkungan multikampus.* | *UC07, UC09, UC14* |
+| **C31** | *Kategori* | *Entitas referensi yang menyimpan klasifikasi atau jenis barang yang digunakan pada katalog, input barang, pencarian, dan filter.* | *UC07, UC09, UC14, UC15* |
+| **C32** | *LokasiCOD* | *Entitas referensi yang menyimpan daftar titik temu COD yang tersedia pada lingkungan multikampus.* | *UC07, UC09, UC14, UC15* |
 | **C33** | *Percakapan* | *Entitas yang merepresentasikan sesi atau ruang percakapan antara pengguna yang terlibat dalam proses negosiasi.* | *UC16, UC17, UC18, UC19* |
 | **C34** | *Pesan* | *Entitas yang menyimpan setiap pesan dalam percakapan, termasuk pengirim, waktu pengiriman, isi pesan terenkripsi, dan status pesan.* | *UC16, UC17, UC18* |
 | **C35** | *Notifikasi* | *Entitas yang menyimpan pemberitahuan kepada pengguna, termasuk status telah dibaca atau belum dibaca.* | *UC01, UC02, UC17, UC22, UC23* |
-| **C36** | *Laporan* | *Entitas yang menyimpan data aduan pengguna, pihak atau barang yang dilaporkan, kategori, alasan, status penanganan, dan hasil penyelesaian.* | *UC19, UC20, UC21, UC22, UC23* |
-| **C37** | *BuktiLaporan* | *Entitas yang menyimpan metadata berkas bukti tangkapan layar yang dilampirkan pada sebuah laporan, seperti lokasi file dan keterkaitannya dengan laporan.* | *UC19, UC20* |
-| **C38** | *LogAudit* | *Entitas yang menyimpan rekam jejak permanen atas penerimaan laporan dan tindak lanjutnya (waktu, pelaku, tindakan) yang tidak dapat diubah maupun dihapus.* | *UC19, UC21, UC22, UC23, UC24* |
+| **C36** | *Laporan* | *Entitas yang menyimpan data aduan pengguna, pihak atau barang yang dilaporkan, kategori, alasan, status penanganan, dan hasil penyelesaian.* | *UC19, UC20, UC21* |
+| **C37** | *BuktiLaporan* | *Entitas yang menyimpan metadata berkas bukti tangkapan layar yang dilampirkan pada sebuah laporan, seperti lokasi file dan keterkaitannya dengan laporan.* | *UC19* |
+| **C38** | *LogAudit* | *Entitas yang menyimpan rekam jejak permanen atas penerimaan laporan dan tindak lanjutnya (waktu, pelaku, tindakan) yang tidak dapat diubah maupun dihapus.* | *UC19, UC21, UC22, UC23* |
 | **C39** | *LogAdmin* | *Entitas yang mencatat setiap tindakan moderasi admin berupa pelaku, jenis tindakan, objek yang ditindak, waktu, dan alasan tindakan.* | *UC22, UC23, UC24* |
-| **C40** | *DokumenLegal* | *Entitas yang menyimpan dokumen legal seperti Terms of Service dan Kebijakan Privasi beserta versi dan status publikasinya.* | *UC01, UC05, UC06, UC16, UC17* |
+| **C40** | *DokumenLegal* | *Entitas yang menyimpan dokumen legal seperti Terms of Service dan Kebijakan Privasi beserta versi dan status publikasinya.* | *UC01, UC05, UC06* |
 
 
 ## 5.2 Diagram Kelas per Use Case
+Setiap diagram pada subbab ini merupakan potongan dari diagram kelas keseluruhan pada 5.3 dan memakai notasi yang sama: panah garis penuh untuk asosiasi *boundary* ke *control*, panah garis putus-putus untuk dependensi «use» dari *control* ke *entity* (atau ke *control* lain), garis dengan multiplisitas untuk asosiasi antar-*entity*, belah ketupat hitam untuk komposisi, dan segitiga kosong untuk generalisasi. Setiap kotak hanya memuat ID dan nama kelas, sedangkan atribut dan metodenya dirinci pada tabel di bawah diagram.
 
 ### 5.2.1 Use Case UC01
 
@@ -951,7 +963,7 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 
 | ID Kelas | Nama Kelas | Deskripsi Kelas |
 | :--- | :--- | :--- |
-| *C01* | *HalamanOtentikasi* | *Menampilkan formulir pendaftaran (nama, NIM, email, kata sandi, kotak persetujuan kebijakan), menandai isian yang belum lengkap, dan menampilkan pesan galat domain/email terdaftar.* |
+| *C01* | *HalamanOtentikasi* | *Menampilkan formulir pendaftaran (nama, NIM, email, kata sandi) beserta Kebijakan Privasi dan kotak persetujuannya, menandai isian yang belum lengkap, dan menampilkan pesan galat domain/email terdaftar.* |
 | *C13* | *AkunController* | *Memvalidasi kelengkapan isian, domain @itb.ac.id, dan keunikan email; melakukan hashing kata sandi; membuat akun berstatus "Belum Terverifikasi"; membangkitkan kode verifikasi dan meminta pengirimannya.* |
 | *C19* | *NotifikasiController* | *Mengirimkan kode verifikasi ke alamat email pendaftar.* |
 | *C23* | *Akun* | *Menyimpan data akun baru (nama, NIM, email, hash kata sandi, status akun, persetujuan kebijakan).* |
@@ -962,22 +974,22 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 #### Diagram Kelas
 
 <p align="center">
-<img alt="Class Diagram UC01" src="./assets/diagram/Diagram_Kelas_UC01.jpg" width="70%">
+<img alt="Diagram Kelas UC01" src="./assets/diagram/Diagram_Kelas_UC01.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 2. Diagram Kelas Use Case UC01</i>
+<i>Gambar 3. Diagram Kelas Use Case UC01</i>
 </p>
 <br>
 
 | ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
 | :--- | :--- | :--- | :--- |
-| *C01* | *HalamanOtentikasi* | *nama, nim, email, kataSandi, setujuKebijakan* | *tampilkanFormulirPendaftaran(), kirimFormulirPendaftaran(), tampilkanPesanGalat(), arahkanKeHalamanVerifikasi()* |
-| *C13* | *AkunController* | *-* | *daftarAkun(), validasiKelengkapanFormulir(), validasiDomainEmail(), cekKeunikanEmail(), hashKataSandi(), buatKodeVerifikasi()* |
+| *C01* | *HalamanOtentikasi* | *nama, nim, email, kataSandi, setujuKebijakan* | *tampilkanFormulirPendaftaran(), tampilkanKebijakanPrivasi(), kirimFormulirPendaftaran(), tampilkanPesanGalat(), arahkanKeHalamanVerifikasi()* |
+| *C13* | *AkunController* | *-* | *daftarAkun(), validasiKelengkapanFormulir(), validasiDomainEmail(), cekKeunikanEmail(), hashKataSandi(), buatKodeVerifikasi(), getTautanDokumenLegal()* |
 | *C19* | *NotifikasiController* | *-* | *kirimEmailVerifikasi()* |
 | *C23* | *Akun* | *idAkun, nama, nim, email, kataSandiHash, statusAkun, setujuKebijakan, waktuDaftar* | *simpan()* |
 | *C27* | *TokenVerifikasi* | *idToken, idAkun, kode, waktuBuat, waktuKedaluwarsa, statusPakai* | *simpan()* |
 | *C35* | *Notifikasi* | *idNotifikasi, idAkun, jenis, isi, waktuKirim, statusBaca* | *simpan()* |
-| *C40* | *DokumenLegal* | *idDokumen, jenisDokumen, versi, isi, tanggalBerlaku* | *getVersiTerbaru()* |
+| *C40* | *DokumenLegal* | *idDokumen, jenisDokumen, versi, isi, tautan* | *getVersiTerbaru(), getTautan()* |
 
 ### 5.2.2 Use Case UC02
 
@@ -997,10 +1009,10 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 #### Diagram Kelas
 
 <p align="center">
-<img alt="Class Diagram UC02" src="./assets/diagram/Diagram_Kelas_UC02.jpg" width="70%">
+<img alt="Diagram Kelas UC02" src="./assets/diagram/Diagram_Kelas_UC02.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 3. Diagram Kelas Use Case UC02</i>
+<i>Gambar 4. Diagram Kelas Use Case UC02</i>
 </p>
 <br>
 
@@ -1010,7 +1022,7 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 | *C13* | *AkunController* | *-* | *verifikasiAkun(), validasiKodeVerifikasi(), cekKedaluwarsaKode(), hanguskanKodeLama(), buatKodeVerifikasi(), kirimUlangKode()* |
 | *C19* | *NotifikasiController* | *-* | *kirimEmailVerifikasi()* |
 | *C23* | *Akun* | *idAkun, email, statusAkun* | *perbaruiStatusAkun()* |
-| *C27* | *TokenVerifikasi* | *idToken, idAkun, kode, waktuBuat, waktuKedaluwarsa, statusPakai* | *cocokkanKode(), sudahKedaluwarsa(), tandaiHangus(), tandaiTerpakai()* |
+| *C27* | *TokenVerifikasi* | *idToken, idAkun, kode, waktuBuat, waktuKedaluwarsa, statusPakai* | *simpan(), cocokkanKode(), sudahKedaluwarsa(), tandaiHangus(), tandaiTerpakai()* |
 | *C35* | *Notifikasi* | *idNotifikasi, idAkun, jenis, isi, waktuKirim, statusBaca* | *simpan()* |
 
 ### 5.2.3 Use Case UC03
@@ -1029,16 +1041,16 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 #### Diagram Kelas
 
 <p align="center">
-<img alt="Class Diagram UC03" src="./assets/diagram/Diagram_Kelas_UC03.jpg" width="70%">
+<img alt="Diagram Kelas UC03" src="./assets/diagram/Diagram_Kelas_UC03.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 4. Diagram Kelas Use Case UC03</i>
+<i>Gambar 5. Diagram Kelas Use Case UC03</i>
 </p>
 <br>
 
 | ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
 | :--- | :--- | :--- | :--- |
-| *C01* | *HalamanOtentikasi* | *email, kataSandi* | *tampilkanFormulirLogin(), kirimFormulirLogin(), tampilkanPesanGalat(), arahkanKeBeranda()* |
+| *C01* | *HalamanOtentikasi* | *email, kataSandi, token* | *tampilkanFormulirLogin(), kirimFormulirLogin(), tampilkanPesanGalat(), arahkanKeBeranda()* |
 | *C13* | *AkunController* | *-* | *login(), cariAkunByEmail(), verifikasiKataSandi(), cekStatusAkun(), buatSesiLogin()* |
 | *C23* | *Akun* | *idAkun, email, kataSandiHash, statusAkun, statusBlokir, peran* | *getStatusAkun()* |
 | *C28* | *SesiLogin* | *idSesi, idAkun, token, waktuMulai, waktuKedaluwarsa, statusAktif* | *buatToken(), simpan()* |
@@ -1059,16 +1071,16 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 #### Diagram Kelas
 
 <p align="center">
-<img alt="Class Diagram UC04" src="./assets/diagram/Diagram_Kelas_UC04.jpg" width="70%">
+<img alt="Diagram Kelas UC04" src="./assets/diagram/Diagram_Kelas_UC04.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 5. Diagram Kelas Use Case UC04</i>
+<i>Gambar 6. Diagram Kelas Use Case UC04</i>
 </p>
 <br>
 
 | ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
 | :--- | :--- | :--- | :--- |
-| *C01* | *HalamanOtentikasi* | *token* | *tampilkanMenuProfil(), kirimPermintaanLogout(), hapusTokenLokal(), arahkanKeHalamanLogin()* |
+| *C01* | *HalamanOtentikasi* | *token* | *tampilkanTombolKeluar(), kirimPermintaanLogout(), hapusTokenLokal(), arahkanKeHalamanLogin()* |
 | *C13* | *AkunController* | *-* | *logout(), cabutSesi()* |
 | *C23* | *Akun* | *idAkun* | *-* |
 | *C28* | *SesiLogin* | *idSesi, idAkun, token, statusAktif* | *nonaktifkan(), hapus()* |
@@ -1094,10 +1106,10 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 #### Diagram Kelas
 
 <p align="center">
-<img alt="Class Diagram UC05" src="./assets/diagram/Diagram_Kelas_UC05.jpg" width="70%">
+<img alt="Diagram Kelas UC05" src="./assets/diagram/Diagram_Kelas_UC05.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 6. Diagram Kelas Use Case UC05</i>
+<i>Gambar 7. Diagram Kelas Use Case UC05</i>
 </p>
 <br>
 
@@ -1107,8 +1119,8 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 | *C06* | *KartuProduk* | *idBarang, judul, harga, fotoUtama, status* | *render()* |
 | *C13* | *AkunController* | *-* | *getProfil(), getIdAkunDariSesi(), getDaftarBarangAkun(), getTautanDokumenLegal()* |
 | *C23* | *Akun* | *idAkun, nama, nim, email* | *getDataIdentitas()* |
-| *C24* | *Pembeli* | *idAkun* | *lihatProfil()* |
-| *C25* | *Penjual* | *idAkun* | *lihatProfil(), getDaftarBarang()* |
+| *C24* | *Pembeli* | *— (diwarisi dari C23 Akun)* | *lihatProfil()* |
+| *C25* | *Penjual* | *— (diwarisi dari C23 Akun)* | *lihatProfil()* |
 | *C28* | *SesiLogin* | *idSesi, idAkun, token* | *getIdAkun()* |
 | *C29* | *Barang* | *idBarang, idPenjual, judul, harga, status* | *getByPemilik()* |
 | *C40* | *DokumenLegal* | *idDokumen, jenisDokumen, tautan* | *getTautan()* |
@@ -1128,10 +1140,10 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 #### Diagram Kelas
 
 <p align="center">
-<img alt="Class Diagram UC06" src="./assets/diagram/Diagram_Kelas_UC06.jpg" width="70%">
+<img alt="Diagram Kelas UC06" src="./assets/diagram/Diagram_Kelas_UC06.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 7. Diagram Kelas Use Case UC06</i>
+<i>Gambar 8. Diagram Kelas Use Case UC06</i>
 </p>
 <br>
 
@@ -1161,10 +1173,10 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 #### Diagram Kelas
 
 <p align="center">
-<img alt="Class Diagram UC07" src="./assets/diagram/Diagram_Kelas_UC07.jpg" width="70%">
+<img alt="Diagram Kelas UC07" src="./assets/diagram/Diagram_Kelas_UC07.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 8. Diagram Kelas Use Case UC07</i>
+<i>Gambar 9. Diagram Kelas Use Case UC07</i>
 </p>
 <br>
 
@@ -1172,7 +1184,7 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 | :--- | :--- | :--- | :--- |
 | *C04* | *FormulirBarang* | *judul, harga, deskripsiKondisi, idKategori, idLokasi, daftarFoto* | *tampilkanFormulir(), validasiTipeData(), validasiFotoSisiKlien(), tandaiIsianKosong(), kirimFormulir(), tampilkanNotifikasi()* |
 | *C14* | *BarangController* | *-* | *buatBarang(), validasiKelengkapanIsian(), validasiFoto(), getIdPenjualDariSesi(), simpanFoto(), terbitkanKeKatalog()* |
-| *C25* | *Penjual* | *idAkun* | *buatListing()* |
+| *C25* | *Penjual* | *— (diwarisi dari C23 Akun)* | *buatListing()* |
 | *C28* | *SesiLogin* | *idSesi, idAkun, token* | *getIdAkun()* |
 | *C29* | *Barang* | *idBarang, idPenjual, judul, harga, deskripsiKondisi, idKategori, idLokasi, status, waktuUnggah* | *simpan()* |
 | *C30* | *FotoBarang* | *idFoto, idBarang, namaBerkas, format, ukuran, urutan, pathBerkas* | *validasiFormat(), validasiUkuran(), simpan()* |
@@ -1197,10 +1209,10 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 #### Diagram Kelas
 
 <p align="center">
-<img alt="Class Diagram UC08" src="./assets/diagram/Diagram_Kelas_UC08.jpg" width="70%">
+<img alt="Diagram Kelas UC08" src="./assets/diagram/Diagram_Kelas_UC08.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 9. Diagram Kelas Use Case UC08</i>
+<i>Gambar 10. Diagram Kelas Use Case UC08</i>
 </p>
 <br>
 
@@ -1209,7 +1221,7 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 | *C03* | *HalamanListingPenjual* | *daftarTersedia, daftarTerjual, tabAktif* | *tampilkanDaftarListing(), pilihTab()* |
 | *C06* | *KartuProduk* | *idBarang, judul, harga, fotoUtama, status* | *render()* |
 | *C14* | *BarangController* | *-* | *getListingSaya(), getIdPenjualDariSesi(), kelompokkanBerdasarkanStatus()* |
-| *C25* | *Penjual* | *idAkun* | *lihatDaftarListingSendiri()* |
+| *C25* | *Penjual* | *— (diwarisi dari C23 Akun)* | *lihatDaftarListingSendiri()* |
 | *C28* | *SesiLogin* | *idSesi, idAkun, token* | *getIdAkun()* |
 | *C29* | *Barang* | *idBarang, idPenjual, judul, harga, status, waktuUnggah* | *getByPemilik(), getRiwayatTerjual()* |
 
@@ -1219,37 +1231,37 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 
 #### Identifikasi Kelas
 
-| ID Kelas | Nama Kelas | Deskripsi Kelas | 
-| :--- | :--- | :--- |  
-| *C04* | *FormulirBarang* | *Antarmuka untuk memasukkan, mengubah, dan melengkapi data barang beserta unggahan foto.* |
-| *C14* | *BarangController* | *Mengelola proses perubahan detail barang.* |
-| *C25* | *Penjual* | *Pengguna pemilik barang untuk dijual yang ingin mengubah informasi maupun foto pada listing miliknya.* |
-| *C23* | *AkunController* | *Akun controller penjual pemilik listing.* |
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C04* | *FormulirBarang* | *Menampilkan formulir berisi data listing saat ini untuk disunting, memvalidasi isian dan berkas foto di sisi klien, serta menandai isian wajib yang kosong.* |
+| *C14* | *BarangController* | *Memverifikasi bahwa pengubah adalah pemilik listing, memvalidasi ulang isian dan foto di sisi server, lalu menyimpan perubahan listing.* |
+| *C25* | *Penjual* | *Pemilik listing yang mengubah informasi maupun foto pada listing miliknya.* |
+| *C28* | *SesiLogin* | *Sesi aktif yang menjadi sumber ID penjual untuk verifikasi kepemilikan listing.* |
 | *C29* | *Barang* | *Menyediakan seluruh atribut barang untuk disunting, memvalidasi kelengkapan isian wajib, dan menyimpan perubahan ke pangkalan data.* |
-| *C30* | *FotoBarang* | *Mengelola pembaruan berkas foto (validasi format dan batas ukuran) serta memastikan total foto tidak melebihi 5 berkas.* | 
-| *C31* | *Kategori* | *Menyediakan rujukan daftar kategori tetap dan memastikan kategori baru yang dipilih berasal dari daftar yang sah.* | 
-| *C32* | *LokasiCOD* | *Menyediakan dan menyimpan rujukan lokasi titik temu yang diubah nilainya oleh penjual.* | 
+| *C30* | *FotoBarang* | *Mengelola pembaruan berkas foto (validasi format dan batas ukuran) serta memastikan total foto tidak melebihi 5 berkas.* |
+| *C31* | *Kategori* | *Menyediakan rujukan daftar kategori tetap dan memastikan kategori baru yang dipilih berasal dari daftar yang sah.* |
+| *C32* | *LokasiCOD* | *Menyediakan daftar rujukan titik temu COD yang dapat dipilih ulang oleh penjual.* |
 
 #### Diagram Kelas
 
 <p align="center">
-<img alt="Class Diagram UC09" src="./assets/diagram/Diagram_Kelas_UC09.png" width="70%">
+<img alt="Diagram Kelas UC09" src="./assets/diagram/Diagram_Kelas_UC09.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 10. Diagram Kelas Use Case UC09</i>
+<i>Gambar 11. Diagram Kelas Use Case UC09</i>
 </p>
 <br>
 
-| ID Kelas | Nama Kelas | Atribut | Metode/Operasi | 
-| :--- | :--- | :--- | :--- | 
-| *C04* | *FormulirBarang* | *barang, barangController* | *drawBarang(), onClickUpdate()* |
-| *C14* | *BarangController* | *listBarang* | *updateBarang()* |
-| *C25* | *Penjual* | *idPengguna, nama* | *getId()* | 
-| *C23* | *AkunController* | *-* | *getIdAkunDariSesi(), getDaftarBarangAkun()* | 
-| *C29* | *Barang* | *idBarang, idPenjual, judul, harga, deskripsiKondisi, idKategori, idLokasi, status, waktuUbah* | *setJudul(), setHarga(), setDeskripsi(), setStatus()* | 
-| *C30* | *FotoBarang* | *idFoto, idListing, namaBerkas, format, ukuran, urutan, pathBerkas* | *perbaruiGaleri()* | 
-| *C31* | *Kategori* | *idKategori, namaKategori* | *getDaftarKategori(), setKategor()* | 
-| *C32* | *LokasiCOD* | *idLokasi, namaLokasi, kampus* | *getDaftarLokasi(), setLokasi()* | 
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C04* | *FormulirBarang* | *judul, harga, deskripsiKondisi, idKategori, idLokasi, daftarFoto* | *tampilkanFormulir(), validasiTipeData(), validasiFotoSisiKlien(), tandaiIsianKosong(), onClickUpdate(), tampilkanNotifikasi()* |
+| *C14* | *BarangController* | *-* | *getBarang(), getIdPenjualDariSesi(), verifikasiKepemilikan(), validasiKelengkapanIsian(), validasiFoto(), updateBarang(), simpanFoto()* |
+| *C25* | *Penjual* | *— (diwarisi dari C23 Akun)* | *ubahListing()* |
+| *C28* | *SesiLogin* | *idSesi, idAkun, token* | *getIdAkun()* |
+| *C29* | *Barang* | *idBarang, idPenjual, judul, harga, deskripsiKondisi, idKategori, idLokasi, status, waktuUbah* | *setJudul(), setHarga(), setDeskripsi(), setKategori(), setLokasi(), simpan()* |
+| *C30* | *FotoBarang* | *idFoto, idBarang, namaBerkas, format, ukuran, urutan, pathBerkas* | *validasiFormat(), validasiUkuran(), perbaruiGaleri(), hapus()* |
+| *C31* | *Kategori* | *idKategori, namaKategori* | *getDaftarKategori(), validasiKategori()* |
+| *C32* | *LokasiCOD* | *idLokasi, namaLokasi, kampus* | *getDaftarLokasi()* |
 
 ### 5.2.10 Use Case UC10
 
@@ -1257,31 +1269,31 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 
 #### Identifikasi Kelas
 
-| ID Kelas | Nama Kelas | Deskripsi Kelas | 
-| :--- | :--- | :--- | 
-| *C04* | *FormulirBarang* | *Antarmuka untuk menghapus data barang beserta unggahan foto.* |
-| *C14* | *BarangController* | *Mengelola proses penghapusan  barang.* |
-| *C25* | *Penjual* | *Pemilik listing yang menginisiasi aksi penghapusan permanen atas listing miliknya.* | 
-| *C23* | *AkunController* | *Akun controller penjual pemilik listing.* |
-| *C29* | *Barang* | *Menghapus data listing secara permanen dari pangkalan data sistem.* | 
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C03* | *HalamanListingPenjual* | *Menampilkan halaman "Listing Saya" beserta menu "Hapus Listing", dialog konfirmasi penghapusan, dan notifikasi hasilnya.* |
+| *C14* | *BarangController* | *Memverifikasi kepemilikan listing lalu menghapus listing beserta rujukan fotonya.* |
+| *C25* | *Penjual* | *Pemilik listing yang menginisiasi aksi penghapusan permanen atas listing miliknya.* |
+| *C28* | *SesiLogin* | *Sesi aktif yang menjadi sumber ID penjual untuk verifikasi kepemilikan listing yang akan dihapus.* |
+| *C29* | *Barang* | *Menghapus data listing secara permanen dari pangkalan data sistem.* |
 
 #### Diagram Kelas
 
 <p align="center">
-<img alt="Class Diagram UC10" src="./assets/diagram/Diagram_Kelas_UC10.png" width="70%">
+<img alt="Diagram Kelas UC10" src="./assets/diagram/Diagram_Kelas_UC10.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 11. Diagram Kelas Use Case UC10</i>
+<i>Gambar 12. Diagram Kelas Use Case UC10</i>
 </p>
 <br>
 
-| ID Kelas | Nama Kelas | Atribut | Metode/Operasi | 
-| :--- | :--- | :--- | :--- | 
-| *C04* | *FormulirBarang* | *barang, barangController* | *drawBarang(), onClickDelete()* |
-| *C14* | *BarangController* | *listBarang* | *deleteBarang()* |
-| *C25* | *Penjual* | *idPengguna, nama* | *getId()* | 
-| *C23* | *AkunController* | *-* | *getIdAkunDariSesi(), getDaftarBarangAkun()* | 
-| *C29* | *Barang* | *idListing, idPenjual* | *deleteFoto(), deleteBarang()* | 
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C03* | *HalamanListingPenjual* | *daftarTersedia, daftarTerjual* | *tampilkanDaftarListing(), onClickHapus(), tampilkanKonfirmasi(), tampilkanNotifikasi()* |
+| *C14* | *BarangController* | *-* | *getIdPenjualDariSesi(), verifikasiKepemilikan(), deleteBarang()* |
+| *C25* | *Penjual* | *— (diwarisi dari C23 Akun)* | *hapusListing()* |
+| *C28* | *SesiLogin* | *idSesi, idAkun, token* | *getIdAkun()* |
+| *C29* | *Barang* | *idBarang, idPenjual* | *hapus()* |
 
 ### 5.2.11 Use Case UC11
 
@@ -1289,31 +1301,31 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 
 #### Identifikasi Kelas
 
-| ID Kelas | Nama Kelas | Deskripsi Kelas | 
-| :--- | :--- | :--- | 
-| *C04* | *FormulirBarang* | *Antarmuka untuk memasukkan, mengubah, dan melengkapi data barang beserta unggahan foto.* |
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C03* | *HalamanListingPenjual* | *Menampilkan listing berstatus "Tersedia" pada halaman "Listing Saya" beserta tombol "Tandai Terjual", dialog konfirmasi, dan pemindahan kartu ke riwayat "Terjual".* |
 | *C14* | *BarangController* | *Mengelola proses perubahan status barang dan menyembunyikannya dari hasil pencarian umum untuk barang dengan status terjual.* |
-| *C25* | *Penjual* | *Pengguna pemilik barang yang menekan tombol aksi untuk menandai sebuah barang yang telah laku.* | 
-| *C23* | *AkunController* | *Akun controller penjual pemilik listing.* |
+| *C25* | *Penjual* | *Pengguna pemilik barang yang menekan tombol aksi untuk menandai sebuah barang yang telah laku.* |
+| *C28* | *SesiLogin* | *Sesi aktif yang menjadi sumber ID penjual untuk verifikasi kepemilikan listing.* |
 | *C29* | *Barang* | *Memeriksa nilai status terkini, memperbarui status menjadi "Terjual"* |
 
 #### Diagram Kelas
 
 <p align="center">
-<img alt="Class Diagram UC11" src="./assets/diagram/Diagram_Kelas_UC10.png" width="70%">
+<img alt="Diagram Kelas UC11" src="./assets/diagram/Diagram_Kelas_UC11.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 12. Diagram Kelas Use Case UC11</i>
+<i>Gambar 13. Diagram Kelas Use Case UC11</i>
 </p>
 <br>
 
-| ID Kelas | Nama Kelas | Atribut | Metode/Operasi | 
-| :--- | :--- | :--- | :--- | 
-| *C04* | *FormulirBarang* | *barang, barangController* | *onClickStatus()* |
-| *C14* | *BarangController* | *listBarang* | *updateBarang()* |
-| *C25* | *Penjual* | *idPengguna, nama* | *getId()* | 
-| *C23* | *AkunController* | *-* | *getIdAkunDariSesi(), getDaftarBarangAkun()* | 
-| *C29* | *Barang* | *idListing, idPenjual* | *setStatus()* | 
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C03* | *HalamanListingPenjual* | *daftarTersedia, daftarTerjual* | *tampilkanDaftarListing(), onClickTandaiTerjual(), tampilkanKonfirmasi(), tampilkanNotifikasi()* |
+| *C14* | *BarangController* | *-* | *getIdPenjualDariSesi(), verifikasiKepemilikan(), ubahStatusBarang()* |
+| *C25* | *Penjual* | *— (diwarisi dari C23 Akun)* | *tandaiTerjual()* |
+| *C28* | *SesiLogin* | *idSesi, idAkun, token* | *getIdAkun()* |
+| *C29* | *Barang* | *idBarang, idPenjual, status* | *getStatus(), setStatus()* |
 
 ### 5.2.12 Use Case UC12
 
@@ -1321,31 +1333,31 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 
 #### Identifikasi Kelas
 
-| ID Kelas | Nama Kelas | Deskripsi Kelas | 
-| :--- | :--- | :--- | 
-| *C04* | *FormulirBarang* | *Antarmuka untuk memasukkan, mengubah, dan melengkapi data barang beserta unggahan foto.* |
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C03* | *HalamanListingPenjual* | *Menampilkan riwayat "Terjual" pada halaman "Listing Saya" beserta tombol "Batalkan Penandaan Terjual", dialog konfirmasi, dan pemindahan kartu kembali ke bagian "Tersedia".* |
 | *C14* | *BarangController* | *Mengelola proses perubahan status barang dan menampilkan pada hasil pencarian umum untuk barang yang belum terjual.* |
-| *C25* | *Penjual* | *Pengguna pemilik barang yang menekan tombol aksi untuk update status barang.* | 
-| *C23* | *AkunController* | *Akun controller penjual pemilik listing.* |
-| *C29* | *Barang* | *Memeriksa nilai status terkini, memperbarui status menjadi "Belum Terjual".* | 
+| *C25* | *Penjual* | *Pengguna pemilik barang yang menekan tombol aksi untuk update status barang.* |
+| *C28* | *SesiLogin* | *Sesi aktif yang menjadi sumber ID penjual untuk verifikasi kepemilikan listing.* |
+| *C29* | *Barang* | *Memeriksa nilai status terkini dan mengembalikan status menjadi "Tersedia".* |
 
 #### Diagram Kelas
 
 <p align="center">
-<img alt="Class Diagram UC12" src="./assets/diagram/Diagram_Kelas_UC10.png" width="70%">
+<img alt="Diagram Kelas UC12" src="./assets/diagram/Diagram_Kelas_UC12.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 13. Diagram Kelas Use Case UC12</i>
+<i>Gambar 14. Diagram Kelas Use Case UC12</i>
 </p>
 <br>
 
-| ID Kelas | Nama Kelas | Atribut | Metode/Operasi | 
-| :--- | :--- | :--- | :--- | 
-| *C04* | *FormulirBarang* | *barang, barangController* | *onClickStatus()* |
-| *C14* | *BarangController* | *listBarang* | *updateBarang()* |
-| *C25* | *Penjual* | *idPengguna, nama* | *getId()* | 
-| *C23* | *AkunController* | *-* | *getIdAkunDariSesi(), getDaftarBarangAkun()* | 
-| *C29* | *Barang* | *idListing, idPenjual* | *setStatus()* | 
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C03* | *HalamanListingPenjual* | *daftarTersedia, daftarTerjual* | *tampilkanDaftarListing(), onClickBatalTerjual(), tampilkanKonfirmasi(), tampilkanNotifikasi()* |
+| *C14* | *BarangController* | *-* | *getIdPenjualDariSesi(), verifikasiKepemilikan(), ubahStatusBarang()* |
+| *C25* | *Penjual* | *— (diwarisi dari C23 Akun)* | *batalkanTandaTerjual()* |
+| *C28* | *SesiLogin* | *idSesi, idAkun, token* | *getIdAkun()* |
+| *C29* | *Barang* | *idBarang, idPenjual, status* | *getStatus(), setStatus()* |
 
 ### 5.2.13 Use Case UC13
 
@@ -1353,29 +1365,29 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 
 #### Identifikasi Kelas
 
-| ID Kelas | Nama Kelas | Deskripsi Kelas | 
-| :--- | :--- | :--- | 
-| *C05* | *HalamanKatalog* | *Antarmuka utama untuk menampilkan katalog barang.* |
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C05* | *HalamanKatalog* | *Antarmuka utama untuk menampilkan katalog barang maksimum 20 listing per halaman beserta navigasi antarhalaman.* |
 | *C06* | *KartuProduk* | *Antarmuka untuk satuan barang yang ada di dalam halaman katalog.* |
-| *C15* | *KatalogController* | *Mengatur barang apa saja yang dimunculkan pada halaman katalog.* | 
-| *C29* | *Barang* | *Data barang yang akan ditunjukkan, barang dengan status terjual tidak ditampilkan.* | 
+| *C15* | *KatalogController* | *Mengambil listing berstatus "Tersedia" milik akun yang tidak diblokir dan membaginya per halaman.* |
+| *C29* | *Barang* | *Data barang yang akan ditunjukkan, barang dengan status terjual tidak ditampilkan.* |
 
 #### Diagram Kelas
 
 <p align="center">
-<img alt="Class Diagram UC13" src="./assets/diagram/Diagram_Kelas_UC13.png" width="70%">
+<img alt="Diagram Kelas UC13" src="./assets/diagram/Diagram_Kelas_UC13.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 14. Diagram Kelas Use Case UC13</i>
+<i>Gambar 15. Diagram Kelas Use Case UC13</i>
 </p>
 <br>
 
-| ID Kelas | Nama Kelas | Atribut | Metode/Operasi | 
-| :--- | :--- | :--- | :--- | 
-| *C05* | *HalamanKatalog* | *listProduk* | *showKatalog()* |
-| *C06* | *KartuProduk* | *barang* | *showBarang()* |
-| *C15* | *KatalogController* | *listProduk* | *getProduk()* |
-| *C29* | *Barang* | *idBarang, idPenjual, judul, harga, deskripsiKondisi* | *getJudul(), getHarga(), getDeskripsi(), getStatus()* | 
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C05* | *HalamanKatalog* | *listProduk, halamanAktif* | *showKatalog(), pindahHalaman()* |
+| *C06* | *KartuProduk* | *idBarang, judul, harga, fotoUtama, status* | *render()* |
+| *C15* | *KatalogController* | *-* | *getProduk(), paginasi()* |
+| *C29* | *Barang* | *idBarang, idPenjual, judul, harga, status, waktuUnggah* | *getJudul(), getHarga(), getStatus()* |
 
 ### 5.2.14 Use Case UC14
 
@@ -1383,37 +1395,37 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 
 #### Identifikasi Kelas
 
-| ID Kelas | Nama Kelas | Deskripsi Kelas | 
-| :--- | :--- | :--- | 
-| *C05* | *HalamanKatalog* | *Antarmuka utama untuk menampilkan katalog barang.* |
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C05* | *HalamanKatalog* | *Antarmuka katalog yang menyediakan kolom pencarian, filter, pilihan pengurutan, navigasi halaman, dan pesan barang tidak ditemukan.* |
 | *C06* | *KartuProduk* | *Antarmuka untuk satuan barang yang ada di dalam halaman katalog.* |
-| *C15* | *KatalogController* | *Mengatur barang apa saja yang dimunculkan pada halaman katalog.* | 
-| *C16* | *PencarianController* | *Mengatur pencarian barang berdasarkan kata kunci.* | 
-| *C17* | *FilterController* | *Mengatur pencarian barang berdasarkan harga, kategori, dan lokasi COD.* | 
-| *C29* | *Barang* | *Data barang yang akan ditunjukkan, barang dengan status terjual tidak ditampilkan.* | 
-| *C31* | *Kategori* | *Entitas referensi yang menyimpan klasifikasi atau jenis barang yang digunakan pada katalog, input barang, pencarian, dan filter.* | 
-| *C32* | *LokasiCOD* | *Entitas referensi yang menyimpan daftar titik temu COD yang tersedia pada lingkungan multikampus, memungkinkan filter terhadap lokasi COD.* | 
+| *C15* | *KatalogController* | *Menggabungkan hasil pencarian dan filter, mengurutkannya, lalu membaginya per halaman.* |
+| *C16* | *PencarianController* | *Mengatur pencarian barang berdasarkan kata kunci.* |
+| *C17* | *FilterController* | *Mengatur pencarian barang berdasarkan harga, kategori, dan lokasi COD.* |
+| *C29* | *Barang* | *Data barang yang akan ditunjukkan, barang dengan status terjual tidak ditampilkan.* |
+| *C31* | *Kategori* | *Entitas referensi yang menyimpan klasifikasi atau jenis barang yang digunakan pada katalog, input barang, pencarian, dan filter.* |
+| *C32* | *LokasiCOD* | *Entitas referensi yang menyimpan daftar titik temu COD yang tersedia pada lingkungan multikampus, memungkinkan filter terhadap lokasi COD.* |
 
 #### Diagram Kelas
 
 <p align="center">
-<img alt="Class Diagram UC14" src="./assets/diagram/Diagram_Kelas_UC14.png" width="70%">
+<img alt="Diagram Kelas UC14" src="./assets/diagram/Diagram_Kelas_UC14.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 15. Diagram Kelas Use Case UC14</i>
+<i>Gambar 16. Diagram Kelas Use Case UC14</i>
 </p>
 <br>
 
-| ID Kelas | Nama Kelas | Atribut | Metode/Operasi | 
-| :--- | :--- | :--- | :--- | 
-| *C05* | *HalamanKatalog* | *listProduk* | *showKatalog()* |
-| *C06* | *KartuProduk* | *barang* | *showBarang()* |
-| *C15* | *KatalogController* | *listProduk* | *getProduk(), filterPrice(), filterCategory(), filterLocation(), sortPrice()* |
-| *C16* | *PencarianController* | *-* | *search()* | 
-| *C17* | *FilterController* | *-* | *filterCategory(), filterPrice(), filterLocation()* |
-| *C29* | *Barang* | *idBarang, idPenjual, judul, harga, deskripsiKondisi* | *getJudul(), getHarga(), getDeskripsi(), getStatus()* | 
-| *C31* | *Kategori* | *idKategori, namaKategori* | *getDaftarKategori(), getKategori()* | 
-| *C32* | *LokasiCOD* | *idLokasi, namaLokasi, kampus* | *getDaftarLokasi(), getLokasi()* | 
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C05* | *HalamanKatalog* | *listProduk, kataKunci, filterAktif, kriteriaUrutan, halamanAktif* | *inputPencarian(), pilihFilter(), pilihUrutan(), tampilkanHasil(), pindahHalaman(), tampilkanPesanKosong()* |
+| *C06* | *KartuProduk* | *idBarang, judul, harga, fotoUtama, status* | *render()* |
+| *C15* | *KatalogController* | *-* | *getProduk(), paginasi(), urutkanHasil()* |
+| *C16* | *PencarianController* | *-* | *cariBarang(), normalisasiKataKunci(), cocokkanKataKunci()* |
+| *C17* | *FilterController* | *-* | *validasiParameterFilter(), filterCategory(), filterPrice(), filterLocation()* |
+| *C29* | *Barang* | *idBarang, judul, harga, deskripsiKondisi, idKategori, idLokasi, status, waktuUnggah* | *getJudul(), getHarga(), getDeskripsi(), getStatus()* |
+| *C31* | *Kategori* | *idKategori, namaKategori* | *getDaftarKategori(), getKategori()* |
+| *C32* | *LokasiCOD* | *idLokasi, namaLokasi, kampus* | *getDaftarLokasi(), getLokasi()* |
 
 ### 5.2.15 Use Case UC15
 
@@ -1421,33 +1433,35 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 
 #### Identifikasi Kelas
 
-| ID Kelas | Nama Kelas | Deskripsi Kelas | 
-| :--- | :--- | :--- | 
-| *C07* | *HalamanDetailBarang* | *Antarmuka untuk menampilkan detail spesifikasi, foto, status, dan informasi lengkap suatu barang, beserta tombol "Hubungi Penjual" dan aksi pelaporan.* |  
-| *C14* | *BarangController* | *Menyediakan data suatu barang dari entitiy class barang ke antarmuka.* | 
-| *C25* | *Barang* | *Menyediakan data lengkap suatu barang.* | 
-| *C30* | *FotoBarang* | *Menyediakan galeri foto untuk ditampilkan di halaman detail.* | 
-| *C31* | *Kategori* | *Menyediakan rujukan kategori pada barang.* | 
-| *C32* | *LokasiCOD* | *Menyediakan rujukan lokasi titik temu.* | 
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C07* | *HalamanDetailBarang* | *Menampilkan seluruh foto, judul, harga, deskripsi kondisi, kategori, lokasi COD, dan identitas penjual dari sebuah listing.* |
+| *C14* | *BarangController* | *Menyediakan data suatu barang dari entitiy class barang ke antarmuka.* |
+| *C25* | *Penjual* | *Pemilik listing yang identitasnya ditampilkan pada halaman detail.* |
+| *C29* | *Barang* | *Menyediakan data lengkap suatu barang.* |
+| *C30* | *FotoBarang* | *Menyediakan galeri foto untuk ditampilkan di halaman detail.* |
+| *C31* | *Kategori* | *Menyediakan rujukan kategori pada barang.* |
+| *C32* | *LokasiCOD* | *Menyediakan rujukan lokasi titik temu.* |
 
 #### Diagram Kelas
 
 <p align="center">
-<img alt="Class Diagram UC15" src="./assets/diagram/Diagram_Kelas_UC15.png" width="70%">
+<img alt="Diagram Kelas UC15" src="./assets/diagram/Diagram_Kelas_UC15.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 16. Diagram Kelas Use Case UC15</i>
+<i>Gambar 17. Diagram Kelas Use Case UC15</i>
 </p>
 <br>
 
-| ID Kelas | Nama Kelas | Atribut | Metode/Operasi | 
-| :--- | :--- | :--- | :--- | 
-| *C07* | *HalamanDetailBarang* | *barang* | *showBarang()* |
-| *C29* | *Barang* | *idBarang, idPenjual, judul, harga, deskripsiKondisi* | *getJudul(), getHarga(), getDeskripsi(), getStatus()* | 
-| *C14* | *BarangController* | *listBarang* | *getBarang()* |
-| *C30* | *FotoBarang* | *idFoto, idListing, namaBerkas, format, ukuran, urutan, pathBerkas* | *getGambar()* | 
-| *C31* | *Kategori* | *idKategori, namaKategori* | *getKategori()* | 
-| *C32* | *LokasiCOD* | *idLokasi, namaLokasi, kampus* | *getLokasi()* | 
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C07* | *HalamanDetailBarang* | *barang, daftarFoto* | *showBarang()* |
+| *C14* | *BarangController* | *-* | *getBarang()* |
+| *C25* | *Penjual* | *— (diwarisi dari C23 Akun)* | *-* |
+| *C29* | *Barang* | *idBarang, idPenjual, judul, harga, deskripsiKondisi, idKategori, idLokasi, status* | *getJudul(), getHarga(), getDeskripsi(), getStatus()* |
+| *C30* | *FotoBarang* | *idFoto, idBarang, urutan, pathBerkas* | *getGambar()* |
+| *C31* | *Kategori* | *idKategori, namaKategori* | *getKategori()* |
+| *C32* | *LokasiCOD* | *idLokasi, namaLokasi, kampus* | *getLokasi()* |
 
 ### 5.2.16 Use Case UC16
 
@@ -1455,37 +1469,39 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 
 #### Identifikasi Kelas
 
-| ID Kelas | Nama Kelas | Deskripsi Kelas | 
-| :--- | :--- | :--- | 
-| *C07* | *HalamanDetailBarang* | *Antarmuka untuk menampilkan detail spesifikasi, foto, status, dan informasi lengkap suatu barang, beserta tombol "Hubungi Penjual" dan aksi pelaporan.* |
-| *C08* | *HalamanPercakapan* | *Antarmuka daftar percakapan dan ruang percakapan yang digunakan pengguna untuk melakukan komunikasi dan negosiasi.* |
-| *C18* | *PercakapanController* | *Pengelola alur pembuatan percakapan, verifikasi peserta sah, pengiriman dan penerimaan pesan terenkripsi, serta perubahan status percakapan.* | 
-| *C24* | *Pembeli* | *Pengguna yang berinisiatif memulai negosiasi dengan menekan tombol hubungi penjual.* | 
-| *C25* | *Penjual* | *Identitas akun pemilik listing yang statusnya dipastikan aktif (tidak diblokir) sebelum obrolan dibuka.* | 
-| *C28* | *SesiLogin* | *Memverifikasi identitas penjual dan pembeli yang ingin berkirim pesan.* |
-| *C33* | *Percakapan* | *Entitas yang merepresentasikan sesi atau ruang percakapan antara pengguna yang terlibat dalam proses negosiasi.* | 
-| *C34* | *Pesan* | *Entitas yang menyimpan setiap pesan dalam percakapan, termasuk pengirim, waktu pengiriman, isi pesan terenkripsi, dan status pesan.* |
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C07* | *HalamanDetailBarang* | *Menampilkan detail listing beserta tombol "Hubungi Penjual".* |
+| *C08* | *HalamanPercakapan* | *Membuka ruang percakapan untuk listing tersebut lengkap dengan tautan Kebijakan Privasi.* |
+| *C18* | *PercakapanController* | *Memastikan akun penjual tidak diblokir, membuat atau membuka ruang percakapan, dan memastikan hanya kedua peserta yang dapat mengaksesnya.* |
+| *C24* | *Pembeli* | *Pengguna yang berinisiatif memulai negosiasi dengan menekan tombol hubungi penjual.* |
+| *C25* | *Penjual* | *Identitas akun pemilik listing yang statusnya dipastikan aktif (tidak diblokir) sebelum obrolan dibuka.* |
+| *C28* | *SesiLogin* | *Memverifikasi identitas pengguna yang membuka ruang percakapan.* |
+| *C29* | *Barang* | *Listing yang menjadi rujukan ruang percakapan.* |
+| *C33* | *Percakapan* | *Ruang percakapan yang menghubungkan tepat satu pembeli, satu penjual, dan satu listing.* |
+| *C34* | *Pesan* | *Riwayat pesan terenkripsi yang ditampilkan saat ruang percakapan dibuka.* |
 
 #### Diagram Kelas
 
 <p align="center">
-<img alt="Class Diagram UC15" src="./assets/diagram/Diagram_Kelas_UC16.png" width="70%">
+<img alt="Diagram Kelas UC16" src="./assets/diagram/Diagram_Kelas_UC16.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 16. Diagram Kelas Use Case UC16</i>
+<i>Gambar 18. Diagram Kelas Use Case UC16</i>
 </p>
 <br>
 
-| ID Kelas | Nama Kelas | Atribut | Metode/Operasi | 
-| :--- | :--- | :--- | :--- | 
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
 | *C07* | *HalamanDetailBarang* | *barang, kontakPenjual* | *showBarang(), onClickContact()* |
-| *C08* | *HalamanPercakapan* | *daftarPercakapan, percakapanAktif* | *showDaftarPercakapan(), showPercakapan(), bukaPercakapan()* |
-| *C18* | *PercakapanController* | *daftarPercakapan* | *verifikasiPeserta(), enkripsiPesan(), dekripsiPesan(), mulaiPercakapan()* | 
-| *C24* | *Pembeli* | *idPembeli, nama* | *mulaiPercakapan(), kirimPesan()* |
-| *C25* | *Penjual* | *idPenjual, nama* | *kirimPesan()* |
-| *C28* | *SesiLogin* | *idAkun, sesi, token* | *verifikasiPennguna()* |
-| *C33* | *Percakapan* | *idPercakapan, idPembeli, idPenjual, idBarang, pesan, waktuDibuat* | *addPesan(), getDaftarPesan()* | 
-| *C34* | *Pesan* | *idPesan, idPercakapan, idPengirim, isiPesan, waktuDibuat* | *kirimPesan(), getIsiPesan()* |
+| *C08* | *HalamanPercakapan* | *percakapanAktif* | *bukaPercakapan(), showPercakapan(), tampilkanTautanKebijakan()* |
+| *C18* | *PercakapanController* | *-* | *verifikasiPeserta(), mulaiPercakapan(), dekripsiPesan()* |
+| *C24* | *Pembeli* | *— (diwarisi dari C23 Akun)* | *mulaiPercakapan(), kirimPesan()* |
+| *C25* | *Penjual* | *— (diwarisi dari C23 Akun)* | *kirimPesan()* |
+| *C28* | *SesiLogin* | *idSesi, idAkun, token, statusAktif* | *verifikasiAkses()* |
+| *C29* | *Barang* | *idBarang, idPenjual* | *-* |
+| *C33* | *Percakapan* | *idPercakapan, idPembeli, idPenjual, idBarang, waktuDibuat* | *simpan(), cekPeserta(), getDaftarPesan()* |
+| *C34* | *Pesan* | *idPesan, idPercakapan, idPengirim, isiPesanTerenkripsi, waktuKirim* | *getIsiPesan()* |
 
 ### 5.2.17 Use Case UC17
 
@@ -1493,34 +1509,39 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 
 #### Identifikasi Kelas
 
-| ID Kelas | Nama Kelas | Deskripsi Kelas | 
-| :--- | :--- | :--- | 
-| *C08* | *HalamanPercakapan* | *Menampilkan antarmuka ruang percakapan, kolom input teks, tombol kirim, dan merender gelembung pesan secara berurutan.* | 
-| *C09* | *PanelNotifikasi* | *Menampilkan indikator atau badge pesan baru yang belum dibaca kepada pihak penerima.* | 
-| *C18* | *PercakapanController* | *Mengelola alur pengiriman pesan, memvalidasi sesi pengguna, mengenkripsi isi pesan, dan menyimpan entitas pesan ke dalam basis data.* | 
-| *C19* | *NotifikasiController* | *Memicu pengiriman notifikasi in-app kepada penerima pesan saat sistem mendeteksi pesan baru masuk.* | 
-| *C28* | *SesiLogin* | *Digunakan untuk memvalidasi identitas pengirim pesan (penjual/pembeli) agar sesuai dengan partisipan percakapan.* | 
-| *C33* | *Percakapan* | *Entitas yang menyimpan status ruang percakapan tempat pesan tersebut dikirimkan.* | 
-| *C34* | *Pesan* | *Entitas yang menyimpan isi teks pesan, cap waktu (timestamp), dan status keterbacaan pesan.* | 
-| *C35* | *Notifikasi* | *Menyimpan data pemberitahuan terkait pesan baru untuk ditampilkan pada antarmuka penerima.* | 
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C08* | *HalamanPercakapan* | *Menampilkan antarmuka ruang percakapan, kolom input teks, tombol kirim, dan merender gelembung pesan secara berurutan.* |
+| *C09* | *PanelNotifikasi* | *Menampilkan indikator atau badge pesan baru yang belum dibaca kepada pihak penerima.* |
+| *C18* | *PercakapanController* | *Mengelola alur pengiriman pesan, memvalidasi sesi pengguna, mengenkripsi isi pesan, dan menyimpan entitas pesan ke dalam basis data.* |
+| *C19* | *NotifikasiController* | *Membuat notifikasi pesan baru untuk penerima, mengirimkannya sebagai notifikasi push saat aplikasi tidak dibuka, dan memperbarui status baca.* |
+| *C23* | *Akun* | *Akun pengirim pesan dan penerima notifikasi pesan baru.* |
+| *C28* | *SesiLogin* | *Digunakan untuk memvalidasi identitas pengirim pesan (penjual/pembeli) agar sesuai dengan partisipan percakapan.* |
+| *C33* | *Percakapan* | *Entitas yang menyimpan status ruang percakapan tempat pesan tersebut dikirimkan.* |
+| *C34* | *Pesan* | *Entitas yang menyimpan isi teks pesan, cap waktu (timestamp), dan status keterbacaan pesan.* |
+| *C35* | *Notifikasi* | *Menyimpan data pemberitahuan terkait pesan baru untuk ditampilkan pada antarmuka penerima.* |
 
 #### Diagram Kelas
 
 <p align="center">
-<img alt="Class Diagram UC17" src="./assets/diagram/Diagram_Kelas_UC17.png" width="70%">
+<img alt="Diagram Kelas UC17" src="./assets/diagram/Diagram_Kelas_UC17.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 18. Diagram Kelas Use Case UC17</i>
+<i>Gambar 19. Diagram Kelas Use Case UC17</i>
 </p>
 <br>
 
-| ID Kelas | Nama Kelas | Atribut | Metode/Operasi | 
-| :--- | :--- | :--- | :--- | 
-| *C08* | *HalamanPercakapan* | *idPercakapan, isiTeksInput, riwayatPesan* | *tampilkanRuangPercakapan(), inputPesanTeks(), klikKirimPesan(), renderPesanBaru()* |
-| *C18* | *PercakapanController* | *-* | *validasiAksesPercakapan(), enkripsiPesan(), simpanPesanBaru(), perbaruiWaktuPercakapan()* |
-| *C19* | *NotifikasiController* | *-* | *buatNotifikasiPesanBaru(), pushNotifikasiKePenerima()* |
-| *C33* | *Percakapan* | *idPercakapan, idPenjual, idPembeli, waktuPembaruanTerakhir* | *perbaruiWaktuTerakhir()* |
-| *C34* | *Pesan* | *idPesan, idPercakapan, idPengirim, teksTerenkripsi, waktuKirim, statusBaca* | *buatInstansiPesan(), setTeksTerenkripsi(), tandaiBelumDibaca()* |
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C08* | *HalamanPercakapan* | *percakapanAktif, isiTeksInput* | *showPercakapan(), kirimPesan(), tampilkanUrutanPesan(), tampilkanTautanKebijakan()* |
+| *C09* | *PanelNotifikasi* | *daftarNotifikasi, jumlahBelumDibaca* | *tampilkanDaftarNotifikasi(), tampilkanPenandaBelumDibaca(), tandaiSudahDibaca()* |
+| *C18* | *PercakapanController* | *-* | *verifikasiPeserta(), enkripsiPesan(), kirimPesan(), perbaruiWaktuPercakapan()* |
+| *C19* | *NotifikasiController* | *-* | *kirimNotifikasi(), kirimPushNotifikasi(), perbaruiStatusBaca()* |
+| *C23* | *Akun* | *idAkun, nama* | *getDataIdentitas()* |
+| *C28* | *SesiLogin* | *idSesi, idAkun, token, statusAktif* | *verifikasiAkses()* |
+| *C33* | *Percakapan* | *idPercakapan, idPembeli, idPenjual, waktuPembaruanTerakhir* | *cekPeserta(), addPesan(), perbaruiWaktuTerakhir()* |
+| *C34* | *Pesan* | *idPesan, idPercakapan, idPengirim, isiPesanTerenkripsi, waktuKirim, statusBaca* | *simpanPesan(), updateStatusBaca()* |
+| *C35* | *Notifikasi* | *idNotifikasi, idAkun, jenis, isi, waktuKirim, statusBaca* | *simpan(), tandaiDibaca()* |
 
 ### 5.2.18 Use Case UC18
 
@@ -1528,31 +1549,31 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 
 #### Identifikasi Kelas
 
-| ID Kelas | Nama Kelas | Deskripsi Kelas | 
-| :--- | :--- | :--- | 
-| *C08* | *HalamanPercakapan* | *Menampilkan daftar seluruh percakapan yang dimiliki pengguna beserta cuplikan pesan terakhir dan jumlah pesan belum dibaca.* | 
-| *C18* | *PercakapanController* | *Mengambil data daftar percakapan milik pengguna yang sedang login dari basis data dan mengurutkannya berdasarkan pesan terbaru.* | 
-| *C28* | *SesiLogin* | *Memastikan hanya pengguna yang sah yang dapat melihat daftar percakapannya sendiri.* | 
-| *C33* | *Percakapan* | *Entitas referensi yang menyediakan data percakapan (lawan bicara dan waktu terakhir aktif).* | 
-| *C34* | *Pesan* | *Menyediakan data teks pesan terakhir (cuplikan) untuk ditampilkan pada daftar percakapan.* | 
-
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C08* | *HalamanPercakapan* | *Menampilkan daftar seluruh percakapan yang dimiliki pengguna beserta cuplikan pesan terakhir dan jumlah pesan belum dibaca.* |
+| *C18* | *PercakapanController* | *Mengambil data daftar percakapan milik pengguna yang sedang login dari basis data dan mengurutkannya berdasarkan pesan terbaru.* |
+| *C28* | *SesiLogin* | *Memastikan hanya pengguna yang sah yang dapat melihat daftar percakapannya sendiri.* |
+| *C33* | *Percakapan* | *Entitas referensi yang menyediakan data percakapan (lawan bicara dan waktu terakhir aktif).* |
+| *C34* | *Pesan* | *Menyediakan data teks pesan terakhir (cuplikan) untuk ditampilkan pada daftar percakapan.* |
 
 #### Diagram Kelas
 
 <p align="center">
-<img alt="Class Diagram UC18" src="./assets/diagram/Diagram_Kelas_UC18.png" width="70%">
+<img alt="Diagram Kelas UC18" src="./assets/diagram/Diagram_Kelas_UC18.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 19. Diagram Kelas Use Case UC18</i>
+<i>Gambar 20. Diagram Kelas Use Case UC18</i>
 </p>
 <br>
 
-| ID Kelas | Nama Kelas | Atribut | Metode/Operasi | 
-| :--- | :--- | :--- | :--- | 
-| *C08* | *HalamanPercakapan* | *daftarPercakapan* | *tampilkanDaftarPercakapan(), pilihPercakapan(), tampilkanCuplikanPesan()* |
-| *C18* | *PercakapanController* | *-* | *muatDaftarPercakapanPengguna(), ambilCuplikanPesanTerakhir(), hitungPesanBelumDibaca()* |
-| *C33* | *Percakapan* | *idPercakapan, idPenjual, idPembeli* | *getLawanBicara(), getWaktuTerakhirAktif()* |
-| *C34* | *Pesan* | *idPesan, idPercakapan, teksTerenkripsi, statusBaca* | *dekripsiCuplikanPesan(), cekStatusBaca()* |
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C08* | *HalamanPercakapan* | *daftarPercakapan* | *showDaftarPercakapan(), bukaPercakapan()* |
+| *C18* | *PercakapanController* | *-* | *verifikasiPeserta(), getDaftarPercakapan(), ambilCuplikanPesanTerakhir(), dekripsiPesan(), hitungPesanBelumDibaca()* |
+| *C28* | *SesiLogin* | *idSesi, idAkun, token, statusAktif* | *verifikasiAkses()* |
+| *C33* | *Percakapan* | *idPercakapan, idPembeli, idPenjual, waktuPembaruanTerakhir* | *getDaftarPercakapanByPengguna(), getLawanBicara(), cekPeserta()* |
+| *C34* | *Pesan* | *idPesan, idPercakapan, isiPesanTerenkripsi, statusBaca* | *getCuplikanPesanTerakhir(), hitungPesanBelumDibaca()* |
 
 ### 5.2.19 Use Case UC19
 
@@ -1560,32 +1581,41 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 
 #### Identifikasi Kelas
 
-| ID Kelas | Nama Kelas | Deskripsi Kelas | 
-| :--- | :--- | :--- | 
-| *C10* | *FormulirLaporan* | *Antarmuka bagi pengguna (penjual/pembeli) untuk memilih kategori laporan, mengisi alasan, dan mengunggah tangkapan layar.* | 
-| *C20* | *LaporanController* | *Memproses input formulir, memvalidasi bukti unggahan, dan menyimpan data laporan ke dalam basis data dengan status "Baru".* | 
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C07* | *HalamanDetailBarang* | *Menyediakan tombol "Laporkan" pada halaman detail listing sebagai salah satu titik masuk pelaporan.* |
+| *C10* | *FormulirLaporan* | *Antarmuka bagi pengguna (penjual/pembeli) untuk memilih kategori laporan, mengisi alasan, dan mengunggah tangkapan layar.* |
+| *C20* | *LaporanController* | *Memvalidasi isian dan bukti, menyusun laporan percakapan hanya dari ID percakapan, waktu, dan identitas pelapor, menyimpan laporan berstatus "Baru", serta mencatat penerimaannya ke log audit.* |
+| *C23* | *Akun* | *Akun pelapor yang identitasnya dicatat pada laporan.* |
 | *C28* | *SesiLogin* | *Mengidentifikasi identitas pelapor berdasarkan sesi aktif.* |
+| *C29* | *Barang* | *Listing yang dapat menjadi objek laporan.* |
+| *C33* | *Percakapan* | *Percakapan yang dapat menjadi objek laporan; hanya ID-nya yang dicatat, tanpa isi pesan.* |
 | *C36* | *Laporan* | *Entitas yang menyimpan rincian aduan, objek yang dilaporkan (listing/akun/percakapan), dan status penanganan.* |
-| *C37* | *BuktiLaporan* | *Entitas yang menyimpan metadata gambar tangkapan layar yang diunggah pelapor.* | 
-| *C38* | *LogAudit* | *Mencatat aktivitas penerimaan laporan baru oleh sistem sebagai rekam jejak permanen yang tidak dapat dihapus.* | 
+| *C37* | *BuktiLaporan* | *Entitas yang menyimpan metadata gambar tangkapan layar yang diunggah pelapor.* |
+| *C38* | *LogAudit* | *Mencatat aktivitas penerimaan laporan baru oleh sistem sebagai rekam jejak permanen yang tidak dapat dihapus.* |
 
 #### Diagram Kelas
 
 <p align="center">
-<img alt="Class Diagram UC19" src="./assets/diagram/Diagram_Kelas_UC19.png" width="70%">
+<img alt="Diagram Kelas UC19" src="./assets/diagram/Diagram_Kelas_UC19.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 20. Diagram Kelas Use Case UC19</i>
+<i>Gambar 21. Diagram Kelas Use Case UC19</i>
 </p>
 <br>
 
-| ID Kelas | Nama Kelas | Atribut | Metode/Operasi | 
-| :--- | :--- | :--- | :--- | 
-| *C10* | *FormulirLaporan* | *kategoriLaporan, deskripsiAlasan, fileBukti* | *tampilkanFormulir(), pilihKategori(), unggahBukti(), submitLaporan()* |
-| *C20* | *LaporanController* | *-* | *validasiDataLaporan(), unggahFileBuktiKeStorage(), simpanLaporanBaru(), catatLogAudit()* |
-| *C36* | *Laporan* | *idLaporan, idPelapor, objekDilaporkan, kategori, alasan, statusLaporan, waktuLapor* | *unggahTangkapanLayar(), validasiLampiranWajib()* | *buatLaporanBaru(), setStatusBaru()* |
-| *C37* | *BuktiLaporan* | *idBukti, idLaporan, lokasiFileURL* | *simpanMetadataBukti()* |
-| *C38* | *logAudit* | *idLog, waktuKejadian, aktor, tindakan* | *rekamPenerimaanLaporan()* |
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C07* | *HalamanDetailBarang* | *barang* | *onClickLapor()* |
+| *C10* | *FormulirLaporan* | *jenisPelanggaran, teksAlasan, objekDilaporkan, berkasBukti* | *tampilkanFormulirLaporan(), unggahBukti(), kirimLaporan()* |
+| *C20* | *LaporanController* | *-* | *buatLaporan(), getIdPelaporDariSesi(), validasiDataLaporan(), susunMetadataPercakapan(), validasiBukti(), simpanBukti(), simpanLaporan(), catatLogAudit()* |
+| *C23* | *Akun* | *idAkun, nama* | *getDataIdentitas()* |
+| *C28* | *SesiLogin* | *idSesi, idAkun, token* | *getIdAkun()* |
+| *C29* | *Barang* | *idBarang* | *-* |
+| *C33* | *Percakapan* | *idPercakapan* | *-* |
+| *C36* | *Laporan* | *idLaporan, idPelapor, objekDilaporkan, jenisPelanggaran, teksAlasan, waktuLapor, statusPenanganan* | *simpanLaporanBaru()* |
+| *C37* | *BuktiLaporan* | *idBukti, idLaporan, namaBerkas, pathBerkas* | *validasiLampiranWajib(), simpan()* |
+| *C38* | *LogAudit* | *idLog, idLaporan, waktu, identitasAktor, tindakan* | *catatPenerimaanLaporan()* |
 
 ### 5.2.20 Use Case UC20
 
@@ -1593,29 +1623,29 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 
 #### Identifikasi Kelas
 
-| ID Kelas | Nama Kelas | Deskripsi Kelas | 
-| :--- | :--- | :--- | 
-| *C11* | *DasborAdmin* | *Menampilkan antarmuka tabel daftar laporan beserta fungsi filter (Baru, Diproses, Selesai) khusus untuk Admin.* | 
-| *C21* | *ModerasiController* | *Mengelola kueri pengambilan data laporan dari basis data, menerapkan penyaringan, dan memastikan pengakses memiliki role Admin.* | 
-| *C26* | *Admin* | *Entitas otorisasi yang memvalidasi bahwa sesi saat ini memiliki hak akses level administrator.* | 
-| *C36* | *Laporan* | *Menyediakan data entitas laporan (kategori, status, pelapor) untuk disajikan pada data table Dasbor Admin.* | 
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C11* | *DasborAdmin* | *Menampilkan antarmuka tabel daftar laporan beserta fungsi filter (Baru, Diproses, Selesai) khusus untuk Admin.* |
+| *C21* | *ModerasiController* | *Mengelola kueri pengambilan data laporan dari basis data, menerapkan penyaringan, dan memastikan pengakses memiliki role Admin.* |
+| *C26* | *Admin* | *Entitas otorisasi yang memvalidasi bahwa sesi saat ini memiliki hak akses level administrator.* |
+| *C36* | *Laporan* | *Menyediakan data entitas laporan (kategori, status, pelapor) untuk disajikan pada data table Dasbor Admin.* |
 
 #### Diagram Kelas
 
 <p align="center">
-<img alt="Class Diagram UC20" src="./assets/diagram/Diagram_Kelas_UC20.png" width="70%">
+<img alt="Diagram Kelas UC20" src="./assets/diagram/Diagram_Kelas_UC20.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 21. Diagram Kelas Use Case UC20</i>
+<i>Gambar 22. Diagram Kelas Use Case UC20</i>
 </p>
 <br>
 
-| ID Kelas | Nama Kelas | Atribut | Metode/Operasi | 
-| :--- | :--- | :--- | :--- | 
-| *C11* | *DasborAdmin* | *kriteriaFilter, daftarLaporanDitampilkan* | *tampilkanTabelLaporan(), terapkanFilterStatus(), klikDetailLaporan()* | 
-| *C21* | *ModerasiController* | *-* | *otorisasiAdmin(), ambilDaftarLaporan(), saringLaporanBerdasarkanStatus()* |
-| *C26* | *Admin* | *idAdmin, hakAkses* | *verifikasiRole()* | 
-| *C36* | *Laporan* | *idLaporan, idPelapor, kategori, statusLaporan, waktuLapor* | *getDetailRingkasLaporan()* | 
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C11* | *DasborAdmin* | *daftarLaporan, filterStatus* | *tampilkanDaftarLaporan(), filterLaporan(), tampilkanDetailLaporan()* |
+| *C21* | *ModerasiController* | *-* | *otorisasiAdmin(), getAllLaporan(), filterByStatus()* |
+| *C26* | *Admin* | *— (diwarisi dari C23 Akun)* | *verifikasiPeran(), aksesDaftarLaporan()* |
+| *C36* | *Laporan* | *idLaporan, idPelapor, objekDilaporkan, jenisPelanggaran, waktuLapor, statusPenanganan* | *getAllLaporan(), filterByStatus()* |
 
 ### 5.2.21 Use Case UC21
 
@@ -1623,29 +1653,31 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 
 #### Identifikasi Kelas
 
-| ID Kelas | Nama Kelas | Deskripsi Kelas | 
-| :--- | :--- | :--- | 
-| *C11* | *DasborAdmin* | *Menyediakan tombol aksi (dropdown atau button) bagi Admin untuk mengubah status laporan (misal: "Baru" menjadi "Diproses").* | 
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C11* | *DasborAdmin* | *Menyediakan tombol aksi (dropdown atau button) bagi Admin untuk mengubah status laporan (misal: "Baru" menjadi "Diproses").* |
 | *C21* | *ModerasiController* | *Menangani permintaan perubahan status dari view, memvalidasi perubahan, dan memperbarui entitas laporan.* |
+| *C26* | *Admin* | *Peran admin yang diverifikasi sebelum status penanganan laporan diubah.* |
 | *C36* | *Laporan* | *Entitas yang atribut status penanganannya diperbarui oleh sistem.* |
-| *C38* | *LogAudit* | *Mencatat rekam jejak bahwa Admin tertentu telah mengubah status pada laporan tertentu.* | 
+| *C38* | *LogAudit* | *Mencatat rekam jejak bahwa Admin tertentu telah mengubah status pada laporan tertentu.* |
 
 #### Diagram Kelas
 
 <p align="center">
-<img alt="Class Diagram UC21" src="./assets/diagram/Diagram_Kelas_UC21.png" width="70%">
+<img alt="Diagram Kelas UC21" src="./assets/diagram/Diagram_Kelas_UC21.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 22. Diagram Kelas Use Case UC21</i>
+<i>Gambar 23. Diagram Kelas Use Case UC21</i>
 </p>
 <br>
 
-| ID Kelas | Nama Kelas | Atribut | Metode/Operasi | 
-| :--- | :--- | :--- | :--- | 
-| *C11* | *DasborAdmin* | *pilihanStatusBaru* | *tampilkanOpsiStatus(), konfirmasiUbahStatus()* |
-| *C21* | *ModerasiController* | *-* | *prosesUbahStatusLaporan(), catatPerubahanKeAudit()* |
-| *C36* | *Laporan* | *idLaporan, statusLaporan, hasilPenyelesaian* | *perbaruiStatus(), setHasilPenyelesaian()* |
-| *C38* | *LogAudit* | *idLog, waktuKejadian, aktorAdmin, tindakan* | *rekamPerubahanStatusLaporan()* |
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C11* | *DasborAdmin* | *detailLaporan, statusBaru* | *tampilkanDetailLaporan(), onClickUbahStatus()* |
+| *C21* | *ModerasiController* | *-* | *otorisasiAdmin(), getDetailLaporan(), ubahStatusLaporan(), catatLogAudit()* |
+| *C26* | *Admin* | *— (diwarisi dari C23 Akun)* | *verifikasiPeran(), tinjauLaporan(), ubahStatusLaporan()* |
+| *C36* | *Laporan* | *idLaporan, statusPenanganan, waktuPerubahan* | *getDetailLaporan(), updateStatusPenanganan()* |
+| *C38* | *LogAudit* | *idLog, idLaporan, waktu, identitasAktor, tindakan* | *catatPerubahanStatusLaporan()* |
 
 ### 5.2.22 Use Case UC22
 
@@ -1653,32 +1685,37 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 
 #### Identifikasi Kelas
 
-| ID Kelas | Nama Kelas | Deskripsi Kelas | 
-| :--- | :--- | :--- | 
-| *C11* | *DasborAdmin* | *Antarmuka bagi Admin untuk mengeksekusi penghapusan listing dengan menyertakan input alasan penghapusan.* | 
-| *C21* | *ModerasiController* | *Mengeksekusi logika penghapusan (mengubah status listing menjadi dihapus), mendelegasikan pengiriman notifikasi, dan mencatat log.* |
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C11* | *DasborAdmin* | *Antarmuka bagi Admin untuk mengeksekusi penghapusan listing dengan menyertakan input alasan penghapusan.* |
 | *C19* | *NotifikasiController* | *Mengelola pengiriman pesan pemberitahuan in-app atau surel kepada penjual pemilik listing terkait alasan penghapusan.* |
+| *C21* | *ModerasiController* | *Mengeksekusi logika penghapusan (mengubah status listing menjadi dihapus), mendelegasikan pengiriman notifikasi, dan mencatat log.* |
+| *C26* | *Admin* | *Admin pelaku penghapusan listing yang tercatat pada log admin.* |
 | *C29* | *Barang* | *Entitas listing yang atribut status ketersediaannya diubah (dihapus/dinonaktifkan) dari katalog.* |
+| *C35* | *Notifikasi* | *Entitas yang menyimpan data pesan penalti/pemberitahuan untuk pengguna.* |
+| *C38* | *LogAudit* | *Mencatat tindak lanjut penghapusan listing atas laporan pada catatan audit yang tidak dapat diubah maupun dihapus.* |
 | *C39* | *LogAdmin* | *Menyimpan catatan operasional spesifik bahwa admin melakukan tindakan "Hapus Listing".* |
-| *C35* | *Notifikasi* | *Entitas yang menyimpan data pesan penalti/pemberitahuan untuk pengguna.* | 
 
 #### Diagram Kelas
 
 <p align="center">
-<img alt="Class Diagram UC22" src="./assets/diagram/Diagram_Kelas_UC22.png" width="70%">
+<img alt="Diagram Kelas UC22" src="./assets/diagram/Diagram_Kelas_UC22.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 23. Diagram Kelas Use Case UC22</i>
+<i>Gambar 24. Diagram Kelas Use Case UC22</i>
 </p>
 <br>
 
-| ID Kelas | Nama Kelas | Atribut | Metode/Operasi | 
-| :--- | :--- | :--- | :--- | 
-| *C11* | *DasborAdmin* | *alasanHapusListing, idListingTarget* | *tampilkanModalHapus(), inputAlasanHapus(), konfirmasiHapusListing()* |
-| *C21* | *ModerasiController* | *-* | *hapusListingDariSistem(), panggilNotifikasiController(), tulisLogAdmin()* |
-| *C29* | *Barang* | *idListing, judul, statusKetersediaan, idPenjual* | *setTandaiDihapus()* |
-| *C39* | *LogAdmin* | *idLogAdmin, idAdmin, jenisTindakan, objekDitindak, alasanTindakan* | *simpanLogTindakanModerasi()*
-
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C11* | *DasborAdmin* | *detailLaporan, alasanTindakan* | *tampilkanDetailLaporan(), onClickHapusListing(), tampilkanModalKonfirmasi()* |
+| *C19* | *NotifikasiController* | *-* | *kirimPeringatanPenghapusan()* |
+| *C21* | *ModerasiController* | *-* | *otorisasiAdmin(), hapusListingDilaporkan(), catatLogAdmin(), catatLogAudit()* |
+| *C26* | *Admin* | *— (diwarisi dari C23 Akun)* | *verifikasiPeran(), hapusListing()* |
+| *C29* | *Barang* | *idBarang, idPenjual, judul, status* | *hapus()* |
+| *C35* | *Notifikasi* | *idNotifikasi, idAkun, jenis, isi, waktuKirim, statusBaca* | *simpan()* |
+| *C38* | *LogAudit* | *idLog, idLaporan, waktu, identitasAktor, tindakan* | *catatPenghapusanListing()* |
+| *C39* | *LogAdmin* | *idLogAdmin, idAdmin, jenisTindakan, objekDitindak, waktu, alasan* | *catatTindakan()* |
 
 ### 5.2.23 Use Case UC23
 
@@ -1686,33 +1723,39 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 
 #### Identifikasi Kelas
 
-| ID Kelas | Nama Kelas | Deskripsi Kelas | 
-| :--- | :--- | :--- | 
-| *C11* | *DasborAdmin* | *Antarmuka bagi Admin untuk menekan tombol "Blokir Akun", mengisi alasan pelanggaran, dan menampilkan status akun terkini.* | 
-| *C21* | *ModerasiController* | *Mengubah status akun pengguna menjadi "Diblokir", menonaktifkan seluruh listing miliknya secara iteratif, dan mencatat aktivitas.* | 
-| *C19* | *NotifikasiController* | *Mengirimkan pemberitahuan administratif ke surel pengguna bahwa akunnya telah ditangguhkan beserta alasannya.* | 
-| *C23* | *Akun* | *Entitas yang atribut statusnya berubah dari "Aktif" menjadi "Diblokir".* | 
-| *C29* | *Barang* | *Seluruh listing milik akun yang diblokir akan disembunyikan (cascade effect status ketersediaan).* | 
-| *C38* | *LogAudit* | *Mencatat aktivitas pemblokiran pada catatan audit.* | 
-| *C39* | *LogAdmin* | *Mencatat aktivitas admin yang melakukan pemblokiran dalam log admin* | 
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C11* | *DasborAdmin* | *Antarmuka bagi Admin untuk menekan tombol "Blokir Akun", mengisi alasan pelanggaran, dan menampilkan status akun terkini.* |
+| *C19* | *NotifikasiController* | *Mengirimkan pemberitahuan administratif ke surel pengguna bahwa akunnya telah ditangguhkan beserta alasannya.* |
+| *C21* | *ModerasiController* | *Mengubah status akun pengguna menjadi "Diblokir", menonaktifkan seluruh listing miliknya secara iteratif, dan mencatat aktivitas.* |
+| *C23* | *Akun* | *Entitas yang atribut statusnya berubah dari "Aktif" menjadi "Diblokir".* |
+| *C26* | *Admin* | *Admin pelaku pemblokiran akun yang tercatat pada log admin.* |
+| *C29* | *Barang* | *Seluruh listing milik akun yang diblokir akan disembunyikan (cascade effect status ketersediaan).* |
+| *C35* | *Notifikasi* | *Menyimpan pemberitahuan penangguhan akun beserta alasannya untuk pengguna yang diblokir.* |
+| *C38* | *LogAudit* | *Mencatat aktivitas pemblokiran pada catatan audit.* |
+| *C39* | *LogAdmin* | *Mencatat aktivitas admin yang melakukan pemblokiran dalam log admin* |
 
 #### Diagram Kelas
 
 <p align="center">
-<img alt="Class Diagram UC23" src="./assets/diagram/Diagram_Kelas_UC23.png" width="70%">
+<img alt="Diagram Kelas UC23" src="./assets/diagram/Diagram_Kelas_UC23.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 24. Diagram Kelas Use Case UC23</i>
+<i>Gambar 25. Diagram Kelas Use Case UC23</i>
 </p>
 <br>
 
-| ID Kelas | Nama Kelas | Atribut | Metode/Operasi | 
-| :--- | :--- | :--- | :--- | 
-| *C11* | *DasborAdmin* | *alasanBlokir, idAkunTarget* | *tampilkanModalBlokir(), submitBlokirAkun()* |
-| *C21* | *ModerasiController* | *-* | *eksekusiBlokirAkun(), nonaktifkanSemuaListingPengguna(), tolakAksesLoginAktif()* |
-| *C23* | *Akun* | *idAkun, statusAkun* | *setStatusDiblokir()* |
-| *C29* | *Barang* | *idBarang, statusKetersediaan* | *sembunyikanListingKenaBlokir()* |
-| *C39* | *LogAdmin* | *idLogAdmin, idAdmin, jenisTindakan, objekDitindak* | *simpanTindakanBlokirAkun()* |
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C11* | *DasborAdmin* | *detailLaporan, alasanTindakan* | *onClickBlokirAkun(), tampilkanModalKonfirmasi()* |
+| *C19* | *NotifikasiController* | *-* | *kirimPesanPenangguhan()* |
+| *C21* | *ModerasiController* | *-* | *otorisasiAdmin(), blokirAkun(), nonaktifkanListingPengguna(), catatLogAdmin(), catatLogAudit()* |
+| *C23* | *Akun* | *idAkun, statusBlokir* | *blokir()* |
+| *C26* | *Admin* | *— (diwarisi dari C23 Akun)* | *verifikasiPeran(), eksekusiBlokirAkun()* |
+| *C29* | *Barang* | *idBarang, idPenjual, status* | *nonaktifkanByPemilik()* |
+| *C35* | *Notifikasi* | *idNotifikasi, idAkun, jenis, isi, waktuKirim, statusBaca* | *simpan()* |
+| *C38* | *LogAudit* | *idLog, idLaporan, waktu, identitasAktor, tindakan* | *catatPemblokiranAkun()* |
+| *C39* | *LogAdmin* | *idLogAdmin, idAdmin, jenisTindakan, objekDitindak, waktu, alasan* | *catatTindakan()* |
 
 ### 5.2.24 Use Case UC24
 
@@ -1720,56 +1763,50 @@ Berikut adalah daftar aktor final yang berinteraksi langsung dengan P/L ITBELI b
 
 #### Identifikasi Kelas
 
-| ID Kelas | Nama Kelas | Deskripsi Kelas | 
-| :--- | :--- | :--- | 
-| *C11* | *DasborAdmin* | *Antarmuka profil pengguna di panel admin yang menampilkan opsi pemulihan/membuka blokir (unban).* | 
-| *C21* | *ModerasiControlling* | *Memulihkan status entitas akun agar pengguna dapat melakukan autentikasi (login) kembali ke dalam sistem.* |
-| *C23* | *Akun* | *Entitas yang atribut status akunnya dikembalikan menjadi "Terverifikasi" atau "Aktif".* |
-| *C29* | *Barang* | *Mengembalikan visibilitas listing barang milik pengguna yang sebelumnya disembunyikan akibat pemblokiran.* | 
-| *C39* | *LogAdmin* | *Entitas yang mencatat rekam aktivitas bahwa Admin telah mencabut status blokir dari suatu entitas akun.* | 
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C11* | *DasborAdmin* | *Antarmuka profil pengguna di panel admin yang menampilkan opsi pemulihan/membuka blokir (unban).* |
+| *C21* | *ModerasiController* | *Memulihkan status entitas akun agar pengguna dapat melakukan autentikasi (login) kembali ke dalam sistem.* |
+| *C23* | *Akun* | *Entitas yang status blokirnya dikembalikan sehingga pengguna dapat masuk kembali.* |
+| *C26* | *Admin* | *Admin pelaku pembukaan blokir akun yang tercatat pada log admin.* |
+| *C29* | *Barang* | *Mengembalikan visibilitas listing barang milik pengguna yang sebelumnya disembunyikan akibat pemblokiran.* |
+| *C39* | *LogAdmin* | *Entitas yang mencatat rekam aktivitas bahwa Admin telah mencabut status blokir dari suatu entitas akun.* |
 
 #### Diagram Kelas
 
 <p align="center">
-<img alt="Class Diagram UC24" src="./assets/diagram/Diagram_Kelas_UC24.png" width="70%">
+<img alt="Diagram Kelas UC24" src="./assets/diagram/Diagram_Kelas_UC24.png" width="70%">
 </p>
 <p align="center">
-<i>Gambar 25. Diagram Kelas Use Case UC24</i>
+<i>Gambar 26. Diagram Kelas Use Case UC24</i>
 </p>
 <br>
 
-| ID Kelas | Nama Kelas | Atribut | Metode/Operasi | 
-| :--- | :--- | :--- | :--- | 
-| *C11* | *DasborAdmin* | *idAkunTarget* | *tampilkanOpsiBukaBlokir(), konfirmasiBukaBlokir()* |
-| *C21* | *ModerasiControlling* | *-* | *pulihkanStatusAkun(), aktifkanKembaliListing(), catatPemulihanKeLog()* |
-| *C23* | *Akun* | *idAkun, statusAkun* | *setStatusAktif()* | 
-| *C29* | *Barang* | *idBarang, statusKetersediaan* | *pulihkanVisibilitasListing()* |
-| *C39* | *LogAdmin* | *idLogAdmin, idAdmin, jenisTindakan* | *simpanTindakanBukaBlokir()* |
-
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C11* | *DasborAdmin* | *detailLaporan* | *onClickBukaBlokir(), tampilkanModalKonfirmasi()* |
+| *C21* | *ModerasiController* | *-* | *otorisasiAdmin(), bukaBlokirAkun(), pulihkanListingPengguna(), catatLogAdmin()* |
+| *C23* | *Akun* | *idAkun, statusBlokir* | *bukaBlokir()* |
+| *C26* | *Admin* | *— (diwarisi dari C23 Akun)* | *verifikasiPeran(), cabutBlokirAkun()* |
+| *C29* | *Barang* | *idBarang, idPenjual, status* | *pulihkanKatalog()* |
+| *C39* | *LogAdmin* | *idLogAdmin, idAdmin, jenisTindakan, objekDitindak, waktu, alasan* | *catatTindakan()* |
 
 ## 5.3 Diagram Kelas Keseluruhan
-Seluruh kelas dan hubungan antarkelas dari diagram kelas setiap use case pada 4.2 digabungkan menjadi satu diagram kelas keseluruhan. Kelas yang muncul pada lebih dari satu use case hanya digambarkan satu kali, dengan atribut dan metode merupakan gabungan (union) dari seluruh kemunculannya, sehingga tidak terdapat kelas yang terduplikasi. Penomoran kelas mengikuti master list pada 4.1 (C01–C40).
+Diagram kelas keseluruhan merupakan gabungan dari seluruh diagram kelas per use case pada 5.2. Setiap kelas hanya digambarkan satu kali, dan atribut serta metodenya merupakan gabungan (*union*) dari seluruh kemunculannya pada 5.2. Dengan demikian, setiap atribut, metode, dan relasi pada diagram ini muncul pada sekurang-kurangnya satu diagram per use case, dan sebaliknya tidak ada atribut, metode, atau relasi pada 5.2 yang tidak tercantum di sini. Penomoran kelas mengikuti 5.1 (C01–C40).
 
 Diagram disusun mengikuti pola tiga lapis **boundary–control–entity**:
 
 - **Boundary (C01–C12)**, kolom kiri: kelas antarmuka yang menerima aksi pengguna dan menampilkan hasil. Berasosiasi searah ke kelas control.
-- **Control (C13–C22)**, kolom tengah: kelas pengendali yang memuat logika proses, validasi, dan orkestrasi. Bergantung («use») pada kelas entity.
+- **Control (C13–C22)**, kolom tengah: kelas pengendali yang memuat logika proses, validasi, dan orkestrasi. Bergantung («use») pada kelas entity dan, bila perlu, pada *C19 NotifikasiController*.
 - **Entity (C23–C40)**, kolom kanan: kelas data yang menyimpan keadaan sistem secara persisten. Hanya kelas entity yang saling berasosiasi dengan multiplisitas, komposisi, dan generalisasi.
 
-Karena diagram pada 4.2 disusun oleh anggota yang berbeda, dilakukan penyelarasan berikut pada saat penggabungan:
-
-1. Penulisan nama kelas diseragamkan terhadap 4.1: *ModerasiControlling* pada 4.2.24 dibaca sebagai **C21 ModerasiController**, dan *logAudit* pada 4.2.19 sebagai **C38 LogAudit**.
-2. Baris bertanda *C25* untuk kelas *Barang* pada 4.2.15 dibaca sebagai **C29 Barang**, karena **C25** adalah *Penjual* pada master list 4.1.
-3. Operasi penyaringan `filterCategory()`, `filterPrice()`, dan `filterLocation()` yang pada 4.2.14 diletakkan pada *KatalogController* dipindahkan ke **C17 FilterController**, dan proses pencarian kata kunci ke **C16 PencarianController**, sesuai pembagian tanggung jawab pada 4.1.
-4. Kelas **C16 PencarianController** dan **C17 FilterController** tidak muncul pada diagram use case manapun di 4.2, namun tetap disertakan pada diagram keseluruhan karena tercantum pada 4.1 dan BAB 5; atribut serta metodenya diturunkan dari deskripsi tanggung jawab kelas pada 4.1.
-5. Nama metode yang bersinonim antar use case (misalnya `render()` dan `showBarang()` pada C06, atau `simpanLaporanBaru()` dan `buatLaporanBaru()` pada C36) diseragamkan menjadi satu nama kanonik.
-6. Atribut identitas umum (`nama`, `email`, `kataSandiHash`) hanya didefinisikan pada **C23 Akun**; **C24 Pembeli**, **C25 Penjual**, dan **C26 Admin** mewarisinya melalui relasi generalisasi.
+Sama seperti pada 5.2, setiap kotak kelas hanya memuat ID dan nama kelas. Atribut dan metode lengkap setiap kelas tercantum pada tabel Atribut dan Metode Seluruh Kelas di bawah diagram.
 
 <p align="center">
-<img alt="Class Diagram Keseluruhan" src="./assets/diagram/Diagram_Kelas_Keseluruhan.png" width="100%">
+<img alt="Diagram Kelas Keseluruhan" src="./assets/diagram/Diagram_Kelas_Keseluruhan.png" width="100%">
 </p>
 <p align="center">
-<i>Gambar 26. Diagram Kelas Keseluruhan</i>
+<i>Gambar 27. Diagram Kelas Keseluruhan</i>
 </p>
 <br>
 
@@ -1777,46 +1814,46 @@ Karena diagram pada 4.2 disusun oleh anggota yang berbeda, dilakukan penyelarasa
 
 | ID Kelas | Nama Kelas | Stereotipe | Atribut | Metode/Operasi |
 | :--- | :--- | :--- | :--- | :--- |
-| *C01* | *HalamanOtentikasi* | *boundary* | *nama, nim, email, kataSandi, setujuKebijakan, kodeVerifikasi, sisaWaktu, token* | *tampilkanFormulirPendaftaran(), tampilkanFormulirVerifikasi(), tampilkanFormulirLogin(), kirimFormulirPendaftaran(), kirimKodeVerifikasi(), mintaKirimUlang(), resetHitungMundur(), kirimFormulirLogin(), kirimPermintaanLogout(), hapusTokenLokal(), tampilkanPesanGalat(), arahkanKeHalamanVerifikasi(), arahkanKeBeranda(), arahkanKeHalamanLogin()* |
+| *C01* | *HalamanOtentikasi* | *boundary* | *nama, nim, email, kataSandi, setujuKebijakan, kodeVerifikasi, sisaWaktu, token* | *tampilkanFormulirPendaftaran(), tampilkanKebijakanPrivasi(), kirimFormulirPendaftaran(), arahkanKeHalamanVerifikasi(), tampilkanFormulirVerifikasi(), kirimKodeVerifikasi(), mintaKirimUlang(), resetHitungMundur(), tampilkanFormulirLogin(), kirimFormulirLogin(), arahkanKeBeranda(), tampilkanTombolKeluar(), kirimPermintaanLogout(), hapusTokenLokal(), arahkanKeHalamanLogin(), tampilkanPesanGalat()* |
 | *C02* | *HalamanProfil* | *boundary* | *dataAkun, daftarKartuProduk* | *tampilkanProfil(), tampilkanDaftarListing(), bukaPengaturanAkun(), tampilkanTautanKebijakan()* |
-| *C03* | *HalamanListingPenjual* | *boundary* | *daftarTersedia, daftarTerjual, tabAktif* | *tampilkanDaftarListing(), pilihTab(), onClickHapus(), onClickTandaiTerjual(), onClickBatalTerjual()* |
+| *C03* | *HalamanListingPenjual* | *boundary* | *daftarTersedia, daftarTerjual, tabAktif* | *tampilkanDaftarListing(), pilihTab(), onClickHapus(), onClickTandaiTerjual(), onClickBatalTerjual(), tampilkanKonfirmasi(), tampilkanNotifikasi()* |
 | *C04* | *FormulirBarang* | *boundary* | *judul, harga, deskripsiKondisi, idKategori, idLokasi, daftarFoto* | *tampilkanFormulir(), validasiTipeData(), validasiFotoSisiKlien(), tandaiIsianKosong(), kirimFormulir(), onClickUpdate(), tampilkanNotifikasi()* |
-| *C05* | *HalamanKatalog* | *boundary* | *listProduk, kataKunci, filterAktif* | *showKatalog(), inputPencarian(), pilihFilter(), tampilkanHasil()* |
+| *C05* | *HalamanKatalog* | *boundary* | *listProduk, kataKunci, filterAktif, kriteriaUrutan, halamanAktif* | *showKatalog(), inputPencarian(), pilihFilter(), pilihUrutan(), tampilkanHasil(), pindahHalaman(), tampilkanPesanKosong()* |
 | *C06* | *KartuProduk* | *boundary* | *idBarang, judul, harga, fotoUtama, status* | *render()* |
 | *C07* | *HalamanDetailBarang* | *boundary* | *barang, daftarFoto, kontakPenjual* | *showBarang(), onClickContact(), onClickLapor()* |
-| *C08* | *HalamanPercakapan* | *boundary* | *daftarPercakapan, percakapanAktif* | *showDaftarPercakapan(), showPercakapan(), bukaPercakapan(), tampilkanUrutanPesan(), kirimPesan()* |
+| *C08* | *HalamanPercakapan* | *boundary* | *daftarPercakapan, percakapanAktif, isiTeksInput* | *showDaftarPercakapan(), bukaPercakapan(), showPercakapan(), tampilkanUrutanPesan(), kirimPesan(), tampilkanTautanKebijakan()* |
 | *C09* | *PanelNotifikasi* | *boundary* | *daftarNotifikasi, jumlahBelumDibaca* | *tampilkanDaftarNotifikasi(), tampilkanPenandaBelumDibaca(), tandaiSudahDibaca()* |
 | *C10* | *FormulirLaporan* | *boundary* | *jenisPelanggaran, teksAlasan, objekDilaporkan, berkasBukti* | *tampilkanFormulirLaporan(), unggahBukti(), kirimLaporan()* |
-| *C11* | *DasborAdmin* | *boundary* | *daftarLaporan, filterStatus, detailLaporan* | *tampilkanDaftarLaporan(), filterLaporan(), tampilkanDetailLaporan(), onClickUbahStatus(), onClickHapusListing(), onClickBlokirAkun(), onClickBukaBlokir()* |
+| *C11* | *DasborAdmin* | *boundary* | *daftarLaporan, filterStatus, detailLaporan, statusBaru, alasanTindakan* | *tampilkanDaftarLaporan(), filterLaporan(), tampilkanDetailLaporan(), onClickUbahStatus(), onClickHapusListing(), onClickBlokirAkun(), onClickBukaBlokir(), tampilkanModalKonfirmasi()* |
 | *C12* | *HalamanDokumenLegal* | *boundary* | *judul, isiDokumen* | *tampilkanDokumen(), sorotKlausaPrivasi()* |
-| *C13* | *AkunController* | *control* | *-* | *daftarAkun(), validasiKelengkapanFormulir(), validasiDomainEmail(), cekKeunikanEmail(), hashKataSandi(), buatKodeVerifikasi(), verifikasiAkun(), validasiKodeVerifikasi(), cekKedaluwarsaKode(), hanguskanKodeLama(), kirimUlangKode(), login(), cariAkunByEmail(), verifikasiKataSandi(), cekStatusAkun(), buatSesiLogin(), logout(), cabutSesi(), getProfil(), getIdAkunDariSesi(), getDaftarBarangAkun(), getTautanDokumenLegal()* |
-| *C14* | *BarangController* | *control* | *listBarang* | *buatBarang(), validasiKelengkapanIsian(), validasiFoto(), getIdPenjualDariSesi(), simpanFoto(), terbitkanKeKatalog(), getListingSaya(), kelompokkanBerdasarkanStatus(), getBarang(), updateBarang(), deleteBarang()* |
-| *C15* | *KatalogController* | *control* | *listProduk* | *getProduk(), paginasi(), sortPrice()* |
+| *C13* | *AkunController* | *control* | *-* | *daftarAkun(), validasiKelengkapanFormulir(), validasiDomainEmail(), cekKeunikanEmail(), hashKataSandi(), buatKodeVerifikasi(), getTautanDokumenLegal(), verifikasiAkun(), validasiKodeVerifikasi(), cekKedaluwarsaKode(), hanguskanKodeLama(), kirimUlangKode(), login(), cariAkunByEmail(), verifikasiKataSandi(), cekStatusAkun(), buatSesiLogin(), logout(), cabutSesi(), getProfil(), getIdAkunDariSesi(), getDaftarBarangAkun()* |
+| *C14* | *BarangController* | *control* | *-* | *buatBarang(), validasiKelengkapanIsian(), validasiFoto(), getIdPenjualDariSesi(), simpanFoto(), terbitkanKeKatalog(), getListingSaya(), kelompokkanBerdasarkanStatus(), getBarang(), verifikasiKepemilikan(), updateBarang(), deleteBarang(), ubahStatusBarang()* |
+| *C15* | *KatalogController* | *control* | *-* | *getProduk(), paginasi(), urutkanHasil()* |
 | *C16* | *PencarianController* | *control* | *-* | *cariBarang(), normalisasiKataKunci(), cocokkanKataKunci()* |
 | *C17* | *FilterController* | *control* | *-* | *validasiParameterFilter(), filterCategory(), filterPrice(), filterLocation()* |
-| *C18* | *PercakapanController* | *control* | *daftarPercakapan* | *mulaiPercakapan(), verifikasiPeserta(), enkripsiPesan(), dekripsiPesan(), kirimPesan(), getDaftarPercakapan(), perbaruiStatusPercakapan()* |
-| *C19* | *NotifikasiController* | *control* | *-* | *kirimEmailVerifikasi(), kirimNotifikasi(), kirimPeringatanPenghapusan(), kirimPesanPenangguhan(), perbaruiStatusBaca()* |
-| *C20* | *LaporanController* | *control* | *-* | *buatLaporan(), validasiDataLaporan(), validasiBukti(), simpanLaporan()* |
-| *C21* | *ModerasiController* | *control* | *-* | *getAllLaporan(), filterByStatus(), getDetailLaporan(), ubahStatusLaporan(), hapusListingDilaporkan(), blokirAkun(), bukaBlokirAkun(), catatLogAdmin(), catatLogAudit()* |
+| *C18* | *PercakapanController* | *control* | *-* | *verifikasiPeserta(), mulaiPercakapan(), dekripsiPesan(), enkripsiPesan(), kirimPesan(), perbaruiWaktuPercakapan(), getDaftarPercakapan(), ambilCuplikanPesanTerakhir(), hitungPesanBelumDibaca()* |
+| *C19* | *NotifikasiController* | *control* | *-* | *kirimEmailVerifikasi(), kirimNotifikasi(), kirimPushNotifikasi(), perbaruiStatusBaca(), kirimPeringatanPenghapusan(), kirimPesanPenangguhan()* |
+| *C20* | *LaporanController* | *control* | *-* | *buatLaporan(), getIdPelaporDariSesi(), validasiDataLaporan(), susunMetadataPercakapan(), validasiBukti(), simpanBukti(), simpanLaporan(), catatLogAudit()* |
+| *C21* | *ModerasiController* | *control* | *-* | *otorisasiAdmin(), getAllLaporan(), filterByStatus(), getDetailLaporan(), ubahStatusLaporan(), hapusListingDilaporkan(), blokirAkun(), nonaktifkanListingPengguna(), bukaBlokirAkun(), pulihkanListingPengguna(), catatLogAdmin(), catatLogAudit()* |
 | *C22* | *DokumenLegalController* | *control* | *-* | *getDokumen(), getKlausaPrivasi()* |
-| *C23* | *Akun* | *entity* | *idAkun, nama, nim, email, kataSandiHash, statusAkun, statusBlokir, peran, setujuKebijakan, waktuDaftar* | *simpan(), getDataIdentitas(), getStatusAkun(), perbaruiStatusAkun(), blokir(), bukaBlokir()* |
-| *C24* | *Pembeli* | *entity* | *— (diwarisi dari C23 Akun)* | *lihatProfil(), mulaiPercakapan(), kirimPesan(), kirimLaporan()* |
-| *C25* | *Penjual* | *entity* | *— (diwarisi dari C23 Akun)* | *lihatProfil(), buatListing(), lihatDaftarListingSendiri(), getDaftarBarang(), kirimPesan(), kirimLaporan()* |
-| *C26* | *Admin* | *entity* | *— (diwarisi dari C23 Akun)* | *aksesDaftarLaporan(), tinjauLaporan(), ubahStatusLaporan(), hapusListing(), eksekusiBlokirAkun(), cabutBlokirAkun()* |
+| *C23* | *Akun* | *entity* | *idAkun, nama, nim, email, kataSandiHash, statusAkun, statusBlokir, peran, setujuKebijakan, waktuDaftar* | *simpan(), perbaruiStatusAkun(), getStatusAkun(), getDataIdentitas(), blokir(), bukaBlokir()* |
+| *C24* | *Pembeli* | *entity* | *— (diwarisi dari C23 Akun)* | *lihatProfil(), mulaiPercakapan(), kirimPesan()* |
+| *C25* | *Penjual* | *entity* | *— (diwarisi dari C23 Akun)* | *lihatProfil(), buatListing(), lihatDaftarListingSendiri(), ubahListing(), hapusListing(), tandaiTerjual(), batalkanTandaTerjual(), kirimPesan()* |
+| *C26* | *Admin* | *entity* | *— (diwarisi dari C23 Akun)* | *verifikasiPeran(), aksesDaftarLaporan(), tinjauLaporan(), ubahStatusLaporan(), hapusListing(), eksekusiBlokirAkun(), cabutBlokirAkun()* |
 | *C27* | *TokenVerifikasi* | *entity* | *idToken, idAkun, kode, waktuBuat, waktuKedaluwarsa, statusPakai* | *simpan(), cocokkanKode(), sudahKedaluwarsa(), tandaiHangus(), tandaiTerpakai()* |
-| *C28* | *SesiLogin* | *entity* | *idSesi, idAkun, token, waktuMulai, waktuKedaluwarsa, statusAktif* | *buatToken(), simpan(), getIdAkun(), verifikasiAkses(), nonaktifkan(), hapus()* |
-| *C29* | *Barang* | *entity* | *idBarang, idPenjual, judul, harga, deskripsiKondisi, idKategori, idLokasi, status, waktuUnggah, waktuUbah* | *simpan(), getByPemilik(), getRiwayatTerjual(), getJudul(), getHarga(), getDeskripsi(), getStatus(), setJudul(), setHarga(), setDeskripsi(), setStatus(), hapus(), nonaktifkanByPemilik(), pulihkanKatalog()* |
-| *C30* | *FotoBarang* | *entity* | *idFoto, idBarang, namaBerkas, format, ukuran, urutan, pathBerkas* | *validasiFormat(), validasiUkuran(), simpan(), perbaruiGaleri(), getGambar(), hapus()* |
-| *C31* | *Kategori* | *entity* | *idKategori, namaKategori* | *getDaftarKategori(), getKategori(), validasiKategori()* |
+| *C28* | *SesiLogin* | *entity* | *idSesi, idAkun, token, waktuMulai, waktuKedaluwarsa, statusAktif* | *buatToken(), simpan(), nonaktifkan(), hapus(), getIdAkun(), verifikasiAkses()* |
+| *C29* | *Barang* | *entity* | *idBarang, idPenjual, judul, harga, deskripsiKondisi, idKategori, idLokasi, status, waktuUnggah, waktuUbah* | *simpan(), getByPemilik(), getRiwayatTerjual(), setJudul(), setHarga(), setDeskripsi(), setKategori(), setLokasi(), hapus(), getStatus(), setStatus(), getJudul(), getHarga(), getDeskripsi(), nonaktifkanByPemilik(), pulihkanKatalog()* |
+| *C30* | *FotoBarang* | *entity* | *idFoto, idBarang, namaBerkas, format, ukuran, urutan, pathBerkas* | *validasiFormat(), validasiUkuran(), simpan(), perbaruiGaleri(), hapus(), getGambar()* |
+| *C31* | *Kategori* | *entity* | *idKategori, namaKategori* | *getDaftarKategori(), validasiKategori(), getKategori()* |
 | *C32* | *LokasiCOD* | *entity* | *idLokasi, namaLokasi, kampus* | *getDaftarLokasi(), getLokasi()* |
-| *C33* | *Percakapan* | *entity* | *idPercakapan, idPembeli, idPenjual, idBarang, waktuDibuat, statusPercakapan* | *addPesan(), getDaftarPesan(), getDaftarPercakapanByPengguna(), batasiAksesRuang()* |
-| *C34* | *Pesan* | *entity* | *idPesan, idPercakapan, idPengirim, isiPesanTerenkripsi, waktuKirim, statusBaca* | *simpanPesan(), enkripsiTeks(), getIsiPesan(), updateStatusBaca(), getCuplikanPesanTerakhir(), hitungPesanBelumDibaca()* |
-| *C35* | *Notifikasi* | *entity* | *idNotifikasi, idAkun, jenis, isi, waktuKirim, statusBaca* | *simpan(), kirimNotifikasi(), tandaiDibaca()* |
-| *C36* | *Laporan* | *entity* | *idLaporan, idPelapor, objekDilaporkan, jenisPelanggaran, teksAlasan, waktuLapor, statusPenyelesaian, waktuPerubahan* | *simpanLaporanBaru(), setStatusBaru(), getAllLaporan(), filterByStatus(), getDetailPelanggaran(), getBuktiPelanggaran(), updateStatusPenanganan()* |
-| *C37* | *BuktiLaporan* | *entity* | *idBukti, idLaporan, fileTangkapanLayar, pathBerkas* | *unggahTangkapanLayar(), validasiLampiranWajib(), simpan()* |
-| *C38* | *LogAudit* | *entity* | *idLog, waktu, identitasAktor, tindakanSpesifik* | *catatPenerimaanLaporan(), catatPerubahanStatusLaporan(), catatPenghapusanListing(), catatPemblokiranAkun(), catatPembukaanBlokir()* |
-| *C39* | *LogAdmin* | *entity* | *idLogAdmin, idAdmin, jenisTindakan, objekDitindak, waktu, alasan* | *catatTindakan(), getRiwayatTindakan()* |
-| *C40* | *DokumenLegal* | *entity* | *idDokumen, jenisDokumen, judul, isi, klausaPrivasiPesan, versi, tanggalBerlaku, statusPublikasi, tautan* | *getVersiTerbaru(), getIsi(), getTautan()* |
+| *C33* | *Percakapan* | *entity* | *idPercakapan, idPembeli, idPenjual, idBarang, waktuDibuat, waktuPembaruanTerakhir* | *simpan(), cekPeserta(), getDaftarPesan(), addPesan(), perbaruiWaktuTerakhir(), getDaftarPercakapanByPengguna(), getLawanBicara()* |
+| *C34* | *Pesan* | *entity* | *idPesan, idPercakapan, idPengirim, isiPesanTerenkripsi, waktuKirim, statusBaca* | *getIsiPesan(), simpanPesan(), updateStatusBaca(), getCuplikanPesanTerakhir(), hitungPesanBelumDibaca()* |
+| *C35* | *Notifikasi* | *entity* | *idNotifikasi, idAkun, jenis, isi, waktuKirim, statusBaca* | *simpan(), tandaiDibaca()* |
+| *C36* | *Laporan* | *entity* | *idLaporan, idPelapor, objekDilaporkan, jenisPelanggaran, teksAlasan, waktuLapor, statusPenanganan, waktuPerubahan* | *simpanLaporanBaru(), getAllLaporan(), filterByStatus(), getDetailLaporan(), updateStatusPenanganan()* |
+| *C37* | *BuktiLaporan* | *entity* | *idBukti, idLaporan, namaBerkas, pathBerkas* | *validasiLampiranWajib(), simpan()* |
+| *C38* | *LogAudit* | *entity* | *idLog, idLaporan, waktu, identitasAktor, tindakan* | *catatPenerimaanLaporan(), catatPerubahanStatusLaporan(), catatPenghapusanListing(), catatPemblokiranAkun()* |
+| *C39* | *LogAdmin* | *entity* | *idLogAdmin, idAdmin, jenisTindakan, objekDitindak, waktu, alasan* | *catatTindakan()* |
+| *C40* | *DokumenLegal* | *entity* | *idDokumen, jenisDokumen, judul, isi, klausaPrivasiPesan, versi, tanggalBerlaku, statusPublikasi, tautan* | *getVersiTerbaru(), getTautan(), getIsi()* |
 
 ### Hubungan Antarkelas
 
@@ -1828,8 +1865,8 @@ Karena diagram pada 4.2 disusun oleh anggota yang berbeda, dilakukan penyelarasa
 | *C02 HalamanProfil* | *C13 AkunController* |
 | *C03 HalamanListingPenjual* | *C14 BarangController* |
 | *C04 FormulirBarang* | *C14 BarangController* |
-| *C05 HalamanKatalog* | *C15 KatalogController, C16 PencarianController, C17 FilterController* |
-| *C07 HalamanDetailBarang* | *C14 BarangController, C18 PercakapanController, C20 LaporanController* |
+| *C05 HalamanKatalog* | *C15 KatalogController*, *C16 PencarianController*, *C17 FilterController* |
+| *C07 HalamanDetailBarang* | *C14 BarangController*, *C18 PercakapanController*, *C20 LaporanController* |
 | *C08 HalamanPercakapan* | *C18 PercakapanController* |
 | *C09 PanelNotifikasi* | *C19 NotifikasiController* |
 | *C10 FormulirLaporan* | *C20 LaporanController* |
@@ -1838,19 +1875,19 @@ Karena diagram pada 4.2 disusun oleh anggota yang berbeda, dilakukan penyelarasa
 
 Selain itu, *C02 HalamanProfil*, *C03 HalamanListingPenjual*, dan *C05 HalamanKatalog* masing-masing memiliki relasi komposisi *1 ◆— 0..\** terhadap *C06 KartuProduk*.
 
-**b. Dependensi control ⇢ entity**
+**b. Dependensi control ⇢ entity/control**
 
 | Kelas Control | Bergantung pada |
 | :--- | :--- |
-| *C13 AkunController* | *C23 Akun, C27 TokenVerifikasi, C28 SesiLogin, C29 Barang, C40 DokumenLegal, C19 NotifikasiController* |
-| *C14 BarangController* | *C28 SesiLogin, C29 Barang, C30 FotoBarang, C31 Kategori, C32 LokasiCOD* |
+| *C13 AkunController* | *C23 Akun*, *C27 TokenVerifikasi*, *C28 SesiLogin*, *C29 Barang*, *C40 DokumenLegal*, *C19 NotifikasiController* |
+| *C14 BarangController* | *C28 SesiLogin*, *C29 Barang*, *C30 FotoBarang*, *C31 Kategori*, *C32 LokasiCOD* |
 | *C15 KatalogController* | *C29 Barang* |
 | *C16 PencarianController* | *C29 Barang* |
-| *C17 FilterController* | *C29 Barang, C31 Kategori, C32 LokasiCOD* |
-| *C18 PercakapanController* | *C28 SesiLogin, C33 Percakapan, C34 Pesan, C19 NotifikasiController* |
+| *C17 FilterController* | *C29 Barang*, *C31 Kategori*, *C32 LokasiCOD* |
+| *C18 PercakapanController* | *C28 SesiLogin*, *C33 Percakapan*, *C34 Pesan*, *C19 NotifikasiController* |
 | *C19 NotifikasiController* | *C35 Notifikasi* |
-| *C20 LaporanController* | *C36 Laporan, C37 BuktiLaporan, C38 LogAudit* |
-| *C21 ModerasiController* | *C23 Akun, C29 Barang, C36 Laporan, C38 LogAudit, C39 LogAdmin, C19 NotifikasiController* |
+| *C20 LaporanController* | *C28 SesiLogin*, *C36 Laporan*, *C37 BuktiLaporan*, *C38 LogAudit* |
+| *C21 ModerasiController* | *C23 Akun*, *C26 Admin*, *C29 Barang*, *C36 Laporan*, *C38 LogAudit*, *C39 LogAdmin*, *C19 NotifikasiController* |
 | *C22 DokumenLegalController* | *C40 DokumenLegal* |
 
 **c. Relasi antar-entity**
@@ -1880,198 +1917,128 @@ Selain itu, *C02 HalamanProfil*, *C03 HalamanListingPenjual*, dan *C05 HalamanKa
 | *C36 Laporan* | *1* | *asosiasi* | *0..\** | *C38 LogAudit* | *Rekam jejak permanen atas laporan* |
 | *C26 Admin* | *1* | *asosiasi* | *0..\** | *C39 LogAdmin* | *Catatan setiap tindakan moderasi admin* |
 
-Secara keseluruhan diagram memuat **40 kelas** dengan **3 relasi generalisasi**, **7 relasi komposisi** (4 antar-entity dan 3 antara halaman dengan *C06 KartuProduk*), **15 asosiasi antar-entity**, **15 asosiasi boundary–control**, dan **31 dependensi control–entity**, tanpa kelas yang terduplikasi.
+Secara keseluruhan diagram memuat **40 kelas** dengan **3 relasi generalisasi**, **7 relasi komposisi** (4 antar-entity dan 3 antara halaman dengan *C06 KartuProduk*), **15 asosiasi antar-entity**, **15 asosiasi boundary–control**, dan **33 dependensi control–entity/control**, tanpa kelas yang terduplikasi.
 
 ---
 
 # BAB 6: Traceability
+Bagian ini mencocokkan setiap kelas dengan use case dan kebutuhan fungsional (KF) yang didukung atau diimplementasikannya. Pemetaan disusun dengan dua aturan berikut.
 
-## 6.1 Konsep dan Metodologi Keterlacakan
-Matriks keterlacakan (*traceability matrix*) merupakan instrumen kendali mutu rekayasa perangkat lunak yang menjamin konsistensi vertikal dan horizontal antara spesifikasi kebutuhan fungsional, pemodelan interaksi aktor (*use case*), dan perancangan kelas struktural (*class diagram*). Dokumen ini menerapkan prinsip *bidirectional traceability*:
-1. ***Forward Traceability* (Keterlacakan Maju):** Memastikan setiap butir Kebutuhan Fungsional (KF01–KF56) terefleksikan secara utuh ke dalam sekurang-kurangnya satu Use Case (UC01–UC24) dan direalisasikan oleh kombinasi kelas *Boundary*, *Control*, dan *Entity* yang relevan tanpa ada kebutuhan yang terabaikan (*zero orphan requirements*).
-2. ***Backward Traceability* (Keterlacakan Balik):** Memastikan setiap kelas (C01–C40) yang dirancang pada arsitektur sistem memiliki justifikasi fungsional yang valid terhadap use case dan kebutuhan pengguna, guna mencegah adanya fitur atau kode yang tidak dibutuhkan (*zero gold plating / dead code*).
+1. Sebuah kelas dipetakan ke suatu use case hanya jika kelas tersebut muncul pada diagram kelas use case itu di 5.2. Dengan demikian, kolom ID Use Case pada Tabel 6.1 sama dengan kolom ID Use Case pada 5.1.
+2. Sebuah kelas dipetakan ke suatu KF hanya jika KF tersebut tercantum pada use case yang memuat kelas itu (tabel 4.2) dan kelas tersebut ikut merealisasikan KF tersebut melalui atribut atau metodenya. Kelas tidak otomatis mendapatkan seluruh KF milik use case-nya.
 
-Struktur keterlacakan ini mengadopsi pola arsitektur *Boundary-Control-Entity* (BCE):
-- **Lapis *Boundary* (C01–C12):** Komponen antarmuka pengguna (*presentation layer*) yang berinteraksi langsung dengan aktor.
-- **Lapis *Control* (C13–C22):** Komponen pemroses logika bisnis, koordinator alur kerja, validasi aturan institusional, dan enkripsi data (*business logic layer*).
-- **Lapis *Entity* (C23–C40):** Komponen persistensi data (*data access/persistence layer*) yang memodelkan informasi inti sistem ITBELI.
+## 6.1 Tabel Traceability Kelas
 
----
-
-## 6.2 Tabel Inti Keterlacakan (Class to UC and KF)
-Tabel 6.1 merupakan tabel inti keterlacakan yang memetakan seluruh kelas (C01–C40) terhadap Use Case operasional dan Kebutuhan Fungsional yang didukungnya secara komprehensif.
-
-### Tabel 6.1. Tabel Inti Keterlacakan Sistem ITBELI
+Tabel 6.1. Traceability Kelas, Use Case, dan Kebutuhan Fungsional
 
 | ID Kelas | ID Use Case | ID KF |
 | :--- | :--- | :--- |
-| **C01** | UC01, UC02, UC03, UC04 | KF01, KF02, KF03, KF05, KF06, KF07, KF08, KF09, KF10, KF11, KF12, KF13, KF14, KF39, KF53 |
-| **C02** | UC05 | KF04, KF39 |
-| **C03** | UC08, UC10, UC11, UC12 | KF20, KF21, KF22, KF40, KF41, KF42 |
-| **C04** | UC07, UC09 | KF15, KF16, KF18, KF19, KF21, KF22, KF23, KF24 |
-| **C05** | UC13, UC14 | KF25, KF26, KF27, KF28, KF29, KF30, KF42, KF54 |
-| **C06** | UC05, UC08, UC13, UC14, UC15 | KF04, KF17, KF20, KF25, KF26, KF27, KF28, KF30, KF42 |
-| **C07** | UC15, UC16, UC19 | KF17, KF30, KF31, KF37, KF43 |
-| **C08** | UC16, UC17, UC18 | KF31, KF32, KF33, KF34, KF35, KF36, KF37, KF39 |
-| **C09** | UC17, UC22, UC23 | KF34, KF52 |
-| **C10** | UC19 | KF37, KF43, KF44 |
-| **C11** | UC20, UC21, UC22, UC23, UC24 | KF45, KF46, KF47, KF48, KF50, KF51, KF55, KF56 |
-| **C12** | UC06 | KF13, KF38, KF39 |
-| **C13** | UC01, UC02, UC03, UC04, UC05 | KF01, KF02, KF03, KF04, KF05, KF06, KF07, KF08, KF09, KF10, KF11, KF12, KF13, KF14, KF39, KF53 |
-| **C14** | UC07, UC08, UC09, UC10, UC11, UC12 | KF15, KF16, KF17, KF18, KF19, KF20, KF21, KF22, KF23, KF24, KF40, KF41, KF42 |
-| **C15** | UC13, UC14 | KF25, KF26, KF27, KF28, KF29, KF30, KF42, KF54 |
-| **C16** | UC14 | KF25, KF29 |
-| **C17** | UC14 | KF26, KF29 |
-| **C18** | UC16, UC17, UC18 | KF31, KF32, KF33, KF34, KF35, KF36, KF39 |
-| **C19** | UC01, UC02, UC17, UC22, UC23 | KF06, KF34, KF52 |
-| **C20** | UC19 | KF37, KF43, KF44, KF48 |
-| **C21** | UC20, UC21, UC22, UC23, UC24 | KF45, KF46, KF47, KF48, KF49, KF50, KF51, KF52, KF53, KF54, KF55, KF56 |
-| **C22** | UC06 | KF13, KF38, KF39 |
-| **C23** | UC01, UC02, UC03, UC04, UC05, UC13, UC14, UC15, UC16, UC19, UC20, UC21, UC22, UC23, UC24 | KF01, KF02, KF03, KF04, KF05, KF07, KF08, KF09, KF10, KF11, KF12, KF14, KF30, KF31, KF35, KF37, KF45, KF51, KF52, KF53, KF54, KF56 |
-| **C24** | UC05, UC13, UC14, UC15, UC16, UC17, UC18, UC19 | KF02, KF04, KF09, KF25, KF26, KF27, KF28, KF29, KF30, KF31, KF32, KF33, KF34, KF35, KF37, KF43, KF53 |
-| **C25** | UC05, UC07, UC08, UC09, UC10, UC11, UC12, UC16, UC17, UC18 | KF02, KF04, KF09, KF15, KF16, KF17, KF20, KF21, KF22, KF31, KF32, KF33, KF34, KF35, KF40, KF41, KF42, KF52, KF53 |
-| **C26** | UC20, UC21, UC22, UC23, UC24 | KF10, KF35, KF45, KF46, KF47, KF48, KF50, KF51, KF55, KF56 |
-| **C27** | UC01, UC02 | KF05, KF06, KF07, KF08 |
-| **C28** | UC03, UC04, UC05, UC07, UC08, UC09, UC10, UC11, UC12, UC16, UC17, UC18, UC19, UC20, UC21, UC22, UC23, UC24 | KF03, KF08, KF11, KF12, KF22, KF35, KF53, KF56 |
-| **C29** | UC05, UC07, UC08, UC09, UC10, UC11, UC12, UC13, UC14, UC15, UC16, UC19, UC22, UC23, UC24 | KF04, KF15, KF16, KF17, KF18, KF19, KF20, KF21, KF22, KF25, KF26, KF27, KF28, KF30, KF31, KF40, KF41, KF42, KF50, KF54 |
-| **C30** | UC07, UC09, UC15 | KF17, KF23, KF24 |
-| **C31** | UC07, UC09, UC13, UC14 | KF15, KF19, KF26 |
-| **C32** | UC07, UC09, UC14 | KF15, KF17, KF26 |
-| **C33** | UC16, UC17, UC18, UC19 | KF31, KF32, KF33, KF35, KF36, KF37 |
-| **C34** | UC16, UC17, UC18 | KF32, KF33, KF34, KF36 |
-| **C35** | UC01, UC02, UC17, UC22, UC23 | KF06, KF34, KF52 |
-| **C36** | UC19, UC20, UC21, UC22, UC23 | KF37, KF43, KF44, KF45, KF46, KF47, KF48 |
-| **C37** | UC19, UC20 | KF44, KF45 |
-| **C38** | UC19, UC21, UC22, UC23, UC24 | KF48, KF49 |
-| **C39** | UC22, UC23, UC24 | KF50, KF51, KF55 |
-| **C40** | UC01, UC05, UC06, UC16, UC17 | KF13, KF14, KF38, KF39 |
+| *C01* | *UC01, UC02, UC03, UC04* | *KF01, KF02, KF03, KF05, KF06, KF07, KF08, KF10, KF11, KF12, KF13, KF14, KF39, KF53* |
+| *C02* | *UC05* | *KF04, KF39* |
+| *C03* | *UC08, UC10, UC11, UC12* | *KF20, KF21, KF22, KF40, KF41, KF42* |
+| *C04* | *UC07, UC09* | *KF15, KF16, KF18, KF19, KF21, KF22, KF23, KF24* |
+| *C05* | *UC13, UC14* | *KF25, KF26, KF27, KF28, KF29, KF30, KF42, KF54* |
+| *C06* | *UC05, UC08, UC13, UC14* | *KF04, KF20, KF25, KF26, KF27, KF28, KF30, KF42* |
+| *C07* | *UC15, UC16, UC19* | *KF17, KF31, KF43* |
+| *C08* | *UC16, UC17, UC18* | *KF31, KF32, KF33, KF34, KF35, KF39* |
+| *C09* | *UC17* | *KF34* |
+| *C10* | *UC19* | *KF37, KF43, KF44* |
+| *C11* | *UC20, UC21, UC22, UC23, UC24* | *KF45, KF46, KF47, KF50, KF51, KF52, KF55, KF56* |
+| *C12* | *UC06* | *KF13, KF38, KF39* |
+| *C13* | *UC01, UC02, UC03, UC04, UC05* | *KF01, KF02, KF03, KF04, KF05, KF06, KF07, KF08, KF09, KF10, KF11, KF12, KF13, KF14, KF39, KF53* |
+| *C14* | *UC07, UC08, UC09, UC10, UC11, UC12, UC15* | *KF15, KF16, KF17, KF18, KF19, KF20, KF21, KF22, KF23, KF24, KF40, KF41, KF42* |
+| *C15* | *UC13, UC14* | *KF27, KF28, KF29, KF30, KF42, KF54* |
+| *C16* | *UC14* | *KF25, KF29, KF30* |
+| *C17* | *UC14* | *KF26, KF29, KF30* |
+| *C18* | *UC16, UC17, UC18* | *KF31, KF32, KF33, KF34, KF35, KF36* |
+| *C19* | *UC01, UC02, UC17, UC22, UC23* | *KF06, KF34, KF52* |
+| *C20* | *UC19* | *KF37, KF43, KF44, KF48* |
+| *C21* | *UC20, UC21, UC22, UC23, UC24* | *KF45, KF46, KF47, KF48, KF49, KF50, KF51, KF52, KF53, KF54, KF55, KF56* |
+| *C22* | *UC06* | *KF13, KF38, KF39* |
+| *C23* | *UC01, UC02, UC03, UC04, UC05, UC17, UC19, UC23, UC24* | *KF01, KF02, KF03, KF04, KF05, KF07, KF08, KF09, KF10, KF12, KF14, KF32, KF34, KF37, KF43, KF51, KF53* |
+| *C24* | *UC05, UC16* | *KF04, KF31, KF35* |
+| *C25* | *UC05, UC07, UC08, UC09, UC10, UC11, UC12, UC15, UC16* | *KF04, KF16, KF17, KF20, KF21, KF22, KF31, KF35, KF40, KF41* |
+| *C26* | *UC20, UC21, UC22, UC23, UC24* | *KF45, KF47, KF50, KF51, KF55, KF56* |
+| *C27* | *UC01, UC02* | *KF06, KF07, KF08* |
+| *C28* | *UC03, UC04, UC05, UC07, UC08, UC09, UC10, UC11, UC12, UC16, UC17, UC18, UC19* | *KF03, KF04, KF11, KF12, KF16, KF20, KF22, KF31, KF33, KF35, KF37, KF40, KF41, KF43* |
+| *C29* | *UC05, UC07, UC08, UC09, UC10, UC11, UC12, UC13, UC14, UC15, UC16, UC19, UC22, UC23, UC24* | *KF04, KF16, KF17, KF18, KF20, KF21, KF22, KF25, KF26, KF27, KF28, KF29, KF30, KF31, KF40, KF41, KF42, KF43, KF50, KF54* |
+| *C30* | *UC07, UC09, UC15* | *KF16, KF17, KF21, KF23, KF24* |
+| *C31* | *UC07, UC09, UC14, UC15* | *KF15, KF17, KF19, KF21, KF26* |
+| *C32* | *UC07, UC09, UC14, UC15* | *KF15, KF17, KF21, KF26* |
+| *C33* | *UC16, UC17, UC18, UC19* | *KF31, KF32, KF33, KF35, KF37* |
+| *C34* | *UC16, UC17, UC18* | *KF31, KF32, KF33, KF34, KF35, KF36* |
+| *C35* | *UC01, UC02, UC17, UC22, UC23* | *KF06, KF34, KF52* |
+| *C36* | *UC19, UC20, UC21* | *KF37, KF43, KF44, KF45, KF46, KF47* |
+| *C37* | *UC19* | *KF44* |
+| *C38* | *UC19, UC21, UC22, UC23* | *KF48, KF49* |
+| *C39* | *UC22, UC23, UC24* | *KF55* |
+| *C40* | *UC01, UC05, UC06* | *KF13, KF14, KF38, KF39* |
 
----
+## 6.2 Pemeriksaan Balik per Kebutuhan Fungsional
+Tabel 6.2 menyajikan pemetaan yang sama dari arah kebutuhan fungsional untuk memastikan tidak ada KF yang tertinggal. Tanda "-" pada kolom Kelas Boundary menandakan KF tersebut merupakan aturan internal sistem yang tidak memiliki antarmuka tersendiri, yaitu penyimpanan kata sandi dalam bentuk *hash* (KF09), enkripsi isi pesan (KF36), serta pencatatan dan perlindungan *log* audit (KF48, KF49).
 
-## 6.3 Penjabaran Rinci Tanggung Jawab Kelas dan Realisasi Kebutuhan
-Bagian ini menjabarkan secara operasional bagaimana setiap kelas pada Tabel 6.1 menjalankan fungsinya dalam arsitektur perangkat lunak untuk memenuhi kebutuhan fungsional terkait.
+Tabel 6.2. Pemeriksaan Balik Kebutuhan Fungsional terhadap Use Case dan Kelas
 
-### 6.3.1 Kelas Boundary (Antarmuka Pengguna)
-1. **C01 HalamanOtentikasi:** Berfungsi sebagai gerbang interaksi pengguna untuk pendaftaran akun, input OTP verifikasi, login, dan logout. Menampilkan formulir pendaftaran (KF01), pesan kesalahan domain non-ITB (KF05), input kode OTP beserta hitung mundur 15 menit (KF06, KF07), opsi kirim ulang bagi akun belum terverifikasi (KF08), tautan ToS/kebijakan privasi (KF13, KF39), formulir login (KF03), pemutusan sesi logout (KF12), serta pesan akun ditangguhkan saat diblokir (KF53).
-2. **C02 HalamanProfil:** Menampilkan data identitas pengguna berupa nama, NIM, surel @itb.ac.id, dan daftar listing yang dimiliki (KF04). Menyediakan menu pengaturan akun yang memuat tautan menuju dokumen Kebijakan Privasi (KF39).
-3. **C03 HalamanListingPenjual:** Antarmuka dasbor inventaris penjual yang menyajikan seluruh listing miliknya yang terbagi atas tab "Tersedia" dan riwayat "Terjual" (KF20, KF42). Menyediakan kendali aksi pengubahan (KF21), penghapusan listing (KF21, KF22), penandaan barang terjual (KF40), dan pembatalan tanda terjual (KF41).
-4. **C04 FormulirBarang:** Antarmuka formulir terpadu untuk membuat listing baru dan memperbarui listing yang ada (KF15, KF21). Bertanggung jawab melakukan validasi visual terhadap isian wajib (KF18), menyediakan dropdown pilihan kategori tetap institusi (KF19), serta membatasi pemilihan berkas foto maksimal 5 berkas berformat JPG/PNG berukuran ≤ 5 MB (KF23, KF24).
-5. **C05 HalamanKatalog:** Antarmuka etalase belanja publik yang menampilkan daftar barang "Tersedia" dari penjual aktif (KF30). Menyediakan bilah pencarian kata kunci (KF25), kontrol filter multi-kategori, harga, dan lokasi COD (KF26), kontrol pengurutan (KF27), mekanisme navigasi paginasi maksimal 20 listing per halaman (KF28), serta status visual barang tidak ditemukan (KF29).
-6. **C06 KartuProduk:** Komponen visual modular yang menampilkan ringkasan informasi barang (foto *thumbnail*, judul, harga, kategori, titik temu COD, dan status ketersediaan) yang digunakan secara konsisten pada halaman profil (KF04), dasbor penjual (KF20), katalog publik (KF28, KF30), dan hasil pencarian/penyaringan (KF25, KF26).
-7. **C07 HalamanDetailBarang:** Menyajikan rincian menyeluruh komoditas barang (seluruh foto dalam bentuk *carousel*, deskripsi kondisi lengkap, kategori, lokasi COD, dan identitas penjual) (KF17, KF30). Menyediakan tombol "Hubungi Penjual" untuk membuka ruang obrolan (KF31) serta tombol "Laporkan" untuk mengadukan listing bermasalah (KF37, KF43).
-8. **C08 HalamanPercakapan:** Menyajikan antarmuka daftar obrolan (*inbox*) dan ruang percakapan waktu-nyata (*chat room*). Menampilkan gelembung pesan terurut kronologis beserta waktu kirim (KF32), ringkasan pesan terakhir dan identitas lawan bicara (KF33), indikator unread (KF34), isolasi akses privat antar-dua pihak (KF35), serta tautan Kebijakan Privasi (KF39).
-9. **C09 PanelNotifikasi:** Komponen lencana dan daftar notifikasi yang menampilkan pembaruan jumlah pesan belum dibaca secara *real-time* (KF34), serta pemberitahuan resmi sistem saat listing dihapus atau akun dibekukan oleh tindakan moderasi admin (KF52).
-10. **C10 FormulirLaporan:** Antarmuka pengajuan aduan yang menyediakan pilihan kategori pelanggaran (penipuan, konten tidak pantas, *bug*), isian teks alasan, komponen unggah berkas bukti tangkapan layar (KF43, KF44), serta secara otomatis mengisolasi aduan chat agar tidak melampirkan teks percakapan (KF37).
-11. **C11 DasborAdmin:** Antarmuka operasional khusus staf admin untuk melihat tabel seluruh laporan aduan (KF45), menyaring laporan berdasarkan status (Baru, Diproses, Selesai) (KF46), mengubah status penanganan laporan (KF47), mengeksekusi penghapusan listing bermasalah (KF50), mengeksekusi blokir/buka blokir akun (KF51), serta membatasi akses bagi peran non-admin (KF56).
-12. **C12 HalamanDokumenLegal:** Menampilkan teks lengkap Syarat Ketentuan dan Kebijakan Privasi dengan penegasan klausul tertulis bahwa isi obrolan terenkripsi dan tidak dapat diakses admin maupun pengembang (KF13, KF38, KF39).
+| ID KF | ID Use Case | Kelas Boundary | Kelas Control | Kelas Entity |
+| :--- | :--- | :--- | :--- | :--- |
+| *KF01* | *UC01* | *C01* | *C13* | *C23* |
+| *KF02* | *UC01* | *C01* | *C13* | *C23* |
+| *KF03* | *UC03* | *C01* | *C13* | *C23, C28* |
+| *KF04* | *UC05* | *C02, C06* | *C13* | *C23, C24, C25, C28, C29* |
+| *KF05* | *UC01* | *C01* | *C13* | *C23* |
+| *KF06* | *UC01, UC02* | *C01* | *C13, C19* | *C27, C35* |
+| *KF07* | *UC02* | *C01* | *C13* | *C23, C27* |
+| *KF08* | *UC02, UC03* | *C01* | *C13* | *C23, C27* |
+| *KF09* | *UC01* | *-* | *C13* | *C23* |
+| *KF10* | *UC03* | *C01* | *C13* | *C23* |
+| *KF11* | *UC03* | *C01* | *C13* | *C28* |
+| *KF12* | *UC04* | *C01* | *C13* | *C23, C28* |
+| *KF13* | *UC01, UC06* | *C01, C12* | *C13, C22* | *C40* |
+| *KF14* | *UC01* | *C01* | *C13* | *C23, C40* |
+| *KF15* | *UC07* | *C04* | *C14* | *C31, C32* |
+| *KF16* | *UC07* | *C04* | *C14* | *C25, C28, C29, C30* |
+| *KF17* | *UC15* | *C07* | *C14* | *C25, C29, C30, C31, C32* |
+| *KF18* | *UC07, UC09* | *C04* | *C14* | *C29* |
+| *KF19* | *UC07, UC09* | *C04* | *C14* | *C31* |
+| *KF20* | *UC08* | *C03, C06* | *C14* | *C25, C28, C29* |
+| *KF21* | *UC09, UC10* | *C03, C04* | *C14* | *C25, C29, C30, C31, C32* |
+| *KF22* | *UC09, UC10* | *C03, C04* | *C14* | *C25, C28, C29* |
+| *KF23* | *UC07, UC09* | *C04* | *C14* | *C30* |
+| *KF24* | *UC07, UC09* | *C04* | *C14* | *C30* |
+| *KF25* | *UC14* | *C05, C06* | *C16* | *C29* |
+| *KF26* | *UC14* | *C05, C06* | *C17* | *C29, C31, C32* |
+| *KF27* | *UC14* | *C05, C06* | *C15* | *C29* |
+| *KF28* | *UC13, UC14* | *C05, C06* | *C15* | *C29* |
+| *KF29* | *UC14* | *C05* | *C15, C16, C17* | *C29* |
+| *KF30* | *UC13, UC14* | *C05, C06* | *C15, C16, C17* | *C29* |
+| *KF31* | *UC16* | *C07, C08* | *C18* | *C24, C25, C28, C29, C33, C34* |
+| *KF32* | *UC17* | *C08* | *C18* | *C23, C33, C34* |
+| *KF33* | *UC18* | *C08* | *C18* | *C28, C33, C34* |
+| *KF34* | *UC17, UC18* | *C08, C09* | *C18, C19* | *C23, C34, C35* |
+| *KF35* | *UC16, UC17, UC18* | *C08* | *C18* | *C24, C25, C28, C33, C34* |
+| *KF36* | *UC17* | *-* | *C18* | *C34* |
+| *KF37* | *UC19* | *C10* | *C20* | *C23, C28, C33, C36* |
+| *KF38* | *UC06* | *C12* | *C22* | *C40* |
+| *KF39* | *UC01, UC05, UC06, UC16, UC17* | *C01, C02, C08, C12* | *C13, C22* | *C40* |
+| *KF40* | *UC11* | *C03* | *C14* | *C25, C28, C29* |
+| *KF41* | *UC12* | *C03* | *C14* | *C25, C28, C29* |
+| *KF42* | *UC08, UC11, UC12, UC13* | *C03, C05, C06* | *C14, C15* | *C29* |
+| *KF43* | *UC19* | *C07, C10* | *C20* | *C23, C28, C29, C36* |
+| *KF44* | *UC19* | *C10* | *C20* | *C36, C37* |
+| *KF45* | *UC20* | *C11* | *C21* | *C26, C36* |
+| *KF46* | *UC20* | *C11* | *C21* | *C36* |
+| *KF47* | *UC21* | *C11* | *C21* | *C26, C36* |
+| *KF48* | *UC19, UC21, UC22, UC23* | *-* | *C20, C21* | *C38* |
+| *KF49* | *UC21, UC22, UC23* | *-* | *C21* | *C38* |
+| *KF50* | *UC22* | *C11* | *C21* | *C26, C29* |
+| *KF51* | *UC23, UC24* | *C11* | *C21* | *C23, C26* |
+| *KF52* | *UC22, UC23* | *C11* | *C19, C21* | *C35* |
+| *KF53* | *UC03, UC23* | *C01* | *C13, C21* | *C23* |
+| *KF54* | *UC13, UC23, UC24* | *C05* | *C15, C21* | *C29* |
+| *KF55* | *UC22, UC23, UC24* | *C11* | *C21* | *C26, C39* |
+| *KF56* | *UC20, UC21, UC22, UC23, UC24* | *C11* | *C21* | *C26* |
 
-### 6.3.2 Kelas Control (Logika Bisnis dan Pengendali)
-1. **C13 AkunController:** Mengendalikan seluruh alur registrasi, validasi domain @itb.ac.id, pengecekan keunikan surel, *hashing* kata sandi bcrypt, verifikasi OTP, manajemen sesi token JWT 24 jam, pemutusan sesi logout, pengambilan data profil, serta penolakan login bagi akun yang ditangguhkan (KF01–KF14, KF39, KF53).
-2. **C14 BarangController:** Mengatur logika operasional barang: validasi kelengkapan isian formulir, validasi format/ukuran/kuota berkas foto, verifikasi kepemilikan listing sebelum manipulasi data diizinkan, penyimpanan status awal "Tersedia", serta pembaruan status ketersediaan barang (KF15–KF24, KF40–KF42).
-3. **C15 KatalogController:** Mengatur pengambilan data listing publik dari basis data, menerapkan paginasi 20 item per halaman, menjalankan algoritma pengurutan (waktu unggah, harga terendah/tertinggi), dan memastikan hanya listing "Tersedia" dari pemilik yang tidak diblokir yang ditayangkan (KF25–KF30, KF42, KF54).
-4. **C16 PencarianController:** Memproses kueri penelusuran pengguna dengan melakukan normalisasi string teks dan pencocokan pola (*case-insensitive*) terhadap atribut judul dan deskripsi barang pada basis data (KF25, KF29).
-5. **C17 FilterController:** Memvalidasi parameter penyaringan (memastikan batas harga minimum tidak melebihi harga maksimum) dan menyusun kueri filter komposit berdasarkan kategori dan lokasi titik temu COD kampus ITB (KF26, KF29).
-6. **C18 PercakapanController:** Mengelola pembuatan ruang obrolan baru, memverifikasi bahwa pengakses adalah salah satu dari dua peserta yang sah, mengeksekusi algoritma enkripsi simetris sebelum teks disimpan ke basis data, mendekripsi pesan saat disajikan ke peserta sah, serta mengelola pembacaan pesan (KF31–KF36, KF39).
-7. **C19 NotifikasiController:** Mengelola pengiriman pesan notifikasi otomatis, meliputi pengiriman kode OTP pendaftaran via surel kampus (KF06), pengiriman notifikasi obrolan baru di latar belakang (KF34), serta pengiriman pemberitahuan resmi tindakan sanksi admin (KF52).
-8. **C20 LaporanController:** Memvalidasi formulir aduan pengguna, menjamin bahwa laporan atas ruang percakapan hanya menyertakan metadata (ID obrolan, waktu, identitas) tanpa menyertakan teks pesan, memproses penyimpanan berkas bukti, dan memicu pencatatan ke LogAudit (KF37, KF43, KF44, KF48).
-9. **C21 ModerasiController:** Pusat eksekusi kontrol administratif: memeriksa otorisasi peran admin, mengambil dan menyaring laporan, memperbarui status aduan, menghapus listing yang melanggar, memblokir/membuka blokir akun pengguna beserta efek *cascade* pada listing miliknya, serta menuliskan catatan ke LogAdmin dan LogAudit (KF45–KF56).
-10. **C22 DokumenLegalController:** Bertanggung jawab mengambil naskah resmi Syarat Ketentuan dan Kebijakan Privasi versi terbaru dari direktori penyimpanan dan menyajikannya ke lapisan antarmuka (KF13, KF38, KF39).
-
-### 6.3.3 Kelas Entity (Struktur Data dan Persistensi)
-1. **C23 Akun:** Entitas data pengguna utama yang menyimpan NIM, surel @itb.ac.id, nama, *hash* kata sandi bcrypt, status verifikasi surel, status pemblokiran, dan peran pengguna (KF01–KF05, KF07–KF12, KF14, KF30, KF31, KF35, KF37, KF45, KF51–KF54, KF56).
-2. **C24 Pembeli:** Peran spesialisasi dari Akun yang merepresentasikan mahasiswa dalam mencari barang, menyaring katalog, memulai percakapan negosiasi COD, dan mengirimkan laporan (KF02, KF04, KF09, KF25–KF35, KF37, KF43, KF53).
-3. **C25 Penjual:** Peran spesialisasi dari Akun yang merepresentasikan pemilik barang yang berhak membuat, mengubah, menghapus, dan menandai status listing miliknya, serta merespons obrolan pembeli (KF02, KF04, KF09, KF15–KF17, KF20–KF22, KF31–KF35, KF40–KF42, KF52, KF53).
-4. **C26 Admin:** Peran spesialisasi dari Akun yang memiliki hak akses untuk memoderasi platform, memeriksa aduan, menindak akun dan barang yang bermasalah, serta menuliskan catatan log audit tanpa memiliki akses ke pesan obrolan (KF10, KF35, KF45–KF48, KF50, KF51, KF55, KF56).
-5. **C27 TokenVerifikasi:** Menyimpan data kode verifikasi unik pendaftaran akun, stempel waktu pembuatan, waktu kedaluwarsa 15 menit, serta status keterpakaian kode (KF05–KF08).
-6. **C28 SesiLogin:** Menyimpan rekaman status otentikasi aktif berbasis token (JWT) dengan durasi hidup maksimum 24 jam sebagai dasar otorisasi identitas pengguna pada setiap permintaan data (KF03, KF08, KF11, KF12, KF22, KF35, KF53, KF56).
-7. **C29 Barang:** Entitas komoditas yang menyimpan judul, deskripsi kondisi, harga, status ketersediaan (Tersedia/Terjual/Dihapus), waktu unggah/ubah, serta relasi ke penjual, kategori, dan lokasi COD (KF04, KF15–KF22, KF25–KF28, KF30, KF31, KF40–KF42, KF50, KF54).
-8. **C30 FotoBarang:** Menyimpan berkas gambar barang (URI penyimpanan, tipe berkas JPG/PNG, ukuran berkas ≤ 5 MB, nomor indeks urutan foto) dengan kardinalitas 1 hingga 5 foto per barang (KF17, KF23, KF24).
-9. **C31 Kategori:** Entitas referensi baku (*master data*) yang menyimpan 6 daftar klasifikasi kategori barang tetap di lingkungan ITB (KF15, KF19, KF26).
-10. **C32 LokasiCOD:** Entitas referensi baku titik temu fisik transaksi COD di wilayah kampus ITB (Ganesha, Jatinangor, Cirebon) (KF15, KF17, KF26).
-11. **C33 Percakapan:** Entitas sesi komunikasi privat yang menghubungkan tepat satu pembeli, satu penjual, dan satu barang rujukan (KF31–KF33, KF35–KF37).
-12. **C34 Pesan:** Entitas pesan atomik yang menyimpan teks terenkripsi (*ciphertext*), cap waktu pengiriman, status keterbacaan, dan ID pengirim (KF32–KF34, KF36).
-13. **C35 Notifikasi:** Menyimpan catatan pemberitahuan in-app bagi pengguna terkait kode verifikasi, obrolan baru, atau tindakan moderasi admin (KF06, KF34, KF52).
-14. **C36 Laporan:** Menyimpan entitas aduan pelanggaran yang diajukan pengguna: kategori laporan, teks alasan, objek terlapor, stempel waktu, dan status penyelesaian (KF37, KF43–KF48).
-15. **C37 BuktiLaporan:** Menyimpan metadata dan berkas gambar tangkapan layar yang wajib dilampirkan pada formulir laporan (KF44, KF45).
-16. **C38 LogAudit:** Tabel rekaman kepatuhan sistem yang bersifat *append-only* (kebal modifikasi dan penghapusan) untuk mencatat kronologi waktu, pelaku, dan aksi penanganan laporan (KF48, KF49).
-17. **C39 LogAdmin:** Tabel catatan tindakan operasional staf admin yang merangkum identitas admin, tipe aksi moderasi, target sanksi, waktu, dan alasan penindakan (KF50, KF51, KF55).
-18. **C40 DokumenLegal:** Menyimpan naskah yuridis Syarat Penggunaan dan Kebijakan Privasi beserta nomor versi dan klausul perlindungan privasi percakapan (KF13, KF14, KF38, KF39).
-
----
-
-## 6.4 Matriks Realisasi Kebutuhan Fungsional (KF to UC and Classes)
-Tabel 6.2 menyajikan pemetaan balik dari seluruh 56 butir Kebutuhan Fungsional (KF01–KF56) menuju Use Case operasional dan kombinasi kelas Boundary, Control, dan Entity pembangunnya.
-
-### Tabel 6.2. Matriks Realisasi Kebutuhan Fungsional (RTM)
-
-| ID KF | Ringkasan Kebutuhan Fungsional | ID UC | Kelas Boundary | Kelas Control | Kelas Entity |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **KF01** | Formulir registrasi akun mahasiswa (nama, NIM, surel @itb.ac.id, kata sandi). | UC01 | C01 | C13 | C23 |
-| **KF02** | Pembuatan akun baru dengan penetapan status default "Belum Terverifikasi". | UC01 | C01 | C13 | C23, C24, C25 |
-| **KF03** | Autentikasi surel & kata sandi pada login untuk memberikan akses masuk. | UC03 | C01 | C13 | C23, C28 |
-| **KF04** | Penyajian data identitas profil (nama, NIM, surel) dan daftar listing milik sendiri. | UC05 | C02, C06 | C13 | C23, C24, C25, C28, C29 |
-| **KF05** | Penolakan registrasi surel non-itb.ac.id atau surel yang telah terdaftar. | UC01 | C01 | C13 | C23, C27 |
-| **KF06** | Pembangkitan kode verifikasi berbatas waktu 15 menit ke surel pendaftar. | UC01, UC02 | C01 | C13, C19 | C27, C35 |
-| **KF07** | Pengubahan status akun menjadi "Terverifikasi" saat kode OTP cocok dan valid. | UC02 | C01 | C13 | C23, C27 |
-| **KF08** | Penolakan login akun belum terverifikasi beserta tombol pengiriman ulang kode. | UC02, UC03 | C01 | C13 | C23, C27, C28 |
-| **KF09** | Penyimpanan kata sandi akun wajib menggunakan algoritma *hash* bcrypt. | UC01 | C01 | C13 | C23, C24, C25 |
-| **KF10** | Verifikasi login dengan membandingkan nilai *hash* masukan terhadap basis data. | UC03 | C01 | C13 | C23, C26, C28 |
-| **KF11** | Pembentukan sesi bertoken (JWT) dengan masa berlaku maksimum 24 jam. | UC03 | C01 | C13 | C23, C28 |
-| **KF12** | Penghapusan dan pencabutan (*revoke*) token sesi saat pengguna logout. | UC04 | C01 | C13 | C23, C28 |
-| **KF13** | Penayangan klausul Kebijakan Privasi dan ToS pada antarmuka registrasi. | UC01, UC06 | C01, C12 | C13, C22 | C40 |
-| **KF14** | Pembatalan registrasi jika calon pengguna tidak menyetujui dokumen legal. | UC01 | C01 | C13 | C23, C40 |
-| **KF15** | Formulir pembuatan listing (judul, harga, kondisi, kategori, lokasi COD, foto). | UC07 | C04 | C14 | C25, C28, C29, C31, C32 |
-| **KF16** | Penerbitan listing baru berstatus "Tersedia" langsung ke katalog utama. | UC07 | C04 | C14 | C25, C28, C29 |
-| **KF17** | Halaman detail menyajikan foto lengkap, data barang, dan identitas penjual. | UC15 | C06, C07 | C14 | C25, C29, C30, C31, C32 |
-| **KF18** | Penolakan publikasi dan penandaan visual jika kolom wajib listing kosong. | UC07, UC09 | C04 | C14 | C29 |
-| **KF19** | Pilihan kategori barang terbatas pada 6 kategori baku kampus ITB. | UC07, UC09 | C04 | C14 | C29, C31 |
-| **KF20** | Halaman daftar listing penjual menampilkan seluruh barang dan statusnya. | UC08 | C03, C06 | C14 | C25, C28, C29 |
-| **KF21** | Eksekusi penyimpanan perubahan data atau penghapusan listing milik sendiri. | UC09, UC10 | C03, C04 | C14 | C25, C28, C29, C30 |
-| **KF22** | Penolakan manipulasi/penghapusan listing dari akun yang bukan pemilik sah. | UC09, UC10 | C03, C04 | C14 | C25, C28, C29 |
-| **KF23** | Penerimaan unggahan foto listing khusus JPG/PNG, maks 5 MB, maks 5 foto. | UC07, UC09 | C04 | C14 | C29, C30 |
-| **KF24** | Penolakan dan pesan galat spesifik atas pelanggaran ketentuan unggah foto. | UC07, UC09 | C04 | C14 | C29, C30 |
-| **KF25** | Pencocokan kata kunci pencarian terhadap judul dan deskripsi barang. | UC14 | C05, C06 | C15, C16 | C24, C29 |
-| **KF26** | Penerapan filter kategori, rentang batas harga, dan lokasi titik temu COD. | UC14 | C05, C06 | C15, C17 | C24, C29, C31, C32 |
-| **KF27** | Pengurutan hasil berdasarkan waktu terbaru, harga terendah, atau tertinggi. | UC14 | C05, C06 | C15 | C24, C29 |
-| **KF28** | Pembatasan tampilan katalog maks 20 listing per halaman dan kontrol paginasi. | UC13, UC14 | C05, C06 | C15 | C24, C29 |
-| **KF29** | Penayangan pesan visual barang tidak ditemukan saat hasil kueri nihil. | UC14 | C05 | C15, C16, C17 | C24 |
-| **KF30** | Katalog hanya memuat listing "Tersedia" dari pemilik yang tidak diblokir. | UC13, UC14 | C05, C06, C07 | C15 | C23, C24, C29 |
-| **KF31** | Tombol "Hubungi Penjual" membuka ruang obrolan privat untuk listing terkait. | UC16 | C07, C08 | C18 | C23, C24, C25, C28, C29, C33 |
-| **KF32** | Pengiriman pesan teks tersimpan dan tampil berurutan beserta cap waktu. | UC17 | C08 | C18 | C24, C25, C28, C33, C34 |
-| **KF33** | Daftar percakapan memuat cuplikan pesan terakhir dan identitas lawan bicara. | UC18 | C08 | C18 | C24, C25, C28, C33, C34 |
-| **KF34** | Notifikasi pesan baru di latar belakang dan pembaruan lencana pesan belum dibaca. | UC17, UC18 | C08, C09 | C18, C19 | C24, C25, C34, C35 |
-| **KF35** | Larangan akses ruang percakapan bagi pihak ketiga, termasuk akun admin. | UC16, UC17, UC18 | C08 | C18 | C23, C24, C25, C26, C28, C33 |
-| **KF36** | Penyimpanan isi pesan pada basis data wajib dalam format terenkripsi. | UC17 | C08 | C18 | C33, C34 |
-| **KF37** | Laporan percakapan hanya menyertakan ID obrolan, waktu, dan identitas pelapor. | UC19 | C07, C08, C10 | C20 | C23, C24, C33, C36 |
-| **KF38** | Pernyataan tertulis pada Kebijakan Privasi bahwa pesan tidak dapat diakses admin. | UC06 | C12 | C22 | C40 |
-| **KF39** | Tautan Kebijakan Privasi pada registrasi, profil, dan ruang obrolan. | UC01, UC05, UC06, UC16, UC17 | C01, C02, C08, C12 | C13, C18, C22 | C40 |
-| **KF40** | Aksi "Tandai Terjual" mengubah status listing ketersediaan menjadi "Terjual". | UC11 | C03, C04 | C14 | C25, C28, C29 |
-| **KF41** | Aksi pembatalan tanda terjual memulihkan status listing menjadi "Tersedia". | UC12 | C03, C04 | C14 | C25, C28, C29 |
-| **KF42** | Listing "Terjual" disembunyikan dari katalog, namun tetap ada di riwayat akun. | UC08, UC11, UC12, UC13 | C03, C05, C06 | C14, C15 | C25, C29 |
-| **KF43** | Formulir laporan memuat opsi jenis pelanggaran (*fraud*, sara, *bug*) dan alasan. | UC19 | C07, C10 | C20 | C23, C24, C36 |
-| **KF44** | Pengunggahan dan penyimpanan berkas bukti tangkapan layar bersama laporan. | UC19 | C10 | C20 | C36, C37 |
-| **KF45** | Admin dapat melihat tabel daftar laporan aduan beserta seluruh atributnya. | UC20 | C11 | C21 | C23, C26, C28, C36, C37 |
-| **KF46** | Penyaringan daftar laporan berdasarkan status Baru, Diproses, atau Selesai. | UC20 | C11 | C21 | C26, C28, C36 |
-| **KF47** | Pembaruan status penanganan aduan tersimpan beserta stempel perubahannya. | UC21 | C11 | C21 | C26, C28, C36 |
-| **KF48** | Pencatatan penerimaan laporan dan tindak lanjut admin ke dalam log audit. | UC19, UC21, UC22, UC23 | C11 | C20, C21 | C26, C28, C36, C38 |
-| **KF49** | Penjaminan sifat anti-ubah dan anti-hapus (*immutable*) pada tabel log audit. | UC21, UC22, UC23 | — | C21 | C38 |
-| **KF50** | Eksekusi penghapusan listing bermasalah oleh admin disertai pencatatan alasan. | UC22 | C11 | C21 | C26, C28, C29, C39 |
-| **KF51** | Eksekusi pemblokiran atau pembukaan blokir akun pengguna oleh admin. | UC23, UC24 | C11 | C21 | C23, C26, C28, C39 |
-| **KF52** | Pengiriman notifikasi resmi beserta alasan atas penghapusan barang/blokir akun. | UC22, UC23 | C09, C11 | C19, C21 | C23, C25, C35 |
-| **KF53** | Penolakan proses login bagi akun berstatus diblokir beserta pesan penangguhan. | UC03, UC23 | C01 | C13, C21 | C23, C24, C25, C28 |
-| **KF54** | Penonaktifan seluruh listing milik akun terblokir dari katalog publik. | UC13, UC23, UC24 | C05, C11 | C15, C21 | C23, C29 |
-| **KF55** | Pencatatan tindakan moderasi (pelaku, aksi, objek, waktu, alasan) ke log admin. | UC22, UC23, UC24 | C11 | C21 | C26, C28, C39 |
-| **KF56** | Penolakan hak akses halaman dan fungsionalitas moderasi bagi peran non-admin. | UC20, UC21, UC22, UC23, UC24 | C11 | C21 | C23, C26, C28 |
-
----
-
-## 6.5 Analisis Integritas dan Kelengkapan Keterlacakan
-Evaluasi integritas struktural terhadap Tabel 6.1 dan Tabel 6.2 membuktikan bahwa spesifikasi sistem ITBELI memenuhi standar kualitas rekayasa perangkat lunak:
-
-1. **Metrik Cakupan Kebutuhan Fungsional (100%):** Seluruh 56 butir kebutuhan fungsional (KF01–KF56) terpetakan secara lengkap ke sekurang-kurangnya satu Use Case operasional dan direalisasikan oleh kombinasi kelas BCE yang kohesif. Tidak ada kebutuhan fungsional yang menggantung (*zero orphan requirements*).
-2. **Metrik Cakupan Use Case (100%):** Seluruh 24 Use Case (UC01–UC24) memiliki rujukan kebutuhan fungsional dan realisasi kelas batas (*boundary*), kendali (*control*), dan data (*entity*) yang konsisten dengan Diagram Kelas Keseluruhan pada BAB 5.
-3. **Metrik Utilisasi Kelas (100%):** Seluruh 40 kelas rancangan (12 *boundary*, 10 *control*, 18 *entity*) memiliki peran yang terjustifikasi secara eksplisit dalam mendukung kebutuhan sistem. Tidak ditemukan kelas buangan yang tidak berelasi (*zero dead code / unused classes*).
-4. **Kepatuhan Terhadap Batasan Sistem:** Pemetaan pada kelas percakapan (C08, C18, C33, C34) membuktikan keterlacakan ketat terhadap batasan privasi sistem dan KNF03, di mana akses admin diputus secara arsitektural (KF35, KF38) dan isi pesan wajib disimpan dalam format sandi terenkripsi (KF36).
+Berdasarkan Tabel 6.1 dan Tabel 6.2, seluruh 56 kebutuhan fungsional (KF01–KF56) terpetakan ke sekurang-kurangnya satu use case, satu kelas control, dan satu kelas entity. Seluruh 24 use case (UC01–UC24) memiliki kelas pendukung, dan seluruh 40 kelas (C01–C40) terpetakan ke sekurang-kurangnya satu use case dan satu KF.
 
 # Referensi
 - Diagram UML: [https://www.drawio.com/](https://www.drawio.com/), [https://staruml.io/](https://staruml.io/)
