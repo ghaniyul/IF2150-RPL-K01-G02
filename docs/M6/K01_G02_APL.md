@@ -7,25 +7,25 @@ ARSITEKTUR PERANGKAT LUNAK (APL)
 </h1>
 <br>
 
-## *Nama Perangkat Lunak*
+## *ITBELI*
 
-### Untuk: *[Nama Asisten]*
+### Untuk:  *Mikhael Andrian Yonatan*
 
 Dipersiapkan oleh:
 
 | Informasi | Keterangan |
 | --- | --- |
-| Kelas | *\[Kelas\]* |
-| Kelompok | *\[Nomor Kelompok\]*  |
-| Nama Kelompok | *\[Nama Kelompok\]*  |
+| Kelas | *K01* |
+| Kelompok | *G02*  |
+| Nama Kelompok | *Indeks A*  |
 
-| NIM       | Nama               |
-| --------- | ------------------ |
-| *[NIM 1]* | *[Nama Anggota 1]* |
-| *[NIM 2]* | *[Nama Anggota 2]* |
-| *[NIM 3]* | *[Nama Anggota 3]* |
-| *[NIM 4]* | *[Nama Anggota 4]* |
-| *[NIM 5]* | *[Nama Anggota 5]* |
+| NIM | Nama |
+|---|---|
+| *13525124* | *Sulthan Dhiyazka Suwandi* |
+| *13525034* | *Dhanesworo Muhammad Datiputro* |
+| *13525115* | *Nazhif Hilmi Kistijantoro* |
+| *13525121* | *I Made Adi Kusuma Ardana* |
+| *13525106* | *Ghaniyul Amri Caulava* |
 
 ---
 
@@ -134,9 +134,7 @@ Ketentuan pengisian BAB 3:
 6. Beri label pada setiap garis atau panah yang menghubungkan komponen agar hubungan antarkomponen dapat dipahami tanpa penjelasan tambahan.
 7. Jika membuat *Physical View*, gambarkan lingkungan operasi pada Tabel 1.1.
 
-## 3.1 XXX View
-
-Tuliskan secara singkat mengenai model arsitektur perangkat lunak yang Anda pilih dan sertakan alasan mengapa model arsitektur tersebut cocok untuk aplikasi Anda.
+## 3.1 Logical View
 
 <p align="center">
 <img alt="Contoh Logical View pada P/L E-Commerce" src="./assets/diagram/contoh-logical-view.webp" width="100%">
@@ -145,9 +143,7 @@ Tuliskan secara singkat mengenai model arsitektur perangkat lunak yang Anda pili
 <i>Gambar 2. Contoh Logical View pada P/L E-Commerce</i>
 </p>
 
-Gambar 2 adalah contoh *Logical View* dalam bentuk *block diagram*. Seluruh komponen pada Tabel 2.1 digambarkan dan dikelompokkan sesuai pola MVC (*View*, *Controller*, *Model*), ditambah komponen pendukung dan basis data. Sistem di luar P/L, seperti *Payment Gateway (dummy)*, digambarkan dengan garis putus-putus dan tidak perlu dimasukkan ke Tabel 2.1. Setiap garis diberi label: "Memanggil" untuk *View* yang memanggil *Controller*, "akses" untuk *Controller* yang mengakses *Model*, serta agregasi dan komposisi untuk hubungan antar-*Model*.
-
-<sub><b><i>Catatan</i></b>: <i>Ganti XXX dengan nama view yang dibuat, misalnya Logical View. Gambar 2 hanya contoh untuk P/L e-commerce, ganti dengan view milik kelompok Anda yang memuat seluruh komponen pada Tabel 2.1. Jenis view dan notasinya boleh berbeda dari contoh. Jika membuat view tambahan, lanjutkan pola 3.x ini (3.2, 3.3, dan seterusnya).</i></sub>
+Gambar 2 menampilkan _logical view_ dalam bentuk _block diagram_ untuk pola arsitetur MVC (Model-View-Controller) pada program ITBELI. _logical view_ digunakan untuk mendeskripsikan arsitektur karena batasan dan interaksi antarkomponen harus dideskripsikan dengan jelas agar proses implementasi lebih mudah. Selain itu, _block diagram_ dipilih karena mampu menyajikan interaksi komponen secara lebih menyeluruh dibandingkan class diagram, yang umumnya lebih berfokus pada hubungan antarkelas dalam konteks OOP (Object Oriented Programming).  
 
 ---
 
