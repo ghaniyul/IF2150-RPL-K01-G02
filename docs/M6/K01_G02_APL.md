@@ -143,7 +143,7 @@ Ketentuan pengisian BAB 3:
 <i>Gambar 2. Contoh Logical View pada P/L E-Commerce</i>
 </p>
 
-Gambar 2 menampilkan _logical view_ dalam bentuk _block diagram_ untuk pola arsitetur MVC (Model-View-Controller) pada program ITBELI. _logical view_ digunakan untuk mendeskripsikan arsitektur karena batasan dan interaksi antarkomponen harus dideskripsikan dengan jelas agar proses implementasi lebih mudah. Selain itu, _block diagram_ dipilih karena mampu menyajikan interaksi komponen secara lebih menyeluruh dibandingkan class diagram, yang umumnya lebih berfokus pada hubungan antarkelas dalam konteks OOP (Object Oriented Programming).  
+Gambar 2 menampilkan _logical view_ dalam bentuk _block diagram_ untuk pola arsitetur MVC (Model-View-Controller) pada program ITBELI. _Logical view_ digunakan untuk mendeskripsikan arsitektur karena batasan dan interaksi antarkomponen dapat tergambar dengan jelas, sehingga mempermudah saat proses implementasi. Selain itu, _block diagram_ dipilih karena mampu menyajikan interaksi komponen secara lebih menyeluruh dibandingkan class diagram, yang umumnya lebih berfokus pada hubungan antarkelas dalam konteks OOP (Object Oriented Programming).  
 
 ---
 
