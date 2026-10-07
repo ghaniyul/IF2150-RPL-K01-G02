@@ -93,7 +93,7 @@ Pemilihan MVC didasarkan pada karakteristik ITBELI yang telah dituangkan dalam d
 <i>Gambar 1. Penerapan Pola MVC pada ITBELI</i>
 </p>
 
-Gambar 1 menempatkan seluruh komponen pada Tabel 2.1 ke dalam bagian MVC dengan nama yang sama, sekaligus menunjukkan lingkungan operasi tempat setiap bagian dijalankan. Kotak *View* berisi 12 komponen yang berjalan pada peramban (zona Klien). Kotak *Controller* dan *Model* berada pada zona Server Web ITBELI bersama komponen *Pendukung* dan *Integrasi Eksternal*. Komponen *Penyimpanan Data* berada pada Supabase. Layanan Web Push peramban dan layanan SMTP digambarkan dengan kotak abu-abu karena keduanya berada di luar P/L ITBELI dan tidak termasuk komponen pada Tabel 2.1. Kode kelas di samping nama komponen (misalnya C01) menunjukkan kelas pada diagram kelas SKPL yang diwadahi komponen tersebut.
+Gambar 1 menempatkan seluruh komponen pada Tabel 2.1 ke dalam bagian MVC dengan nama yang sama, sekaligus menunjukkan lingkungan operasi tempat setiap bagian dijalankan. Kotak *View* berisi 12 komponen yang berjalan pada peramban (zona Klien). Kotak *Controller* dan *Model* berada pada zona Server Web ITBELI bersama komponen *Pendukung* dan *Integrasi Eksternal*. Komponen *Penyimpanan Data* berada pada Supabase. Layanan Web Push peramban dan layanan SMTP digambarkan dengan kotak bergaris putus-putus kecil karena keduanya berada di luar P/L ITBELI dan tidak termasuk komponen pada Tabel 2.1. Kode kelas di samping nama komponen (misalnya C01) menunjukkan kelas pada diagram kelas SKPL yang diwadahi komponen tersebut.
 
 Arti setiap panah pada Gambar 1 adalah sebagai berikut.
 - **interaksi** dan **tampilan**: pengguna hanya berinteraksi dengan *View*.
