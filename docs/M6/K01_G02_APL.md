@@ -196,7 +196,7 @@ Tabel 2.1. Identifikasi Komponen/Modul/Subsistem
 | Database | *Penyimpanan Data* | Basis data PostgreSQL pada Supabase yang menyimpan seluruh data model secara persisten dan terpusat sehingga data konsisten bagi seluruh perangkat. |
 | PenyimpananBerkas | *Penyimpanan Data* | Supabase Storage yang menyimpan berkas foto listing dan berkas bukti tangkapan layar laporan, sedangkan lokasi berkasnya dicatat pada model Barang dan Laporan. Diakses oleh BarangController dan LaporanController. |
 
-Seluruh 40 kelas pada diagram kelas SKPL tercakup oleh 21 komponen *View*, *Controller*, dan *Model* di atas, sebagaimana dicantumkan pada kolom Penjelasan, sehingga seluruh use case pada dokumen SKPL dapat dijalankan oleh komponen-komponen tersebut.
+Seluruh 40 kelas pada diagram kelas SKPL tercakup oleh 31 komponen *View*, *Controller*, dan *Model* di atas, sebagaimana dicantumkan pada kolom Penjelasan, sehingga seluruh use case pada dokumen SKPL dapat dijalankan oleh komponen-komponen tersebut.
 
 ---
 
