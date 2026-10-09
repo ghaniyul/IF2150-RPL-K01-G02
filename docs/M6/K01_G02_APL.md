@@ -202,31 +202,57 @@ Seluruh 40 kelas pada diagram kelas SKPL tercakup oleh 31 komponen *View*, *Cont
 
 # BAB 3: Model Arsitektur Perangkat Lunak
 
-*Architectural View* adalah bagaimana cara kita melihat/mendeskripsikan arsitektur sebuah sistem dari sudut pandang tertentu. Dalam perancangan arsitektur aplikasi, dibutuhkan *Architectural View* yang dapat mempermudah pemahaman dari proses aplikasi yang akan dikembangkan. Tujuan dari *Architectural View* adalah menjadi bahan komunikasi, pemisahan masalah, mempermudah analisis, dan pemandu saat eksekusi pengembangan sistem tersebut.
+*Architectural view* adalah cara menggambarkan arsitektur sebuah sistem dari sudut pandang tertentu, sehingga arsitektur tersebut dapat dipakai sebagai bahan komunikasi, alat analisis, dan pemandu saat implementasi. Model arsitektur ITBELI digambarkan dengan satu *view*, yaitu ***Logical View***, dengan alasan sebagai berikut.
 
-Buatlah model arsitektur dari aplikasi yang akan dirancang dalam bentuk *view*. Model arsitektur ini berfungsi untuk memperlihatkan bagaimana setiap komponen, modul, dan subsistem saling berinteraksi serta berkolaborasi dalam menjalankan fungsi utama sistem secara keseluruhan. Anda dapat membuat satu atau lebih *view* tergantung kebutuhan dalam bentuk gambar. Pilihlah notasi yang sesuai. Contoh *view* yang dapat digunakan antara lain ***Logical View***, ***Process View***, ***Development View***, serta ***Physical View***.
-
-Ketentuan pengisian BAB 3:
-1. Setiap view menggambarkan **keseluruhan sistem**, bukan satu use case atau satu fitur saja.
-2. Buat **minimal satu view**. Setiap view dituliskan dalam subbab tersendiri (3.1, 3.2, dan seterusnya). Tidak perlu membuat keempat view, pilih yang paling membantu menjelaskan P/L Anda, lalu jelaskan alasan pemilihannya.
-3. Setiap view harus **konsisten dengan BAB 2**. Seluruh komponen pada Tabel 2.1 harus muncul dengan nama yang sama, dan tidak boleh ada komponen pada view yang tidak terdaftar di Tabel 2.1.
-4. Setiap view harus **mencerminkan style/pattern pada BAB 1**. Misalnya, jika memilih MVC, pembagian *Model*, *View*, dan *Controller* harus terlihat jelas pada diagram.
-5. Jika membuat lebih dari satu view, setiap view harus menggambarkan sistem yang sama dari sudut pandang berbeda. View tambahan melengkapi view pertama, bukan mengulanginya.
-6. Beri label pada setiap garis atau panah yang menghubungkan komponen agar hubungan antarkomponen dapat dipahami tanpa penjelasan tambahan.
-7. Jika membuat *Physical View*, gambarkan lingkungan operasi pada Tabel 1.1.
+1. ***Logical view* menunjukkan seluruh komponen beserta hubungan fungsionalnya.** Fokus dokumen ini adalah memastikan bahwa setiap komponen pada Tabel 2.1 memiliki batas tanggung jawab yang jelas dan berhubungan dengan komponen lain sesuai rancangan di dokumen SKPL. *Logical view* menjawab kebutuhan tersebut secara langsung, karena setiap kotak adalah komponen dan setiap garis adalah hubungan antarkomponen.
+2. ***View* lain belum memberi informasi tambahan yang berarti.** Gambar 1 pada BAB 1 sudah menunjukkan tempat setiap bagian dijalankan (peramban, server Node.js, dan Supabase), sehingga *physical view* hanya akan mengulang gambar tersebut. *Process view* juga kurang dibutuhkan, karena hampir seluruh alur ITBELI berbentuk permintaan dan tanggapan yang sudah dicontohkan pada subbab 1.3. Adapun *development view* baru dapat digambarkan secara akurat setelah struktur kode program disusun pada tahap implementasi.
 
 ## 3.1 Logical View
 
 <p align="center">
-<img alt="Contoh Logical View pada P/L E-Commerce" src="./assets/diagram/contoh-logical-view.webp" width="100%">
+<img alt="Logical View ITBELI" src="./assets/diagram/Logical_View_ITBELI.png" width="100%">
 </p>
 <p align="center">
-<i>Gambar 2. Contoh Logical View pada P/L E-Commerce</i>
+<i>Gambar 2. Logical View ITBELI</i>
 </p>
 
-Gambar 2 menampilkan _logical view_ dalam bentuk _block diagram_ untuk pola arsitetur MVC (Model-View-Controller) pada program ITBELI. _Logical view_ digunakan untuk mendeskripsikan arsitektur karena batasan dan interaksi antarkomponen dapat tergambar dengan jelas, sehingga mempermudah saat proses implementasi. Selain itu, _block diagram_ dipilih karena mampu menyajikan interaksi komponen secara lebih menyeluruh dibandingkan class diagram, yang umumnya lebih berfokus pada hubungan antarkelas dalam konteks OOP (Object Oriented Programming). 
+Gambar 2 menampilkan *logical view* ITBELI dalam bentuk *block diagram*. *Block diagram* dipilih dibandingkan diagram kelas karena diagram kelas berfokus pada atribut, metode, dan hubungan antarkelas, sedangkan *view* ini perlu menunjukkan interaksi antarkomponen yang masing-masing dapat mewadahi lebih dari satu kelas.
 
-Pada diagram, relasi setiap komponen ditandai dengan garis yang menghubungkan antar komponen. Setiap garis dilabeli dengan keterangan singkat mengenai relasi tersebut, seperti "Memanggil"  atau "Agregasi". Komponen-komponen pendukung di luar dari Model, View, dan Controller berada diluar _swimlane_.                             
+**Cara membaca diagram.**
+- Diagram dibagi menjadi tiga lajur, yaitu *View*, *Controller*, dan *Model*, sesuai pola MVC pada BAB 1. Komponen *Pendukung* dan *Integrasi Eksternal* berada di luar lajur, di sebelah kanan, karena keduanya bukan bagian dari MVC dan hanya dipanggil oleh *Controller*. Komponen *Penyimpanan Data* berada di bagian bawah.
+- Garis putus-putus berpanah berarti "memanggil" atau "bergantung pada", dengan arah panah menuju komponen yang dipanggil.
+- Garis tegas berlabel "akses" berarti *Controller* mengakses *Model*.
+- Garis tegas di bawah lajur *Model* adalah relasi antar-*Model*. Angka pada ujungnya menunjukkan multiplisitas, dan belah ketupat hitam menunjukkan komposisi.
+- Kotak bergaris putus-putus bertuliskan "sistem eksternal" (Layanan SMTP dan Layanan Web Push) berada di luar P/L ITBELI. Karena itu, keduanya tidak tercantum pada Tabel 2.1.
+
+**Hubungan antarkomponen.** Seluruh hubungan pada Gambar 2 diturunkan dari tabel Hubungan Antarkelas pada subbab 5.3 dokumen SKPL, dengan memetakan setiap kelas ke komponen yang mewadahinya pada Tabel 2.1.
+
+1. ***View* → *Controller* (memanggil).** Terdapat 15 hubungan, sama dengan 15 asosiasi *boundary–control* pada SKPL. KatalogView memanggil tiga *controller* sekaligus, yaitu KatalogController, PencarianController, dan FilterController. DetailBarangView memanggil BarangController untuk mengambil data listing, PercakapanController untuk tombol "Hubungi Penjual", dan LaporanController untuk aksi pelaporan. OtentikasiView dan ProfilView sama-sama memanggil AkunController. Selain itu, KatalogView, ListingPenjualView, dan ProfilView memuat KartuProdukView melalui relasi komposisi.
+2. ***Controller* → *Model* (akses).** Model Barang diakses oleh enam *controller*, yaitu KatalogController, PencarianController, FilterController, BarangController, ModerasiController (penghapusan listing dan penonaktifan listing akun yang diblokir), serta AkunController (daftar listing pada halaman profil). ModerasiController sama sekali tidak mengakses *Model* Percakapan, sehingga tidak ada jalur dari DasborAdminView menuju isi pesan (KF35).
+3. ***Controller* → *Controller*.** PercakapanController (pesan baru), ModerasiController (tindakan moderasi), dan AkunController (kode verifikasi) meminta NotifikasiController mengirim notifikasi.
+4. ***Controller* → *Pendukung*.** AkunController, BarangController, PercakapanController, LaporanController, dan ModerasiController memanggil Otorisasi untuk memeriksa sesi dan peran. Otorisasi kemudian membaca data sesi pada *Model* Otentikasi. Dengan cara ini, ketergantungan BarangController, PercakapanController, dan LaporanController pada kelas C28 SesiLogin di SKPL diwujudkan melalui Otorisasi, sesuai penjelasan Otorisasi pada Tabel 2.1. AkunController dan PercakapanController juga memanggil Kriptografi untuk *hash* kata sandi serta enkripsi dan dekripsi pesan.
+5. ***Controller* → *Integrasi Eksternal* → sistem eksternal.** NotifikasiController mengirim surel melalui SurelAdapter ke Layanan SMTP, dan mengirim notifikasi *push* melalui PushNotifikasiAdapter ke Layanan Web Push.
+6. **Penyimpanan data.** Seluruh *Model* menyimpan dan membaca datanya pada Database. BarangController menyimpan foto listing dan LaporanController menyimpan bukti laporan pada PenyimpananBerkas, sedangkan *Model* Barang dan Laporan hanya mencatat lokasi berkasnya.
+7. **Antar-*Model*.** Terdapat 12 relasi antar-*Model* sebagaimana dirinci pada Tabel 3.1. Relasi antarkelas yang berada di dalam satu komponen tidak digambarkan, karena relasi tersebut merupakan bagian dalam komponen itu sendiri. Contohnya adalah generalisasi Akun–Pembeli/Penjual/Admin, komposisi Barang–FotoBarang, Percakapan–Pesan, dan Laporan–BuktiLaporan.
+
+Tabel 3.1. Relasi Antar-*Model* pada *Logical View*
+
+| *Model* A | Multiplisitas | *Model* B | Jenis | Arti | Asal pada SKPL |
+| :--- | :---: | :--- | :--- | :--- | :--- |
+| Akun | 1 ◆— 0..* | Barang | Komposisi | Listing dimiliki satu penjual dan tidak dapat berdiri tanpa pemiliknya. | C25–C29 |
+| DataReferensi | 1 — 0..* | Barang | Asosiasi | Listing dikelompokkan ke satu kategori dan satu titik temu COD. | C31–C29, C32–C29 |
+| Barang | 1 — 0..* | Percakapan | Asosiasi | Setiap percakapan membahas satu listing. | C29–C33 |
+| Akun | 1 — 0..* | Percakapan | Asosiasi | Akun terlibat dalam percakapan sebagai pembeli, penjual, atau pengirim pesan. | C24–C33, C25–C33, C23–C34 |
+| Akun | 1 — 0..* | Laporan | Asosiasi | Akun membuat laporan sebagai pelapor. | C23–C36 |
+| Laporan | 0..* — 0..1 | Barang | Asosiasi | Listing dapat menjadi objek yang dilaporkan. | C36–C29 |
+| Laporan | 0..* — 0..1 | Percakapan | Asosiasi | Percakapan dapat menjadi objek yang dilaporkan (hanya metadata). | C36–C33 |
+| Laporan | 1 — 0..* | LogAktivitas | Asosiasi | Penerimaan dan tindak lanjut laporan dicatat pada *log* audit. | C36–C38 |
+| Akun | 1 — 0..* | LogAktivitas | Asosiasi | Setiap tindakan moderasi admin dicatat pada *log* admin. | C26–C39 |
+| Akun | 0..* — 1 | DokumenLegal | Asosiasi | Akun menyetujui satu versi kebijakan saat mendaftar. | C23–C40 |
+| Akun | 1 — 0..* | Notifikasi | Asosiasi | Akun menerima notifikasi. | C23–C35 |
+| Akun | 1 — 0..* | Otentikasi | Asosiasi | Akun memiliki kode verifikasi dan sesi *login*. | C23–C27, C23–C28 |
+
+**Konsistensi dengan BAB 1 dan BAB 2.** Seluruh 37 komponen pada Tabel 2.1 muncul pada Gambar 2 dengan nama yang sama, dan tidak ada komponen lain selain dua sistem eksternal yang berada di luar P/L. Pembagian *View*, *Controller*, dan *Model* terlihat dari lajur pada diagram, dan setiap garis diberi label. Seluruh hubungan juga mematuhi aturan ketergantungan pada subbab 1.1. *View* hanya memanggil *Controller*, Database hanya diakses oleh *Model*, serta *Pendukung*, *Integrasi Eksternal*, dan PenyimpananBerkas hanya dipanggil oleh *Controller*. Otorisasi memang membaca data sesi dari *Model* Otentikasi, tetapi hal ini tidak melanggar aturan tersebut karena Otorisasi sendiri tetap hanya dipanggil oleh *Controller*. Gambar 2 melengkapi Gambar 1: Gambar 1 menunjukkan pembagian MVC beserta lingkungan operasinya, sedangkan Gambar 2 merinci hubungan antar-komponen secara satu per satu.
 
 ---
 
