@@ -1,0 +1,81 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam sequenceMessageAlign center
+skinparam backgroundColor #FFFFFF
+
+skinparam participant {
+    BackgroundColor #FFFFFF
+    BorderColor #000000
+}
+skinparam actor {
+    BackgroundColor #FFFFFF
+    BorderColor #000000
+}
+skinparam sequence {
+    LifeLineBackgroundColor #FFFFFF
+    LifeLineBorderColor #000000
+    ArrowColor #000000
+    ActorBorderColor #000000
+    ActorBackgroundColor #FFFFFF
+    GroupBorderColor #000000
+    GroupBackgroundColor #FFFFFF
+}
+
+actor "Calon Pengguna" as User
+boundary ":HalamanOtentikasi" as UI
+control ":AkunController" as Ctrl
+control ":NotifikasiController" as NotifCtrl
+entity ":DokumenLegal" as Dokumen
+entity ":Akun" as Akun
+entity ":TokenVerifikasi" as Token
+entity ":Notifikasi" as Notif
+
+User -> UI: bukaFormulirPendaftaran()
+activate UI
+UI -> Ctrl: getTautanDokumenLegal()
+activate Ctrl
+Ctrl -> Dokumen: getTautan()
+activate Dokumen
+Dokumen --> Ctrl: tautanDokumen
+deactivate Dokumen
+Ctrl --> UI: tautanDokumen
+deactivate Ctrl
+UI --> User: tampilkanFormulirPendaftaran()
+deactivate UI
+
+User -> UI: kirimFormulirPendaftaran(nama, nim, email, kataSandi, setujuKebijakan)
+activate UI
+UI -> Ctrl: daftarAkun(nama, nim, email, kataSandi, setujuKebijakan)
+activate Ctrl
+Ctrl -> Ctrl: validasiKelengkapanFormulir(nama, nim, email, kataSandi, setujuKebijakan)
+Ctrl -> Ctrl: validasiDomainEmail(email)
+Ctrl -> Ctrl: cekKeunikanEmail(email)
+Ctrl -> Ctrl: hashKataSandi(kataSandi)
+
+Ctrl -> Akun: simpan(nama, nim, email, kataSandiHash, statusAkun="Belum Terverifikasi", setujuKebijakan=true)
+activate Akun
+Akun --> Ctrl: idAkun
+deactivate Akun
+
+Ctrl -> Ctrl: buatKodeVerifikasi(idAkun)
+Ctrl -> Token: simpan(idAkun, kode, waktuBuat, waktuKedaluwarsa, statusPakai="Aktif")
+activate Token
+Token --> Ctrl: statusSimpan
+deactivate Token
+
+Ctrl -> NotifCtrl: kirimEmailVerifikasi(email, kode)
+activate NotifCtrl
+NotifCtrl -> Notif: simpan(idAkun, jenis="Surel Verifikasi", isi, waktuKirim, statusBaca=false)
+activate Notif
+Notif --> NotifCtrl: statusNotifikasi
+deactivate Notif
+NotifCtrl --> Ctrl: konfirmasiPengiriman
+deactivate NotifCtrl
+
+Ctrl --> UI: statusPendaftaranBerhasil
+deactivate Ctrl
+UI --> User: arahkanKeHalamanVerifikasi()
+deactivate UI
+@enduml

@@ -1,0 +1,60 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+skinparam classBorderColor #000000
+skinparam classBackgroundColor #FFFFFF
+skinparam arrowColor #000000
+skinparam nodesep 55
+skinparam ranksep 55
+
+hide circle
+hide stereotype
+
+class "HalamanOtentikasi" as C01 {
+  - email: String
+  - kataSandi: String
+  - token: String
+  + tampilkanFormulirLogin(): void
+  + kirimFormulirLogin(email: String, kataSandi: String): void
+  + arahkanKeBeranda(): void
+  + tampilkanPesanGalat(pesan: String): void
+}
+
+class "AkunController" as C13 {
+  + login(email: String, kataSandi: String): Map<String, Any>
+  + cariAkunByEmail(email: String): Akun
+  + verifikasiKataSandi(plain: String, hash: String): Boolean
+  + cekStatusAkun(idAkun: String): String
+  + buatSesiLogin(idAkun: String): SesiLogin
+}
+
+class "Akun" as C23 {
+  - idAkun: String
+  - email: String
+  - kataSandiHash: String
+  - statusAkun: String
+  - statusBlokir: Boolean
+  - peran: String
+  + cariByEmail(email: String): Akun
+  + getStatusAkun(): String
+}
+
+class "SesiLogin" as C28 {
+  - idSesi: String
+  - idAkun: String
+  - token: String
+  - waktuMulai: DateTime
+  - waktuKedaluwarsa: DateTime
+  - statusAktif: Boolean
+  + buatToken(idAkun: String): String
+  + simpan(): Boolean
+}
+
+C01 --> C13
+C13 ..> C23
+C13 ..> C28
+C23 "1" -- "0..*" C28
+@enduml

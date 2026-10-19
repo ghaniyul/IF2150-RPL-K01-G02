@@ -1,0 +1,35 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam sequenceMessageAlign center
+skinparam backgroundColor #FFFFFF
+
+skinparam participant {
+    BackgroundColor #FFFFFF
+    BorderColor #000000
+}
+skinparam actor {
+    BackgroundColor #FFFFFF
+    BorderColor #000000
+}
+skinparam sequence {
+    LifeLineBackgroundColor #FFFFFF
+    LifeLineBorderColor #000000
+    ArrowColor #000000
+    ActorBorderColor #000000
+    ActorBackgroundColor #FFFFFF
+    GroupBorderColor #000000
+    GroupBackgroundColor #FFFFFF
+}
+
+actor "Penjual" as User
+boundary ":FormulirBarang" as UI
+
+User -> UI: kirimFormulir(dataTidakLengkap)
+activate UI
+UI -> UI: tandaiIsianKosong()
+note right of UI: Judul, harga, kategori, atau foto belum terisi\n(pengiriman dibatalkan)
+UI --> User: tampilkanPenandaMerah("Isian wajib belum lengkap.")
+deactivate UI
+@enduml

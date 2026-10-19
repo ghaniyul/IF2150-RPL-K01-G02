@@ -1,0 +1,48 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam sequenceMessageAlign center
+skinparam backgroundColor #FFFFFF
+
+skinparam participant {
+    BackgroundColor #FFFFFF
+    BorderColor #000000
+}
+skinparam actor {
+    BackgroundColor #FFFFFF
+    BorderColor #000000
+}
+skinparam sequence {
+    LifeLineBackgroundColor #FFFFFF
+    LifeLineBorderColor #000000
+    ArrowColor #000000
+    ActorBorderColor #000000
+    ActorBackgroundColor #FFFFFF
+    GroupBorderColor #000000
+    GroupBackgroundColor #FFFFFF
+}
+
+actor "Pengguna" as User
+boundary ":HalamanOtentikasi" as UI
+control ":AkunController" as Ctrl
+entity ":Akun" as Akun
+
+User -> UI: kirimFormulirLogin(email, kataSandi)
+activate UI
+UI -> Ctrl: login(email, kataSandi)
+activate Ctrl
+Ctrl -> Akun: cariByEmail(email)
+activate Akun
+Akun --> Ctrl: dataAkun
+deactivate Akun
+Ctrl -> Ctrl: verifikasiKataSandi(kataSandi, kataSandiHash)
+Ctrl -> Akun: getStatusAkun()
+activate Akun
+Akun --> Ctrl: "Belum Terverifikasi"
+deactivate Akun
+Ctrl --> UI: galatBelumVerifikasi
+deactivate Ctrl
+UI --> User: tampilkanPesanGalat("Akun belum diverifikasi. Kirim ulang kode.")
+deactivate UI
+@enduml

@@ -1,0 +1,49 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam sequenceMessageAlign center
+skinparam backgroundColor #FFFFFF
+
+skinparam participant {
+    BackgroundColor #FFFFFF
+    BorderColor #000000
+}
+skinparam actor {
+    BackgroundColor #FFFFFF
+    BorderColor #000000
+}
+skinparam sequence {
+    LifeLineBackgroundColor #FFFFFF
+    LifeLineBorderColor #000000
+    ArrowColor #000000
+    ActorBorderColor #000000
+    ActorBackgroundColor #FFFFFF
+    GroupBorderColor #000000
+    GroupBackgroundColor #FFFFFF
+}
+
+actor "Pengguna" as User
+boundary ":HalamanOtentikasi" as UI
+control ":AkunController" as Ctrl
+entity ":SesiLogin" as Sesi
+
+User -> UI: kirimPermintaanLogout(token)
+activate UI
+UI -> Ctrl: logout(token)
+activate Ctrl
+Ctrl -> Sesi: verifikasiAkses(token)
+activate Sesi
+Sesi --> Ctrl: true (sesi valid)
+deactivate Sesi
+Ctrl -> Ctrl: cabutSesi(token)
+Ctrl -> Sesi: nonaktifkan(token)
+activate Sesi
+Sesi --> Ctrl: statusNonaktif
+deactivate Sesi
+Ctrl --> UI: konfirmasiLogout
+deactivate Ctrl
+UI -> UI: hapusTokenLokal()
+UI --> User: arahkanKeHalamanLogin()
+deactivate UI
+@enduml

@@ -268,66 +268,482 @@ Seluruh hubungan tersebut mematuhi aturan ketergantungan pada subbab 2.2.1. Sala
 
 # BAB 3: Realisasi Use Case
 
-## 3.1 Use Case [Nama Use Case 1]
+Bab ini mendeskripsikan realisasi use case ITBELI ke dalam perancangan perangkat lunak untuk use case UC01 sampai dengan UC08. Setiap subbab use case memuat identifikasi kelas perancangan yang terlibat, *sequence diagram* untuk skenario normal dan seluruh skenario alternatif berdasarkan dokumen SKPL, serta diagram kelas perancangan yang memuat spesifikasi lengkap atribut dan operasi.
 
-**ID Use Case:** *[UC01 sesuai SKPL]*  
-**Nama Use Case:** *[Nama use case sesuai SKPL]*
+---
+
+## 3.1 Use Case Mendaftar Akun
+
+**ID Use Case:** UC01  
+**Nama Use Case:** Mendaftar Akun
 
 ### 3.1.1 Identifikasi Kelas
 
-Identifikasi kelas yang terkait dengan use case tersebut. Kelas di tahap perancangan dapat berbeda dengan dengan kelas di tahap analisis. Dapat menggunakan tabel di bawah:
+Realisasi use case pendaftaran akun melibatkan kelas *boundary* untuk menyajikan formulir dan menangkap masukan, kelas *control* untuk menegakkan aturan bisnis (validasi domain @itb.ac.id, keunikan surel, *hashing* kata sandi, serta pemicuan verifikasi surel), kelas *entity* untuk persistensi data, serta kelas *pendukung* dan *integrasi eksternal*.
 
-Tabel 3.1. Identifikasi Kelas Use Case [UC01]
+Tabel 3.1. Identifikasi Kelas Use Case UC01
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
-|:--- | :--- | :--- |
-| 1 | *[Nama kelas perancangan]* | *[Nama kelas analisis pada SKPL]* |
-| 2 | *[Nama kelas perancangan]* | *[Nama kelas analisis pada SKPL]* |
-| ... | *...* | *...* |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanOtentikasi | C01 HalamanOtentikasi | Menyajikan formulir pendaftaran, memvalidasi kelengkapan isian di sisi klien, dan menampilkan pesan galat atau mengarahkan ke halaman verifikasi. |
+| 2 | AkunController | C13 AkunController | Mengorkestrasikan pendaftaran: validasi kelengkapan, verifikasi domain @itb.ac.id, pengecekan keunikan surel, pemanggilan fungsi hash kata sandi, serta pembuatan token verifikasi. |
+| 3 | NotifikasiController | C19 NotifikasiController | Mengelola pembuatan notifikasi surel verifikasi dan meneruskannya ke surel adapter. |
+| 4 | Akun | C23 Akun | Menyimpan entitas akun baru dengan status awal "Belum Terverifikasi". |
+| 5 | TokenVerifikasi | C27 TokenVerifikasi | Menyimpan kode verifikasi unik (OTP) dengan masa berlaku 15 menit dan status aktif. |
+| 6 | Notifikasi | C35 Notifikasi | Menyimpan rekaman riwayat pemberitahuan verifikasi yang dikirimkan kepada pengguna. |
+| 7 | DokumenLegal | C40 DokumenLegal | Menyediakan naskah Kebijakan Privasi dan Ketentuan Penggunaan yang disetujui pendaftar. |
+| 8 | Kriptografi | C42 Kriptografi (Pendukung) | Melakukan enkripsi satu arah (*hashing*) kata sandi menggunakan pustaka bcrypt sebelum disimpan. |
+| 9 | SurelAdapter | C43 SurelAdapter (Integrasi) | Mengirimkan kode verifikasi ke alamat surel @itb.ac.id pengguna melalui protokol SMTP berenkripsi TLS. |
 
 ### 3.1.2 Sequence Diagram
 
-Buat *sequence diagram* untuk **setiap skenario use case**, mencakup skenario normal dan alternatif pada subbab 4.4 SKPL. Diagram melibatkan kelas-kelas yang telah diidentifikasi pada SKPL. 
-
 - **Skenario Normal**
 
-<p align="center">
-<img alt="Contoh Logical View pada P/L E-Commerce" src="./assets/diagram/contoh-sequence_diagram.png" width="50%">
-</p>
-<p align="center">
-<i>Gambar X. Sequence Diagram [UC01]</i>
-</p>
-
-- **Skenario Alternatif [Nomor]: [Nama Skenario]**
+Alur pendaftaran normal diawali saat calon pengguna membuka halaman pendaftaran akun, mengisi identitas lengkap dengan surel berdomain @itb.ac.id, menyetujui ketentuan privasi, dan menekan tombol daftar. Sistem melakukan validasi, mengenkripsi kata sandi, menyimpan akun baru berstatus "Belum Terverifikasi", membangkitkan token verifikasi, serta mengirimkan kode ke surel pengguna.
 
 <p align="center">
-<img alt="Contoh Logical View pada P/L E-Commerce" src="./assets/diagram/contoh-sequence_diagram.png" width="50%">
+<img alt="Sequence Diagram UC01 - Skenario Normal" src="./assets/diagram/Sequence_UC01_Normal.png" width="95%">
 </p>
 <p align="center">
-<i>Gambar X. Sequence Diagram [UC01] - [Nama skenario alternatif]</i>
+<i>Gambar 3.1. Sequence Diagram UC01 - Skenario Normal</i>
+</p>
+
+- **Skenario Alternatif 1: Domain Email Tidak Valid**
+
+Skenario ini terjadi apabila calon pengguna memasukkan alamat surel yang tidak berakhiran domain institusi resmi (@itb.ac.id), seperti @gmail.com atau @yahoo.com. AkunController mendeteksi ketidaksesuaian domain, membatalkan penyimpanan, dan HalamanOtentikasi menampilkan pesan galat validasi institusi.
+
+<p align="center">
+<img alt="Sequence Diagram UC01 - Skenario Alternatif 1: Domain Email Tidak Valid" src="./assets/diagram/Sequence_UC01_Alt1.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.2. Sequence Diagram UC01 - Skenario Alternatif 1: Domain Email Tidak Valid</i>
+</p>
+
+- **Skenario Alternatif 2: Email Sudah Terdaftar**
+
+Skenario ini terjadi apabila calon pengguna mendaftar dengan surel yang telah tersimpan sebelumnya pada basis data ITBELI. Pengecekan keunikan surel oleh AkunController menghasilkan status terdaftar, sehingga proses pembuatan akun digagalkan dan sistem menyarankan pengguna untuk masuk atau menggunakan alamat lain.
+
+<p align="center">
+<img alt="Sequence Diagram UC01 - Skenario Alternatif 2: Email Sudah Terdaftar" src="./assets/diagram/Sequence_UC01_Alt2.png" width="80%">
+</p>
+<p align="center">
+<i>Gambar 3.3. Sequence Diagram UC01 - Skenario Alternatif 2: Email Sudah Terdaftar</i>
 </p>
 
 ### 3.1.3 Diagram Kelas
 
-Buatlah diagram kelas untuk use case ini yang terdiri atas kelas-kelas dari 3.1.1. **Setiap kelas pada diagram wajib menampilkan atribut dan metode/operasi langsung di dalam kotak kelasnya**, sehingga tidak perlu membuat tabel daftar atribut dan metode per kelas pada subbab ini. Daftar lengkap atribut dan metode seluruh kelas disajikan pada Tabel 4.1 (Bab 4).
+Diagram kelas perancangan UC01 menggambarkan struktur statis kelas perancangan yang merealisasikan proses pendaftaran akun. HalamanOtentikasi berasosiasi langsung dengan AkunController. AkunController bergantung pada Akun, TokenVerifikasi, DokumenLegal, Kriptografi, serta NotifikasiController. NotifikasiController selanjutnya berkolaborasi dengan SurelAdapter dan entitas Notifikasi. Multiplisitas relasi antar-entitas menunjukkan bahwa satu Akun dapat memiliki banyak TokenVerifikasi dan Notifikasi, serta merujuk ke satu versi DokumenLegal yang disetujui.
 
 <p align="center">
-<img alt="Contoh Logical View pada P/L E-Commerce" src="./assets/diagram/contoh_class-diagram2.jpg" width="35%">
+<img alt="Diagram Kelas Use Case UC01" src="./assets/diagram/Diagram_Kelas_UC01.png" width="85%">
 </p>
 <p align="center">
-<i>Gambar X. Diagram Kelas [Nama Uce Case]</i>
+<i>Gambar 3.4. Diagram Kelas Use Case UC01</i>
 </p>
 
-Pada diagram, pastikan:
-- Atribut dituliskan beserta visibilitas dan tipe datanya, misalnya `- email: String`.
-- Operasi dituliskan beserta visibilitas, parameter, dan tipe kembaliannya, misalnya `+ login(email: String, password: String): Boolean`.
-- Relasi antarkelas (asosiasi, agregasi, komposisi, generalisasi, dan dependensi) digambarkan lengkap dengan multiplisitas.
-- Semua operasi yang dipanggil pada sequence diagram 3.1.2 (skenario normal dan alternatif) ada pada kelas yang bersangkutan.
-- Kelas yang sama dengan kelas di use case lain memakai nama, atribut, dan metode yang konsisten.
+---
 
-## 3.2 Use Case XX
+## 3.2 Use Case Memverifikasi Surel
 
-Silahkan lanjutkan untuk  *use case* berikutnya dengan content yang sama dengan 3.1
+**ID Use Case:** UC02  
+**Nama Use Case:** Memverifikasi Surel
+
+### 3.2.1 Identifikasi Kelas
+
+Realisasi use case verifikasi surel melibatkan antarmuka verifikasi untuk menerima kode masukan dan menampilkan hitung mundur waktu kedaluwarsa, kelas pengendali untuk memverifikasi keabsahan kode dan memperbarui status akun, serta entitas token verifikasi dan surel adapter untuk kebutuhan pengiriman ulang kode.
+
+Tabel 3.2. Identifikasi Kelas Use Case UC02
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanOtentikasi | C01 HalamanOtentikasi | Menyajikan kolom isian kode verifikasi, indikator hitung mundur 15 menit, opsi tombol kirim ulang, serta notifikasi hasil validasi. |
+| 2 | AkunController | C13 AkunController | Memvalidasi kode verifikasi terhadap basis data token, memeriksa batas waktu kedaluwarsa, memperbarui status akun, serta memproses permintaan kode baru. |
+| 3 | NotifikasiController | C19 NotifikasiController | Menangani pengiriman surel kode verifikasi baru ketika diminta pengiriman ulang. |
+| 4 | Akun | C23 Akun | Menyimpan pembaruan status akun dari "Belum Terverifikasi" menjadi "Terverifikasi". |
+| 5 | TokenVerifikasi | C27 TokenVerifikasi | Melakukan pencocokan kode masukan, pengecekan kedaluwarsa 15 menit, penandaan status terpakai, dan penandaan hangus saat kode baru dibangkitkan. |
+| 6 | Notifikasi | C35 Notifikasi | Menyimpan rekaman riwayat pengiriman ulang kode verifikasi. |
+| 7 | SurelAdapter | C43 SurelAdapter (Integrasi) | Mengirimkan surel berisi kode verifikasi baru ke alamat pengguna melalui SMTP. |
+
+### 3.2.2 Sequence Diagram
+
+- **Skenario Normal**
+
+Pada skenario normal, pengguna menyalin kode verifikasi dari surel, memasukkannya ke antarmuka, lalu menekan tombol verifikasi. Sistem mencocokkan kode dengan data token, memastikan waktu belum melampaui 15 menit, mengubah status token menjadi terpakai, memperbarui status akun menjadi "Terverifikasi", dan mengarahkan pengguna ke halaman beranda/login.
+
+<p align="center">
+<img alt="Sequence Diagram UC02 - Skenario Normal" src="./assets/diagram/Sequence_UC02_Normal.png" width="65%">
+</p>
+<p align="center">
+<i>Gambar 3.5. Sequence Diagram UC02 - Skenario Normal</i>
+</p>
+
+- **Skenario Alternatif 1: Kode Tidak Valid / Kedaluwarsa**
+
+Skenario ini terjadi jika kode yang dimasukkan salah atau waktu penginputan telah melewati batas toleransi 15 menit. Sistem menolak pembaruan status akun dan menampilkan pesan galat yang menginstruksikan pengguna untuk meminta kode verifikasi baru.
+
+<p align="center">
+<img alt="Sequence Diagram UC02 - Skenario Alternatif 1: Kode Tidak Valid / Kedaluwarsa" src="./assets/diagram/Sequence_UC02_Alt1.png" width="70%">
+</p>
+<p align="center">
+<i>Gambar 3.6. Sequence Diagram UC02 - Skenario Alternatif 1: Kode Tidak Valid / Kedaluwarsa</i>
+</p>
+
+- **Skenario Alternatif 2: Meminta Pengiriman Ulang Kode**
+
+Skenario ini terjadi saat pengguna menekan tombol "Kirim Ulang Kode". Sistem menandai token lama sebagai hangus (*invalidated*), membangkitkan kode baru dengan batas waktu 15 menit baru, menyimpannya ke basis data, mengirimkannya melalui SurelAdapter, dan me-reset hitung mundur di layar antarmuka.
+
+<p align="center">
+<img alt="Sequence Diagram UC02 - Skenario Alternatif 2: Meminta Pengiriman Ulang Kode" src="./assets/diagram/Sequence_UC02_Alt2.png" width="80%">
+</p>
+<p align="center">
+<i>Gambar 3.7. Sequence Diagram UC02 - Skenario Alternatif 2: Meminta Pengiriman Ulang Kode</i>
+</p>
+
+### 3.2.3 Diagram Kelas
+
+Diagram kelas perancangan UC02 mendefinisikan kelas dan operasi yang dibutuhkan untuk validasi dan pengiriman ulang token verifikasi. HalamanOtentikasi berasosiasi dengan AkunController. AkunController bergantung pada Akun, TokenVerifikasi, dan NotifikasiController. NotifikasiController berkolaborasi dengan SurelAdapter dan entitas Notifikasi.
+
+<p align="center">
+<img alt="Diagram Kelas Use Case UC02" src="./assets/diagram/Diagram_Kelas_UC02.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.8. Diagram Kelas Use Case UC02</i>
+</p>
+
+---
+
+## 3.3 Use Case Masuk ke Sistem (Login)
+
+**ID Use Case:** UC03  
+**Nama Use Case:** Masuk ke Sistem (Login)
+
+### 3.3.1 Identifikasi Kelas
+
+Realisasi use case login melibatkan antarmuka autentikasi untuk menerima kredensial, controller untuk memverifikasi kecocokan hash sandi dan memeriksa status keaktifan akun, modul kriptografi untuk verifikasi bcrypt, serta entitas sesi untuk pembentukan token akses (JWT).
+
+Tabel 3.3. Identifikasi Kelas Use Case UC03
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanOtentikasi | C01 HalamanOtentikasi | Menyajikan formulir login, menangkap surel dan kata sandi, serta menampilkan pesan kegagalan (kredensial salah, belum verifikasi, atau terblokir). |
+| 2 | AkunController | C13 AkunController | Mengorkestrasikan login: pencarian akun, pemanggilan verifikasi hash sandi, pemeriksaan status akun dan blokir, serta penerbitan token sesi. |
+| 3 | Akun | C23 Akun | Menyimpan data kredensial, status verifikasi akun, status pemblokiran, dan peran pengguna (Pembeli/Penjual/Admin). |
+| 4 | SesiLogin | C28 SesiLogin | Membangkitkan token sesi (JWT) bertenggat kedaluwarsa 24 jam dan menyimpannya sebagai catatan sesi aktif. |
+| 5 | Kriptografi | C42 Kriptografi (Pendukung) | Membandingkan kata sandi teks murni dengan nilai hash bcrypt yang tersimpan secara aman. |
+
+### 3.3.2 Sequence Diagram
+
+- **Skenario Normal**
+
+Pada skenario normal, pengguna memasukkan surel dan kata sandi yang valid. AkunController mengambil data akun, memverifikasi hash melalui Kriptografi, memastikan status akun adalah "Terverifikasi" dan tidak terblokir, membangkitkan token sesi 24 jam melalui SesiLogin, serta mengarahkan pengguna ke beranda aplikasi.
+
+<p align="center">
+<img alt="Sequence Diagram UC03 - Skenario Normal" src="./assets/diagram/Sequence_UC03_Normal.png" width="85%">
+</p>
+<p align="center">
+<i>Gambar 3.9. Sequence Diagram UC03 - Skenario Normal</i>
+</p>
+
+- **Skenario Alternatif 1: Kredensial Tidak Sesuai**
+
+Skenario ini terjadi saat surel tidak ditemukan pada sistem atau kata sandi yang dimasukkan tidak cocok dengan nilai hash yang tersimpan. Sistem menolak pembentukan sesi dan memunculkan pesan galat kredensial salah.
+
+<p align="center">
+<img alt="Sequence Diagram UC03 - Skenario Alternatif 1: Kredensial Tidak Sesuai" src="./assets/diagram/Sequence_UC03_Alt1.png" width="65%">
+</p>
+<p align="center">
+<i>Gambar 3.10. Sequence Diagram UC03 - Skenario Alternatif 1: Kredensial Tidak Sesuai</i>
+</p>
+
+- **Skenario Alternatif 2: Akun Belum Terverifikasi**
+
+Skenario ini terjadi ketika kredensial pengguna cocok, namun atribut status akun masih bernilai "Belum Terverifikasi". Sistem menahan pembuatan sesi login dan menampilkan pesan peringatan beserta tombol pintasan untuk verifikasi/kirim ulang kode.
+
+<p align="center">
+<img alt="Sequence Diagram UC03 - Skenario Alternatif 2: Akun Belum Terverifikasi" src="./assets/diagram/Sequence_UC03_Alt2.png" width="65%">
+</p>
+<p align="center">
+<i>Gambar 3.11. Sequence Diagram UC03 - Skenario Alternatif 2: Akun Belum Terverifikasi</i>
+</p>
+
+- **Skenario Alternatif 3: Akun Sedang Diblokir**
+
+Skenario ini terjadi jika kredensial cocok dan akun terverifikasi, namun nilai atribut statusBlokir bernilai true (telah ditangguhkan oleh admin). Sistem membatalkan sesi masuk dan menampilkan pesan penangguhan resmi.
+
+<p align="center">
+<img alt="Sequence Diagram UC03 - Skenario Alternatif 3: Akun Sedang Diblokir" src="./assets/diagram/Sequence_UC03_Alt3.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.12. Sequence Diagram UC03 - Skenario Alternatif 3: Akun Sedang Diblokir</i>
+</p>
+
+### 3.3.3 Diagram Kelas
+
+Diagram kelas perancangan UC03 memodelkan komponen autentikasi pengguna. HalamanOtentikasi berasosiasi dengan AkunController. AkunController bergantung pada Akun, SesiLogin, dan kelas utilitas Kriptografi. Satu entitas Akun berelasi 1 ke 0..* dengan SesiLogin.
+
+<p align="center">
+<img alt="Diagram Kelas Use Case UC03" src="./assets/diagram/Diagram_Kelas_UC03.png" width="65%">
+</p>
+<p align="center">
+<i>Gambar 3.13. Diagram Kelas Use Case UC03</i>
+</p>
+
+---
+
+## 3.4 Use Case Keluar dari Sistem (Logout)
+
+**ID Use Case:** UC04  
+**Nama Use Case:** Keluar dari Sistem (Logout)
+
+### 3.4.1 Identifikasi Kelas
+
+Realisasi use case logout melibatkan komponen antarmuka yang menyediakan tombol keluar, controller untuk memproses pencabutan otorisasi, modul otorisasi untuk validasi token, serta entitas sesi login untuk menonaktifkan token secara permanen.
+
+Tabel 3.4. Identifikasi Kelas Use Case UC04
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanOtentikasi | C01 HalamanOtentikasi | Menampilkan opsi tombol "Keluar", mengirimkan permintaan logout, menghapus token lokal peramban, dan mengalihkan ke halaman login. |
+| 2 | AkunController | C13 AkunController | Memproses permintaan pencabutan sesi di sisi server web. |
+| 3 | Akun | C23 Akun | Entitas pemilik sesi login yang sedang aktif. |
+| 4 | SesiLogin | C28 SesiLogin | Mengubah status sesi menjadi tidak aktif (*revoked*) atau menghapus rekaman sesi aktif dari basis data. |
+| 5 | Otorisasi | C41 Otorisasi (Pendukung) | Memvalidasi keberlakuan token sesi pengguna sebelum dieksekusi pencabutannya. |
+
+### 3.4.2 Sequence Diagram
+
+- **Skenario Normal**
+
+Pengguna yang sedang masuk mengklik menu profil dan memilih "Keluar". Permintaan diteruskan ke AkunController yang memvalidasi token melalui Otorisasi dan mencabut sesi di entitas SesiLogin. Setelah berhasil, token pada penyimpanan lokal peramban dihapus dan tampilan dialihkan ke halaman login.
+
+<p align="center">
+<img alt="Sequence Diagram UC04 - Skenario Normal" src="./assets/diagram/Sequence_UC04_Normal.png" width="55%">
+</p>
+<p align="center">
+<i>Gambar 3.14. Sequence Diagram UC04 - Skenario Normal</i>
+</p>
+
+### 3.4.3 Diagram Kelas
+
+Diagram kelas perancangan UC04 menunjukkan relasi antara HalamanOtentikasi, AkunController, entitas SesiLogin dan Akun, serta komponen pendukung Otorisasi. Operasi cabutSesi() dan nonaktifkan() menjamin integritas penutupan sesi.
+
+<p align="center">
+<img alt="Diagram Kelas Use Case UC04" src="./assets/diagram/Diagram_Kelas_UC04.png" width="50%">
+</p>
+<p align="center">
+<i>Gambar 3.15. Diagram Kelas Use Case UC04</i>
+</p>
+
+---
+
+## 3.5 Use Case Melihat Profil Akun
+
+**ID Use Case:** UC05  
+**Nama Use Case:** Melihat Profil Akun
+
+### 3.5.1 Identifikasi Kelas
+
+Realisasi use case melihat profil melibatkan antarmuka profil akun dan komponen kartu produk, controller akun untuk menghimpun data identitas dan daftar listing milik pengguna, modul otorisasi untuk mengekstrak identitas dari token sesi, serta entitas Akun, Barang, dan DokumenLegal.
+
+Tabel 3.5. Identifikasi Kelas Use Case UC05
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanProfil | C02 HalamanProfil | Menampilkan informasi identitas (nama, NIM, surel), daftar kartu barang dagangan milik sendiri, dan menu pengaturan akun. |
+| 2 | KartuProduk | C06 KartuProduk | Komponen visual penyaji ringkasan tiap listing produk milik akun pada antarmuka profil. |
+| 3 | AkunController | C13 AkunController | Mengambil identitas akun dan deretan listing yang berelasi dengan idAkun sesi pengguna aktif. |
+| 4 | Akun | C23 Akun | Menyediakan data identitas profil (nama, NIM, surel). |
+| 5 | Pembeli | C24 Pembeli | Peran pembeli dari akun yang melihat profil. |
+| 6 | Penjual | C25 Penjual | Peran penjual dari akun yang melihat profil dan mengelola barang dagangannya. |
+| 7 | SesiLogin | C28 SesiLogin | Menyediakan konteks idAkun yang terikat pada token sesi login aktif. |
+| 8 | Barang | C29 Barang | Menyediakan sekumpulan entitas produk yang dimiliki oleh idAkun pengguna. |
+| 9 | DokumenLegal | C40 DokumenLegal | Menyediakan tautan Kebijakan Privasi yang dapat dibuka melalui menu pengaturan akun. |
+| 10 | Otorisasi | C41 Otorisasi (Pendukung) | Mengekstrak dan memverifikasi idAkun dari token sesi otentikasi. |
+
+### 3.5.2 Sequence Diagram
+
+- **Skenario Normal**
+
+Pengguna membuka menu profil. Sistem mengekstrak idAkun dari token sesi melalui Otorisasi, mengambil data identitas dari Akun, mengambil daftar listing dari entitas Barang, dan merender tampilan profil beserta kartu produk. Ketika pengguna membuka pengaturan akun, sistem menyediakan tautan dokumen kebijakan privasi.
+
+<p align="center">
+<img alt="Sequence Diagram UC05 - Skenario Normal" src="./assets/diagram/Sequence_UC05_Normal.png" width="80%">
+</p>
+<p align="center">
+<i>Gambar 3.16. Sequence Diagram UC05 - Skenario Normal</i>
+</p>
+
+### 3.5.3 Diagram Kelas
+
+Diagram kelas perancangan UC05 menggambarkan struktur komponen tampilan profil. HalamanProfil memiliki relasi komposisi 1 ke 0..* dengan KartuProduk, berasosiasi dengan AkunController. AkunController bergantung pada Akun, SesiLogin, Barang, DokumenLegal, dan Otorisasi. Akun memiliki subtipe generalisasi Pembeli dan Penjual.
+
+<p align="center">
+<img alt="Diagram Kelas Use Case UC05" src="./assets/diagram/Diagram_Kelas_UC05.png" width="85%">
+</p>
+<p align="center">
+<i>Gambar 3.17. Diagram Kelas Use Case UC05</i>
+</p>
+
+---
+
+## 3.6 Use Case Melihat Kebijakan Privasi dan Ketentuan Penggunaan
+
+**ID Use Case:** UC06  
+**Nama Use Case:** Melihat Kebijakan Privasi dan Ketentuan Penggunaan
+
+### 3.6.1 Identifikasi Kelas
+
+Realisasi use case dokumen legal melibatkan antarmuka pembaca naskah hukum, controller pengambil dokumen legal yang sedang berlaku, serta entitas DokumenLegal yang menyimpan teks statis dan klausul penjaminan kerahasiaan percakapan pribadi.
+
+Tabel 3.6. Identifikasi Kelas Use Case UC06
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanDokumenLegal | C12 HalamanDokumenLegal | Merender teks dokumen hukum secara penuh dan memberikan penekanan visual khusus pada klausul privasi percakapan. |
+| 2 | DokumenLegalController | C22 DokumenLegalController | Mengambil naskah dokumen kebijakan versi aktif dan klausul proteksi percakapan. |
+| 3 | DokumenLegal | C40 DokumenLegal | Menyimpan data dokumen hukum (versi, tanggal berlaku, teks isi, dan klausul privasi). |
+
+### 3.6.2 Sequence Diagram
+
+- **Skenario Normal**
+
+Pengguna mengklik tautan dokumen hukum dari formulir pendaftaran, profil, atau ruang percakapan. DokumenLegalController mengambil naskah versi terbaru beserta klausul spesifik yang menyatakan bahwa isi percakapan pribadi dienkripsi dan tidak dapat diakses admin maupun pengembang sistem. HalamanDokumenLegal merender teks dan menyoroti klausul tersebut.
+
+<p align="center">
+<img alt="Sequence Diagram UC06 - Skenario Normal" src="./assets/diagram/Sequence_UC06_Normal.png" width="55%">
+</p>
+<p align="center">
+<i>Gambar 3.18. Sequence Diagram UC06 - Skenario Normal</i>
+</p>
+
+### 3.6.3 Diagram Kelas
+
+Diagram kelas perancangan UC06 memiliki struktur yang sederhana dan modular: HalamanDokumenLegal memanggil DokumenLegalController, yang kemudian mengakses entitas DokumenLegal untuk mengambil data dokumen dan klausul privasi.
+
+<p align="center">
+<img alt="Diagram Kelas Use Case UC06" src="./assets/diagram/Diagram_Kelas_UC06.png" width="40%">
+</p>
+<p align="center">
+<i>Gambar 3.19. Diagram Kelas Use Case UC06</i>
+</p>
+
+---
+
+## 3.7 Use Case Membuat Listing
+
+**ID Use Case:** UC07  
+**Nama Use Case:** Membuat Listing
+
+### 3.7.1 Identifikasi Kelas
+
+Realisasi use case pembuatan listing melibatkan antarmuka formulir barang (dengan validasi berkas dan isian di sisi klien), controller barang untuk validasi ganda di sisi server dan orkestrasinya, modul otorisasi untuk identifikasi penjual, entitas data referensi (Kategori dan LokasiCOD), entitas utama Barang dan FotoBarang, serta layanan penyimpanan berkas (Supabase Storage).
+
+Tabel 3.7. Identifikasi Kelas Use Case UC07
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | FormulirBarang | C04 FormulirBarang | Menampilkan formulir input barang, memvalidasi tipe data dan spesifikasi foto di browser, menandai isian kosong, serta mengirimkan data ke backend. |
+| 2 | BarangController | C14 BarangController | Menjalankan validasi server (kelengkapan isian dan keabsahan berkas), mengunggah berkas foto ke storage, menyimpan objek Barang dan FotoBarang, serta menerbitkan produk ke katalog. |
+| 3 | Penjual | C25 Penjual | Aktor pengguna yang berwenang menerbitkan produk jualan. |
+| 4 | SesiLogin | C28 SesiLogin | Menyediakan konteks idPenjual dari sesi login aktif. |
+| 5 | Barang | C29 Barang | Menyimpan informasi utama listing dengan status ketersediaan awal "Tersedia". |
+| 6 | FotoBarang | C30 FotoBarang | Menyimpan metadata berkas foto produk (1 sampai 5 foto, JPG/PNG, ukuran ≤ 5 MB). |
+| 7 | Kategori | C31 Kategori | Menyediakan daftar kategori barang tetap dan memvalidasi keabsahan kategori yang dipilih. |
+| 8 | LokasiCOD | C32 LokasiCOD | Menyediakan pilihan titik temu fisik transaksi COD di wilayah kampus ITB. |
+| 9 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token sesi dan memastikan idAkun berstatus aktif. |
+| 10 | PenyimpananBerkas | PenyimpananBerkas (Storage) | Layanan Supabase Storage untuk menyimpan fisik berkas foto produk secara persisten. |
+
+### 3.7.2 Sequence Diagram
+
+- **Skenario Normal**
+
+Penjual mengisi formulir produk, mengunggah foto yang memenuhi syarat (maksimum 5 foto JPG/PNG, ≤ 5 MB), lalu menekan tombol simpan. Sistem melakukan verifikasi token, validasi ganda kelengkapan formulir dan foto di sisi server, mengunggah berkas ke Supabase Storage, menyimpan entitas Barang dengan status "Tersedia", menyimpan rujukan FotoBarang, dan menerbitkannya ke katalog utama.
+
+<p align="center">
+<img alt="Sequence Diagram UC07 - Skenario Normal" src="./assets/diagram/Sequence_UC07_Normal.png" width="90%">
+</p>
+<p align="center">
+<i>Gambar 3.20. Sequence Diagram UC07 - Skenario Normal</i>
+</p>
+
+- **Skenario Alternatif 1: Isian Formulir Tidak Lengkap**
+
+Skenario ini terjadi apabila penjual mengosongkan kolom wajib (misalnya judul, harga, atau tidak memilih kategori). FormulirBarang mendeteksi kegagalan pada validasi wajib-isi di sisi klien, membatalkan pengiriman ke backend, dan memberi penanda visual merah pada kolom yang terlewat.
+
+<p align="center">
+<img alt="Sequence Diagram UC07 - Skenario Alternatif 1: Isian Formulir Tidak Lengkap" src="./assets/diagram/Sequence_UC07_Alt1.png" width="55%">
+</p>
+<p align="center">
+<i>Gambar 3.21. Sequence Diagram UC07 - Skenario Alternatif 1: Isian Formulir Tidak Lengkap</i>
+</p>
+
+- **Skenario Alternatif 2: Pelanggaran Syarat Unggahan Foto**
+
+Skenario ini terjadi ketika penjual mencoba mengunggah foto berformat di luar JPG/PNG (misal .pdf atau .heic), berkas berukuran lebih dari 5 MB, atau mencoba mengunggah lebih dari 5 foto. FormulirBarang memblokir pratinjau berkas dan menampilkan pesan galat spesifikasi berkas.
+
+<p align="center">
+<img alt="Sequence Diagram UC07 - Skenario Alternatif 2: Pelanggaran Syarat Unggahan Foto" src="./assets/diagram/Sequence_UC07_Alt2.png" width="65%">
+</p>
+<p align="center">
+<i>Gambar 3.22. Sequence Diagram UC07 - Skenario Alternatif 2: Pelanggaran Syarat Unggahan Foto</i>
+</p>
+
+### 3.7.3 Diagram Kelas
+
+Diagram kelas perancangan UC07 memodelkan struktur pembuatan listing. FormulirBarang berasosiasi ke BarangController. BarangController bergantung pada SesiLogin, Penjual, Kategori, LokasiCOD, Barang, FotoBarang, dan Otorisasi. Multiplisitas relasi komposisi Barang terhadap FotoBarang adalah 1 ke 1..5, menjamin setiap barang wajib memiliki sekurang-kurangnya satu foto dan paling banyak lima foto.
+
+<p align="center">
+<img alt="Diagram Kelas Use Case UC07" src="./assets/diagram/Diagram_Kelas_UC07.png" width="90%">
+</p>
+<p align="center">
+<i>Gambar 3.23. Diagram Kelas Use Case UC07</i>
+</p>
+
+---
+
+## 3.8 Use Case Melihat Daftar Listing Milik Sendiri
+
+**ID Use Case:** UC08  
+**Nama Use Case:** Melihat Daftar Listing Milik Sendiri
+
+### 3.8.1 Identifikasi Kelas
+
+Realisasi use case ini melibatkan antarmuka dasbor listing penjual dan komponen kartu produk, controller barang untuk mengambil dan mengelompokkan data berdasarkan status, modul otorisasi untuk mengekstrak identitas penjual dari token sesi, serta entitas Penjual, SesiLogin, dan Barang.
+
+Tabel 3.8. Identifikasi Kelas Use Case UC08
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanListingPenjual | C03 HalamanListingPenjual | Menyajikan dasbor kelola jualan dengan pemisahan tab barang "Tersedia" dan tab riwayat "Terjual". |
+| 2 | KartuProduk | C06 KartuProduk | Merender representasi visual ringkas tiap produk pada masing-masing tab. |
+| 3 | BarangController | C14 BarangController | Mengambil seluruh listing milik idPenjual yang sedang masuk dan mengelompokkannya menurut label status. |
+| 4 | Penjual | C25 Penjual | Aktor pemilik listing yang mengakses riwayat jualannya. |
+| 5 | SesiLogin | C28 SesiLogin | Menyediakan konteks idAkun penjual dari token sesi yang aktif. |
+| 6 | Barang | C29 Barang | Entitas data produk jualan beserta status ketersediaannya. |
+| 7 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token sesi dan mengekstrak identitas pengguna. |
+
+### 3.8.2 Sequence Diagram
+
+- **Skenario Normal**
+
+Penjual membuka menu "Listing Saya". Sistem memvalidasi token sesi, mengambil seluruh data listing milik idPenjual dari entitas Barang, mengelompokkan barang ke dalam daftar "Tersedia" dan riwayat "Terjual", lalu merender HalamanListingPenjual dengan tab aktif yang menampilkan kartu produk untuk masing-masing item.
+
+<p align="center">
+<img alt="Sequence Diagram UC08 - Skenario Normal" src="./assets/diagram/Sequence_UC08_Normal.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.24. Sequence Diagram UC08 - Skenario Normal</i>
+</p>
+
+### 3.8.3 Diagram Kelas
+
+Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang mengomposisikan 1 ke 0..* KartuProduk, berasosiasi dengan BarangController. BarangController bergantung pada Penjual, SesiLogin, Barang, dan Otorisasi. Relasi Penjual dan Barang berupa komposisi 1 ke 0..*.
+
+<p align="center">
+<img alt="Diagram Kelas Use Case UC08" src="./assets/diagram/Diagram_Kelas_UC08.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.25. Diagram Kelas Use Case UC08</i>
+</p>
 
 <br>
 

@@ -1,0 +1,43 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam sequenceMessageAlign center
+skinparam backgroundColor #FFFFFF
+
+skinparam participant {
+    BackgroundColor #FFFFFF
+    BorderColor #000000
+}
+skinparam actor {
+    BackgroundColor #FFFFFF
+    BorderColor #000000
+}
+skinparam sequence {
+    LifeLineBackgroundColor #FFFFFF
+    LifeLineBorderColor #000000
+    ArrowColor #000000
+    ActorBorderColor #000000
+    ActorBackgroundColor #FFFFFF
+    GroupBorderColor #000000
+    GroupBackgroundColor #FFFFFF
+}
+
+actor "Pengguna" as User
+boundary ":HalamanOtentikasi" as UI
+control ":AkunController" as Ctrl
+entity ":TokenVerifikasi" as Token
+
+User -> UI: kirimKodeVerifikasi(email, kode)
+activate UI
+UI -> Ctrl: verifikasiAkun(email, kode)
+activate Ctrl
+Ctrl -> Token: cocokkanKode(kode)
+activate Token
+Token --> Ctrl: kodeTidakCocok / kadaluwarsa
+deactivate Token
+Ctrl --> UI: galatKodeInvalidAtauKedaluwarsa
+deactivate Ctrl
+UI --> User: tampilkanPesanGalat("Kode tidak valid atau telah kedaluwarsa. Silakan minta kode baru.")
+deactivate UI
+@enduml

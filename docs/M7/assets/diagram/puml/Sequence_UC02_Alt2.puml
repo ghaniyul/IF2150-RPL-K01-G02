@@ -1,0 +1,63 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam sequenceMessageAlign center
+skinparam backgroundColor #FFFFFF
+
+skinparam participant {
+    BackgroundColor #FFFFFF
+    BorderColor #000000
+}
+skinparam actor {
+    BackgroundColor #FFFFFF
+    BorderColor #000000
+}
+skinparam sequence {
+    LifeLineBackgroundColor #FFFFFF
+    LifeLineBorderColor #000000
+    ArrowColor #000000
+    ActorBorderColor #000000
+    ActorBackgroundColor #FFFFFF
+    GroupBorderColor #000000
+    GroupBackgroundColor #FFFFFF
+}
+
+actor "Pengguna" as User
+boundary ":HalamanOtentikasi" as UI
+control ":AkunController" as Ctrl
+control ":NotifikasiController" as NotifCtrl
+entity ":TokenVerifikasi" as Token
+entity ":Notifikasi" as Notif
+
+User -> UI: mintaKirimUlang(email)
+activate UI
+UI -> Ctrl: kirimUlangKode(email)
+activate Ctrl
+Ctrl -> Ctrl: hanguskanKodeLama(idAkun)
+Ctrl -> Token: tandaiHangus()
+activate Token
+Token --> Ctrl: statusHangus
+deactivate Token
+
+Ctrl -> Ctrl: buatKodeVerifikasi(idAkun)
+Ctrl -> Token: simpan(idAkun, kodeBaru, waktuBuat, waktuKedaluwarsa, statusPakai="Aktif")
+activate Token
+Token --> Ctrl: statusSimpan
+deactivate Token
+
+Ctrl -> NotifCtrl: kirimEmailVerifikasi(email, kodeBaru)
+activate NotifCtrl
+NotifCtrl -> Notif: simpan(idAkun, jenis="Surel Verifikasi Ulang", isi, waktuKirim, statusBaca=false)
+activate Notif
+Notif --> NotifCtrl: statusNotifikasi
+deactivate Notif
+NotifCtrl --> Ctrl: konfirmasiKirimUlang
+deactivate NotifCtrl
+
+Ctrl --> UI: kirimUlangBerhasil
+deactivate Ctrl
+UI -> UI: resetHitungMundur()
+UI --> User: tampilkanPesanSukses("Kode verifikasi baru telah dikirim.")
+deactivate UI
+@enduml

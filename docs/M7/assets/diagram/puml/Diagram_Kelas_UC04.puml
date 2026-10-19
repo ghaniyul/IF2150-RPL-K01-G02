@@ -1,0 +1,47 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+skinparam classBorderColor #000000
+skinparam classBackgroundColor #FFFFFF
+skinparam arrowColor #000000
+skinparam nodesep 55
+skinparam ranksep 55
+
+hide circle
+hide stereotype
+
+class "HalamanOtentikasi" as C01 {
+  - token: String
+  + tampilkanTombolKeluar(): void
+  + kirimPermintaanLogout(token: String): void
+  + hapusTokenLokal(): void
+  + arahkanKeHalamanLogin(): void
+}
+
+class "AkunController" as C13 {
+  + logout(token: String): Boolean
+  + cabutSesi(token: String): void
+}
+
+class "Akun" as C23 {
+  - idAkun: String
+}
+
+class "SesiLogin" as C28 {
+  - idSesi: String
+  - idAkun: String
+  - token: String
+  - statusAktif: Boolean
+  + verifikasiAkses(token: String): Boolean
+  + nonaktifkan(token: String): void
+  + hapus(token: String): void
+}
+
+C01 --> C13
+C13 ..> C23
+C13 ..> C28
+C23 "1" -- "0..*" C28
+@enduml

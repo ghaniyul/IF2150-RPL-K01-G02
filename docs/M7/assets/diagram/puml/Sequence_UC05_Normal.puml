@@ -1,0 +1,78 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam sequenceMessageAlign center
+skinparam backgroundColor #FFFFFF
+
+skinparam participant {
+    BackgroundColor #FFFFFF
+    BorderColor #000000
+}
+skinparam actor {
+    BackgroundColor #FFFFFF
+    BorderColor #000000
+}
+skinparam sequence {
+    LifeLineBackgroundColor #FFFFFF
+    LifeLineBorderColor #000000
+    ArrowColor #000000
+    ActorBorderColor #000000
+    ActorBackgroundColor #FFFFFF
+    GroupBorderColor #000000
+    GroupBackgroundColor #FFFFFF
+}
+
+actor "Pengguna" as User
+boundary ":HalamanProfil" as UI
+boundary ":KartuProduk" as Kartu
+control ":AkunController" as Ctrl
+entity ":SesiLogin" as Sesi
+entity ":Akun" as Akun
+entity ":Barang" as Barang
+entity ":DokumenLegal" as Dokumen
+
+User -> UI: tampilkanProfil()
+activate UI
+UI -> Ctrl: getProfil(token)
+activate Ctrl
+Ctrl -> Sesi: getIdAkun()
+activate Sesi
+Sesi --> Ctrl: idAkun
+deactivate Sesi
+
+Ctrl -> Akun: getDataIdentitas()
+activate Akun
+Akun --> Ctrl: dataIdentitas(nama, nim, email)
+deactivate Akun
+
+Ctrl -> Ctrl: getDaftarBarangAkun(idAkun)
+Ctrl -> Barang: getByPemilik(idAkun)
+activate Barang
+Barang --> Ctrl: daftarBarang
+deactivate Barang
+
+Ctrl --> UI: dataProfil(dataIdentitas, daftarBarang)
+deactivate Ctrl
+
+UI -> UI: renderProfil(dataIdentitas)
+loop untuk setiap barang dalam daftarBarang
+  UI -> Kartu: render(barang)
+  activate Kartu
+  Kartu --> UI: elemenKartu
+  deactivate Kartu
+end
+UI --> User: tampilkanProfilLengkap()
+
+User -> UI: bukaPengaturanAkun()
+UI -> Ctrl: getTautanDokumenLegal()
+activate Ctrl
+Ctrl -> Dokumen: getTautan()
+activate Dokumen
+Dokumen --> Ctrl: tautanDokumen
+deactivate Dokumen
+Ctrl --> UI: tautanDokumen
+deactivate Ctrl
+UI --> User: tampilkanTautanKebijakan(tautanDokumen)
+deactivate UI
+@enduml

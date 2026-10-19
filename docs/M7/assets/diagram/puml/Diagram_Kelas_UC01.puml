@@ -1,0 +1,104 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+skinparam classBorderColor #000000
+skinparam classBackgroundColor #FFFFFF
+skinparam arrowColor #000000
+skinparam nodesep 55
+skinparam ranksep 55
+
+hide circle
+hide stereotype
+
+class "HalamanOtentikasi" as C01 {
+  - nama: String
+  - nim: String
+  - email: String
+  - kataSandi: String
+  - setujuKebijakan: Boolean
+  - kodeVerifikasi: String
+  - sisaWaktu: Integer
+  - token: String
+  + tampilkanFormulirPendaftaran(): void
+  + tampilkanKebijakanPrivasi(): void
+  + kirimFormulirPendaftaran(nama: String, nim: String, email: String, kataSandi: String, setujuKebijakan: Boolean): void
+  + arahkanKeHalamanVerifikasi(): void
+  + tampilkanPesanGalat(pesan: String): void
+}
+
+class "AkunController" as C13 {
+  + daftarAkun(nama: String, nim: String, email: String, kataSandi: String, setuju: Boolean): Boolean
+  + validasiKelengkapanFormulir(nama: String, nim: String, email: String, kataSandi: String, setuju: Boolean): Boolean
+  + validasiDomainEmail(email: String): Boolean
+  + cekKeunikanEmail(email: String): Boolean
+  + hashKataSandi(kataSandi: String): String
+  + buatKodeVerifikasi(idAkun: String): String
+  + getTautanDokumenLegal(): String
+}
+
+class "NotifikasiController" as C19 {
+  + kirimEmailVerifikasi(email: String, kode: String): Boolean
+}
+
+class "Akun" as C23 {
+  - idAkun: String
+  - nama: String
+  - nim: String
+  - email: String
+  - kataSandiHash: String
+  - statusAkun: String
+  - statusBlokir: Boolean
+  - peran: String
+  - setujuKebijakan: Boolean
+  - waktuDaftar: DateTime
+  + simpan(): Boolean
+}
+
+class "TokenVerifikasi" as C27 {
+  - idToken: String
+  - idAkun: String
+  - kode: String
+  - waktuBuat: DateTime
+  - waktuKedaluwarsa: DateTime
+  - statusPakai: String
+  + simpan(): Boolean
+}
+
+class "Notifikasi" as C35 {
+  - idNotifikasi: String
+  - idAkun: String
+  - jenis: String
+  - isi: String
+  - waktuKirim: DateTime
+  - statusBaca: Boolean
+  + simpan(): Boolean
+}
+
+class "DokumenLegal" as C40 {
+  - idDokumen: String
+  - jenisDokumen: String
+  - judul: String
+  - isi: String
+  - klausaPrivasiPesan: String
+  - versi: String
+  - tanggalBerlaku: Date
+  - statusPublikasi: Boolean
+  - tautan: String
+  + getVersiTerbaru(): DokumenLegal
+  + getTautan(): String
+}
+
+C01 --> C13
+C13 ..> C19
+C13 ..> C23
+C13 ..> C27
+C13 ..> C40
+C19 ..> C35
+
+C23 "1" -- "0..*" C27
+C23 "1" -- "0..*" C35
+C23 "0..*" -- "1" C40
+@enduml

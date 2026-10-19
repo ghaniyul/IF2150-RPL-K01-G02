@@ -1,0 +1,42 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam sequenceMessageAlign center
+skinparam backgroundColor #FFFFFF
+
+skinparam participant {
+    BackgroundColor #FFFFFF
+    BorderColor #000000
+}
+skinparam actor {
+    BackgroundColor #FFFFFF
+    BorderColor #000000
+}
+skinparam sequence {
+    LifeLineBackgroundColor #FFFFFF
+    LifeLineBorderColor #000000
+    ArrowColor #000000
+    ActorBorderColor #000000
+    ActorBackgroundColor #FFFFFF
+    GroupBorderColor #000000
+    GroupBackgroundColor #FFFFFF
+}
+
+actor "Calon Pengguna" as User
+boundary ":HalamanOtentikasi" as UI
+control ":AkunController" as Ctrl
+
+User -> UI: kirimFormulirPendaftaran(nama, nim, email, kataSandi, setujuKebijakan)
+activate UI
+UI -> Ctrl: daftarAkun(nama, nim, email, kataSandi, setujuKebijakan)
+activate Ctrl
+Ctrl -> Ctrl: validasiKelengkapanFormulir(nama, nim, email, kataSandi, setujuKebijakan)
+Ctrl -> Ctrl: validasiDomainEmail(email)
+Ctrl -> Ctrl: cekKeunikanEmail(email)
+note right of Ctrl: Email ditemukan di basis data\n(gagal uji keunikan)
+Ctrl --> UI: galatEmailSudahTerdaftar
+deactivate Ctrl
+UI --> User: tampilkanPesanGalat("Email sudah terdaftar. Silakan gunakan email lain atau masuk menggunakan akun tersebut.")
+deactivate UI
+@enduml

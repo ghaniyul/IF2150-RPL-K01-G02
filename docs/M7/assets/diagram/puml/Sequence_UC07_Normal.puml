@@ -1,0 +1,84 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam sequenceMessageAlign center
+skinparam backgroundColor #FFFFFF
+
+skinparam participant {
+    BackgroundColor #FFFFFF
+    BorderColor #000000
+}
+skinparam actor {
+    BackgroundColor #FFFFFF
+    BorderColor #000000
+}
+skinparam sequence {
+    LifeLineBackgroundColor #FFFFFF
+    LifeLineBorderColor #000000
+    ArrowColor #000000
+    ActorBorderColor #000000
+    ActorBackgroundColor #FFFFFF
+    GroupBorderColor #000000
+    GroupBackgroundColor #FFFFFF
+}
+
+actor "Penjual" as User
+boundary ":FormulirBarang" as UI
+control ":BarangController" as Ctrl
+entity ":SesiLogin" as Sesi
+entity ":Kategori" as Kat
+entity ":Barang" as Barang
+entity ":FotoBarang" as Foto
+
+User -> UI: tampilkanFormulir()
+activate UI
+UI --> User: formulirListing
+deactivate UI
+
+User -> UI: isiFormulir(judul, harga, kondisi, idKategori, idLokasi)
+activate UI
+UI -> UI: validasiTipeData()
+deactivate UI
+
+User -> UI: unggahFoto(daftarFoto)
+activate UI
+UI -> UI: validasiFotoSisiKlien()
+deactivate UI
+
+User -> UI: kirimFormulir(dataListing, daftarFoto)
+activate UI
+UI -> Ctrl: buatBarang(token, dataListing, daftarFoto)
+activate Ctrl
+Ctrl -> Sesi: getIdAkun()
+activate Sesi
+Sesi --> Ctrl: idPenjual
+deactivate Sesi
+
+Ctrl -> Ctrl: validasiKelengkapanIsian(dataListing)
+Ctrl -> Kat: validasiKategori(idKategori)
+activate Kat
+Kat --> Ctrl: valid (true)
+deactivate Kat
+
+Ctrl -> Ctrl: validasiFoto(daftarFoto)
+Ctrl -> Ctrl: simpanFoto(idBarang, daftarFoto)
+
+Ctrl -> Barang: simpan(idPenjual, judul, harga, kondisi, idKategori, idLokasi, status="Tersedia")
+activate Barang
+Barang --> Ctrl: idBarang
+deactivate Barang
+
+loop untuk setiap foto dalam daftarFoto
+  Ctrl -> Foto: simpan(idBarang, namaBerkas, format, ukuran, urutan, pathBerkas)
+  activate Foto
+  Foto --> Ctrl: statusSimpanFoto
+  deactivate Foto
+end
+
+Ctrl -> Ctrl: terbitkanKeKatalog(idBarang)
+Ctrl --> UI: statusListingBerhasil
+deactivate Ctrl
+UI --> User: tampilkanNotifikasi("Listing berhasil dibuat")
+deactivate UI
+@enduml
