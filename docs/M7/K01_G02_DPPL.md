@@ -1213,6 +1213,433 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 
 ---
 
+## 3.17 Use Case Mengirim Pesan dalam Percakapan
+
+**ID Use Case:** UC17  
+**Nama Use Case:** Mengirim Pesan dalam Percakapan
+
+### 3.17.1 Identifikasi Kelas
+
+Realisasi use case pengiriman pesan melibatkan antarmuka ruang percakapan untuk menangkap teks dan merender pesan, antarmuka panel notifikasi untuk menampilkan penanda pesan belum dibaca, controller percakapan untuk memverifikasi peserta, mengenkripsi, dan menyimpan pesan, controller notifikasi untuk memicu notifikasi bagi penerima, modul otorisasi dan kriptografi sebagai kelas pendukung, entitas Percakapan, Pesan, dan Notifikasi, serta adapter push notifikasi sebagai integrasi eksternal.
+
+Tabel 3.17. Identifikasi Kelas Use Case UC17
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanPercakapan | C08 HalamanPercakapan | Menampilkan ruang percakapan, menangkap teks pada kolom input, menonaktifkan tombol kirim apabila input kosong, dan merender pesan secara berurutan beserta waktu pengiriman. |
+| 2 | PanelNotifikasi | C09 PanelNotifikasi | Memperbarui penanda jumlah pesan belum dibaca pada antarmuka penerima. |
+| 3 | PercakapanController | C18 PercakapanController | Memverifikasi bahwa pengirim adalah peserta sah, meminta enkripsi isi pesan, menyimpan pesan, memperbarui waktu percakapan, dan meminta notifikasi bagi penerima. |
+| 4 | NotifikasiController | C19 NotifikasiController | Membuat notifikasi pesan baru bagi penerima dan meneruskannya ke adapter push notifikasi. |
+| 5 | Akun | C23 Akun | Menyediakan identitas pengirim dan penerima pesan. |
+| 6 | SesiLogin | C28 SesiLogin | Menyediakan idAkun pengirim dari sesi aktif untuk dicocokkan dengan peserta percakapan. |
+| 7 | Percakapan | C33 Percakapan | Menyimpan ruang percakapan, memeriksa keanggotaan peserta, dan memperbarui waktu pembaruan terakhir. |
+| 8 | Pesan | C34 Pesan | Menyimpan isi pesan terenkripsi, pengirim, waktu kirim, dan status baca. |
+| 9 | Notifikasi | C35 Notifikasi | Menyimpan pemberitahuan pesan baru untuk penerima beserta status bacanya. |
+| 10 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token sesi dan mengidentifikasi akun pengirim. |
+| 11 | Kriptografi | C42 Kriptografi (Pendukung) | Mengenkripsi isi pesan sebelum disimpan ke basis data. |
+| 12 | PushNotifikasiAdapter | C44 PushNotifikasiAdapter (Integrasi) | Mengirim notifikasi Web Push ke perangkat penerima, termasuk saat aplikasi tidak dibuka. |
+
+### 3.17.2 Sequence Diagram
+
+- **Skenario Normal**
+
+Pengguna mengetik pesan pada ruang percakapan lalu menekan tombol "Kirim". HalamanPercakapan meneruskan permintaan ke PercakapanController. Controller memverifikasi token melalui Otorisasi dan SesiLogin, memastikan pengirim adalah peserta Percakapan, mengenkripsi isi pesan melalui Kriptografi, lalu menyimpan entitas Pesan dan memperbarui waktu percakapan. Pesan yang tersimpan ditayangkan kepada kedua pihak secara berurutan beserta waktu kirim. PercakapanController kemudian meminta NotifikasiController membuat Notifikasi bagi penerima dan mengirimkannya melalui PushNotifikasiAdapter, sehingga penanda pesan belum dibaca pada PanelNotifikasi penerima bertambah.
+
+<p align="center">
+<img alt="Sequence Diagram UC17 - Skenario Normal" src="./assets/diagram/Sequence_UC17_Normal.png" width="95%">
+</p>
+<p align="center">
+<i>Gambar 3.61. Sequence Diagram UC17 - Skenario Normal</i>
+</p>
+
+- **Skenario Alternatif 1: Percobaan Pengiriman Pesan Kosong**
+
+Skenario ini terjadi apabila pengguna tidak mengetik teks apa pun atau hanya mengetik spasi. HalamanPercakapan mendeteksi bahwa input kosong setelah pemangkasan spasi, menonaktifkan tombol "Kirim" atau mengabaikan aksi kirim, dan tidak mengirim permintaan apa pun ke server.
+
+<p align="center">
+<img alt="Sequence Diagram UC17 - Skenario Alternatif 1: Percobaan Pengiriman Pesan Kosong" src="./assets/diagram/Sequence_UC17_Alt1.png" width="55%">
+</p>
+<p align="center">
+<i>Gambar 3.62. Sequence Diagram UC17 - Skenario Alternatif 1: Percobaan Pengiriman Pesan Kosong</i>
+</p>
+
+### 3.17.3 Diagram Kelas
+
+Diagram kelas perancangan UC17 memodelkan HalamanPercakapan dan PanelNotifikasi yang berasosiasi ke PercakapanController dan NotifikasiController. PercakapanController bergantung pada Otorisasi, SesiLogin, Kriptografi, Percakapan, Pesan, dan Akun. Percakapan memiliki relasi komposisi 1 ke 0..* terhadap Pesan. NotifikasiController bergantung pada Notifikasi dan PushNotifikasiAdapter, sedangkan Akun berelasi 1 ke 0..* dengan Notifikasi.
+
+<p align="center">
+<img alt="Diagram Kelas Use Case UC17" src="./assets/diagram/Diagram_Kelas_UC17.png" width="90%">
+</p>
+<p align="center">
+<i>Gambar 3.63. Diagram Kelas Use Case UC17</i>
+</p>
+
+---
+
+## 3.18 Use Case Melihat Daftar Percakapan
+
+**ID Use Case:** UC18  
+**Nama Use Case:** Melihat Daftar Percakapan
+
+### 3.18.1 Identifikasi Kelas
+
+Realisasi use case ini melibatkan antarmuka percakapan untuk menyajikan daftar, controller percakapan untuk mengambil percakapan milik pengguna beserta cuplikan pesan terakhir dan jumlah pesan belum dibaca, modul otorisasi dan kriptografi sebagai kelas pendukung, serta entitas SesiLogin, Percakapan, dan Pesan.
+
+Tabel 3.18. Identifikasi Kelas Use Case UC18
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanPercakapan | C08 HalamanPercakapan | Menampilkan daftar percakapan beserta identitas lawan bicara, cuplikan pesan terakhir, dan penanda jumlah pesan belum dibaca. |
+| 2 | PercakapanController | C18 PercakapanController | Mengambil percakapan milik pengguna, mengurutkannya berdasarkan pesan terbaru, mengambil dan mendekripsi cuplikan pesan terakhir, serta menghitung pesan belum dibaca. |
+| 3 | SesiLogin | C28 SesiLogin | Menyediakan idAkun pengguna dari token sesi aktif. |
+| 4 | Percakapan | C33 Percakapan | Menyediakan data percakapan milik pengguna, lawan bicara, dan waktu aktivitas terakhir. |
+| 5 | Pesan | C34 Pesan | Menyediakan pesan terakhir dan jumlah pesan belum dibaca pada tiap percakapan. |
+| 6 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token sesi dan mengekstrak identitas pengguna. |
+| 7 | Kriptografi | C42 Kriptografi (Pendukung) | Mendekripsi isi pesan terakhir agar dapat ditampilkan sebagai cuplikan. |
+
+### 3.18.2 Sequence Diagram
+
+- **Skenario Normal**
+
+Pengguna membuka halaman "Daftar Percakapan" dari menu navigasi. PercakapanController memverifikasi token melalui Otorisasi dan SesiLogin, mengambil seluruh Percakapan yang melibatkan pengguna, mengambil Pesan terakhir tiap percakapan, mendekripsinya melalui Kriptografi, menghitung pesan belum dibaca, lalu mengembalikan daftar yang diurutkan dari yang terbaru. HalamanPercakapan merender daftar tersebut.
+
+<p align="center">
+<img alt="Sequence Diagram UC18 - Skenario Normal" src="./assets/diagram/Sequence_UC18_Normal.png" width="90%">
+</p>
+<p align="center">
+<i>Gambar 3.64. Sequence Diagram UC18 - Skenario Normal</i>
+</p>
+
+### 3.18.3 Diagram Kelas
+
+Diagram kelas perancangan UC18 memodelkan HalamanPercakapan yang berasosiasi dengan PercakapanController. PercakapanController bergantung pada Otorisasi, SesiLogin, Kriptografi, Percakapan, dan Pesan. Relasi Percakapan terhadap Pesan berupa komposisi 1 ke 0..*.
+
+<p align="center">
+<img alt="Diagram Kelas Use Case UC18" src="./assets/diagram/Diagram_Kelas_UC18.png" width="85%">
+</p>
+<p align="center">
+<i>Gambar 3.65. Diagram Kelas Use Case UC18</i>
+</p>
+
+---
+
+## 3.19 Use Case Mengirimkan Laporan
+
+**ID Use Case:** UC19  
+**Nama Use Case:** Mengirimkan Laporan
+
+### 3.19.1 Identifikasi Kelas
+
+Realisasi use case pelaporan melibatkan antarmuka detail barang sebagai salah satu titik masuk, antarmuka formulir laporan untuk menangkap kategori, alasan, dan bukti, controller laporan untuk validasi, penyusunan metadata percakapan tanpa isi pesan, penyimpanan, dan pencatatan log audit, modul otorisasi untuk identifikasi pelapor, entitas Laporan, BuktiLaporan, dan LogAudit, serta layanan penyimpanan berkas untuk bukti tangkapan layar.
+
+Tabel 3.19. Identifikasi Kelas Use Case UC19
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanDetailBarang | C07 HalamanDetailBarang | Menyediakan tombol "Laporkan" pada detail listing sebagai salah satu titik masuk pelaporan. |
+| 2 | FormulirLaporan | C10 FormulirLaporan | Menampilkan formulir sesuai konteks asal, menangkap kategori, alasan, dan bukti, memvalidasi kelengkapan di sisi klien, serta menandai kolom yang kosong. |
+| 3 | LaporanController | C20 LaporanController | Memvalidasi data dan bukti di sisi server, menyusun metadata percakapan tanpa isi pesan, mengunggah bukti, menyimpan laporan berstatus "Baru", dan mencatat penerimaan ke log audit. |
+| 4 | Akun | C23 Akun | Akun pelapor yang identitasnya dicatat pada laporan. |
+| 5 | SesiLogin | C28 SesiLogin | Menyediakan idAkun pelapor dari sesi aktif. |
+| 6 | Barang | C29 Barang | Listing yang dapat menjadi objek laporan. |
+| 7 | Percakapan | C33 Percakapan | Percakapan yang dapat menjadi objek laporan. Hanya ID percakapan yang dicatat, tanpa isi pesan. |
+| 8 | Laporan | C36 Laporan | Menyimpan rincian aduan, objek yang dilaporkan, kategori, alasan, waktu, dan status penanganan "Baru". |
+| 9 | BuktiLaporan | C37 BuktiLaporan | Menyimpan metadata berkas bukti tangkapan layar. |
+| 10 | LogAudit | C38 LogAudit | Mencatat penerimaan laporan sebagai rekam jejak permanen yang tidak dapat diubah atau dihapus. |
+| 11 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token sesi pelapor. |
+| 12 | PenyimpananBerkas | PenyimpananBerkas (Storage) | Menyimpan fisik berkas bukti tangkapan layar pada Supabase Storage. |
+
+### 3.19.2 Sequence Diagram
+
+- **Skenario Normal**
+
+Pengguna menekan "Laporkan" dari halaman detail listing, profil pengguna, ruang percakapan, atau menu bantuan, lalu FormulirLaporan ditampilkan sesuai konteks. Pengguna memilih kategori, mengisi alasan, melampirkan bukti, dan menekan "Kirim Laporan". LaporanController memverifikasi sesi melalui Otorisasi dan SesiLogin, memvalidasi kelengkapan data dan bukti, dan apabila laporan berasal dari percakapan, hanya menyusun ID percakapan, waktu pelaporan, dan identitas pelapor tanpa isi pesan. Bukti diunggah ke PenyimpananBerkas dan dicatat sebagai BuktiLaporan, Laporan disimpan dengan status "Baru", penerimaan dicatat ke LogAudit, dan notifikasi "Laporan berhasil dikirim" ditampilkan.
+
+<p align="center">
+<img alt="Sequence Diagram UC19 - Skenario Normal" src="./assets/diagram/Sequence_UC19_Normal.png" width="95%">
+</p>
+<p align="center">
+<i>Gambar 3.66. Sequence Diagram UC19 - Skenario Normal</i>
+</p>
+
+- **Skenario Alternatif 1: Kolom Bukti atau Alasan Dikosongkan**
+
+Skenario ini terjadi apabila pengguna mengosongkan kolom alasan atau tidak melampirkan tangkapan layar. FormulirLaporan mendeteksi kegagalan validasi wajib-isi, membatalkan pengiriman ke server, memberi penanda merah pada kolom terkait, dan menampilkan galat "Alasan dan bukti tangkapan layar wajib diisi".
+
+<p align="center">
+<img alt="Sequence Diagram UC19 - Skenario Alternatif 1: Kolom Bukti atau Alasan Dikosongkan" src="./assets/diagram/Sequence_UC19_Alt1.png" width="60%">
+</p>
+<p align="center">
+<i>Gambar 3.67. Sequence Diagram UC19 - Skenario Alternatif 1: Kolom Bukti atau Alasan Dikosongkan</i>
+</p>
+
+### 3.19.3 Diagram Kelas
+
+Diagram kelas perancangan UC19 memodelkan HalamanDetailBarang yang membuka FormulirLaporan, dan FormulirLaporan yang berasosiasi dengan LaporanController. LaporanController bergantung pada Otorisasi, SesiLogin, Akun, Barang, Percakapan, Laporan, BuktiLaporan, LogAudit, dan PenyimpananBerkas. Relasi komposisi Laporan terhadap BuktiLaporan adalah 1 ke 1..*, karena setiap laporan wajib memiliki bukti. Akun berelasi 1 ke 0..* dengan Laporan sebagai pelapor.
+
+<p align="center">
+<img alt="Diagram Kelas Use Case UC19" src="./assets/diagram/Diagram_Kelas_UC19.png" width="90%">
+</p>
+<p align="center">
+<i>Gambar 3.68. Diagram Kelas Use Case UC19</i>
+</p>
+
+---
+
+## 3.20 Use Case Melihat dan Menyaring Daftar Laporan
+
+**ID Use Case:** UC20  
+**Nama Use Case:** Melihat dan Menyaring Daftar Laporan
+
+### 3.20.1 Identifikasi Kelas
+
+Realisasi use case ini melibatkan antarmuka dasbor admin untuk menampilkan tabel dan filter laporan, controller moderasi untuk memeriksa hak akses admin dan mengambil serta menyaring data laporan, modul otorisasi untuk pemeriksaan token dan peran, serta entitas Admin, SesiLogin, dan Laporan.
+
+Tabel 3.20. Identifikasi Kelas Use Case UC20
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | DasborAdmin | C11 DasborAdmin | Menampilkan tabel laporan (pelapor, objek, kategori, waktu, status), menyediakan filter status, dan menampilkan peringatan "Akses Ditolak" apabila akses ditolak. |
+| 2 | ModerasiController | C21 ModerasiController | Memeriksa peran admin, mengambil seluruh laporan, dan menyaring laporan berdasarkan status. |
+| 3 | Admin | C26 Admin | Aktor pemilik hak akses moderasi yang perannya diverifikasi. |
+| 4 | SesiLogin | C28 SesiLogin | Menyediakan idAkun dan peran dari token sesi aktif. |
+| 5 | Laporan | C36 Laporan | Menyediakan data laporan untuk ditampilkan dan disaring menurut status penanganan. |
+| 6 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token dan menolak akses fungsi moderasi oleh akun yang tidak berperan admin. |
+
+### 3.20.2 Sequence Diagram
+
+- **Skenario Normal**
+
+Admin membuka halaman daftar laporan pada dasbor admin. ModerasiController memeriksa token dan peran melalui Otorisasi dan SesiLogin, memastikan akun adalah Admin, lalu mengambil seluruh Laporan dan menampilkannya pada DasborAdmin. Ketika admin memilih status pada filter (misalnya "Baru"), ModerasiController menyaring laporan menurut status tersebut dan tabel diperbarui.
+
+<p align="center">
+<img alt="Sequence Diagram UC20 - Skenario Normal" src="./assets/diagram/Sequence_UC20_Normal.png" width="90%">
+</p>
+<p align="center">
+<i>Gambar 3.69. Sequence Diagram UC20 - Skenario Normal</i>
+</p>
+
+- **Skenario Alternatif 1: Akses oleh Akun Bukan Admin**
+
+Skenario ini terjadi apabila pengguna biasa membuka URL daftar laporan secara langsung. Otorisasi memeriksa peran dari token sesi dan mendeteksi bahwa akun bukan admin. ModerasiController menolak permintaan, lalu pengguna dialihkan ke beranda utama disertai peringatan "Akses Ditolak".
+
+<p align="center">
+<img alt="Sequence Diagram UC20 - Skenario Alternatif 1: Akses oleh Akun Bukan Admin" src="./assets/diagram/Sequence_UC20_Alt1.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.70. Sequence Diagram UC20 - Skenario Alternatif 1: Akses oleh Akun Bukan Admin</i>
+</p>
+
+### 3.20.3 Diagram Kelas
+
+Diagram kelas perancangan UC20 memodelkan DasborAdmin yang berasosiasi dengan ModerasiController. ModerasiController bergantung pada Otorisasi, SesiLogin, Admin, dan Laporan. Admin merupakan generalisasi (turunan) dari Akun, dan relasi ModerasiController ke Laporan berupa 1 ke 0..*.
+
+<p align="center">
+<img alt="Diagram Kelas Use Case UC20" src="./assets/diagram/Diagram_Kelas_UC20.png" width="80%">
+</p>
+<p align="center">
+<i>Gambar 3.71. Diagram Kelas Use Case UC20</i>
+</p>
+
+---
+
+## 3.21 Use Case Mengubah Status Penanganan Laporan
+
+**ID Use Case:** UC21  
+**Nama Use Case:** Mengubah Status Penanganan Laporan
+
+### 3.21.1 Identifikasi Kelas
+
+Realisasi use case ini melibatkan antarmuka dasbor admin untuk meninjau detail dan memilih status baru, controller moderasi untuk memvalidasi dan memperbarui status, modul otorisasi untuk verifikasi admin, entitas Laporan yang statusnya diperbarui, serta LogAudit untuk pencatatan permanen tindak lanjut.
+
+Tabel 3.21. Identifikasi Kelas Use Case UC21
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | DasborAdmin | C11 DasborAdmin | Menampilkan detail laporan dan kendali dropdown status (Baru, Diproses, Selesai), lalu meneruskan perubahan ke controller. |
+| 2 | ModerasiController | C21 ModerasiController | Memverifikasi peran admin, memvalidasi status baru, memperbarui Laporan, dan meminta pencatatan ke log audit. |
+| 3 | Admin | C26 Admin | Aktor admin yang meninjau laporan dan mengubah statusnya. |
+| 4 | SesiLogin | C28 SesiLogin | Menyediakan identitas admin dari token sesi aktif. |
+| 5 | Laporan | C36 Laporan | Menyimpan status penanganan beserta stempel waktu perubahan. |
+| 6 | LogAudit | C38 LogAudit | Mencatat secara permanen bahwa admin tertentu mengubah status laporan tertentu. Catatan tidak dapat diubah atau dihapus. |
+| 7 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token dan peran admin sebelum perubahan dilakukan. |
+
+### 3.21.2 Sequence Diagram
+
+- **Skenario Normal**
+
+Admin membuka detail laporan, meninjau isinya, memilih status baru pada dropdown, dan menyimpan. ModerasiController memverifikasi peran admin melalui Otorisasi, memvalidasi status baru, lalu memperbarui statusPenanganan dan waktu perubahan pada Laporan. Setelah itu controller mencatat tindak lanjut ke LogAudit yang bersifat hanya-tambah. DasborAdmin menampilkan status terbaru.
+
+<p align="center">
+<img alt="Sequence Diagram UC21 - Skenario Normal" src="./assets/diagram/Sequence_UC21_Normal.png" width="90%">
+</p>
+<p align="center">
+<i>Gambar 3.72. Sequence Diagram UC21 - Skenario Normal</i>
+</p>
+
+### 3.21.3 Diagram Kelas
+
+Diagram kelas perancangan UC21 memodelkan DasborAdmin yang berasosiasi dengan ModerasiController. ModerasiController bergantung pada Otorisasi, SesiLogin, Admin, Laporan, dan LogAudit. Setiap Laporan berelasi 1 ke 0..* dengan LogAudit.
+
+<p align="center">
+<img alt="Diagram Kelas Use Case UC21" src="./assets/diagram/Diagram_Kelas_UC21.png" width="80%">
+</p>
+<p align="center">
+<i>Gambar 3.73. Diagram Kelas Use Case UC21</i>
+</p>
+
+---
+
+## 3.22 Use Case Menghapus Listing yang Dilaporkan
+
+**ID Use Case:** UC22  
+**Nama Use Case:** Menghapus Listing yang Dilaporkan
+
+### 3.22.1 Identifikasi Kelas
+
+Realisasi use case ini melibatkan antarmuka dasbor admin untuk menangkap alasan dan konfirmasi, controller moderasi untuk mengeksekusi penghapusan dan mengorkestrasi notifikasi serta pencatatan, controller notifikasi dan surel adapter untuk memberi tahu pemilik listing, modul otorisasi, serta entitas Barang, Notifikasi, LogAudit, dan LogAdmin.
+
+Tabel 3.22. Identifikasi Kelas Use Case UC22
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | DasborAdmin | C11 DasborAdmin | Menyediakan tombol "Hapus Listing", dialog alasan, dan konfirmasi penghapusan. |
+| 2 | ModerasiController | C21 ModerasiController | Memverifikasi admin, menghapus listing, meminta notifikasi kepada pemilik, serta mencatat ke log admin dan log audit. |
+| 3 | NotifikasiController | C19 NotifikasiController | Membuat dan mengirim pemberitahuan penghapusan beserta alasan kepada pemilik listing. |
+| 4 | Admin | C26 Admin | Aktor pelaku penghapusan yang tercatat pada log admin. |
+| 5 | SesiLogin | C28 SesiLogin | Menyediakan identitas admin dari token sesi aktif. |
+| 6 | Barang | C29 Barang | Entitas listing yang dihapus dari katalog (beserta foto dan detail terkait). |
+| 7 | Notifikasi | C35 Notifikasi | Menyimpan pemberitahuan penghapusan listing dan alasannya bagi pemilik. |
+| 8 | LogAudit | C38 LogAudit | Mencatat tindak lanjut penghapusan pada catatan audit yang tidak dapat diubah. |
+| 9 | LogAdmin | C39 LogAdmin | Mencatat tindakan "Hapus Listing" beserta pelaku, objek, waktu, dan alasan. |
+| 10 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token dan peran admin. |
+| 11 | SurelAdapter | C43 SurelAdapter (Integrasi) | Mengirim surel pemberitahuan penghapusan kepada pemilik listing. |
+| 12 | PenyimpananBerkas | PenyimpananBerkas (Storage) | Menghapus berkas foto listing dari Supabase Storage. |
+
+### 3.22.2 Sequence Diagram
+
+- **Skenario Normal**
+
+Dari halaman detail laporan, admin menekan "Hapus Listing", mengisi alasan pada dialog, lalu mengonfirmasi. ModerasiController memverifikasi peran admin melalui Otorisasi dan SesiLogin, lalu menghapus Barang beserta berkas fotonya dari PenyimpananBerkas. Controller meminta NotifikasiController membuat Notifikasi bagi pemilik dan mengirim surel melalui SurelAdapter, dengan isi yang mencantumkan alasan dari admin. Terakhir, tindakan dicatat ke LogAdmin dan LogAudit.
+
+<p align="center">
+<img alt="Sequence Diagram UC22 - Skenario Normal" src="./assets/diagram/Sequence_UC22_Normal.png" width="95%">
+</p>
+<p align="center">
+<i>Gambar 3.74. Sequence Diagram UC22 - Skenario Normal</i>
+</p>
+
+### 3.22.3 Diagram Kelas
+
+Diagram kelas perancangan UC22 memodelkan DasborAdmin yang berasosiasi dengan ModerasiController. ModerasiController bergantung pada Otorisasi, SesiLogin, Admin, Barang, NotifikasiController, LogAudit, LogAdmin, dan PenyimpananBerkas. NotifikasiController bergantung pada Notifikasi dan SurelAdapter. Admin berelasi 1 ke 0..* dengan LogAdmin.
+
+<p align="center">
+<img alt="Diagram Kelas Use Case UC22" src="./assets/diagram/Diagram_Kelas_UC22.png" width="90%">
+</p>
+<p align="center">
+<i>Gambar 3.75. Diagram Kelas Use Case UC22</i>
+</p>
+
+---
+
+## 3.23 Use Case Memblokir Akun Pengguna
+
+**ID Use Case:** UC23  
+**Nama Use Case:** Memblokir Akun Pengguna
+
+### 3.23.1 Identifikasi Kelas
+
+Realisasi use case ini melibatkan antarmuka dasbor admin untuk menangkap alasan dan konfirmasi pemblokiran, controller moderasi untuk mengubah status akun, menonaktifkan listing milik akun tersebut, dan memutus sesi aktif, controller notifikasi dan surel adapter untuk pemberitahuan penangguhan, modul otorisasi, serta entitas Akun, SesiLogin, Barang, Notifikasi, LogAudit, dan LogAdmin.
+
+Tabel 3.23. Identifikasi Kelas Use Case UC23
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | DasborAdmin | C11 DasborAdmin | Menyediakan tombol "Blokir Akun", dialog alasan, konfirmasi, dan status akun terkini. |
+| 2 | ModerasiController | C21 ModerasiController | Mengubah status akun menjadi "Diblokir", menonaktifkan seluruh listing milik akun, memutus sesi aktif, meminta notifikasi, dan mencatat log. |
+| 3 | NotifikasiController | C19 NotifikasiController | Membuat dan mengirim pemberitahuan penangguhan beserta alasannya kepada pengguna. |
+| 4 | Akun | C23 Akun | Entitas yang statusnya berubah dari "Aktif" menjadi "Diblokir". |
+| 5 | Admin | C26 Admin | Aktor pelaku pemblokiran yang tercatat pada log admin. |
+| 6 | SesiLogin | C28 SesiLogin | Sesi aktif milik akun yang diblokir dinonaktifkan. Menyediakan pula identitas admin pelaku. |
+| 7 | Barang | C29 Barang | Seluruh listing milik akun dinonaktifkan sehingga hilang dari katalog dan hasil pencarian. |
+| 8 | Notifikasi | C35 Notifikasi | Menyimpan pemberitahuan penangguhan akun. |
+| 9 | LogAudit | C38 LogAudit | Mencatat tindakan pemblokiran pada catatan audit permanen. |
+| 10 | LogAdmin | C39 LogAdmin | Mencatat tindakan "Blokir Akun" beserta pelaku, objek, waktu, dan alasan. |
+| 11 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token dan peran admin. |
+| 12 | SurelAdapter | C43 SurelAdapter (Integrasi) | Mengirim surel pemberitahuan penangguhan beserta alasan. |
+
+### 3.23.2 Sequence Diagram
+
+- **Skenario Normal**
+
+Admin menekan "Blokir Akun" dari detail laporan atau profil pengguna, mengisi alasan, lalu mengonfirmasi. ModerasiController memverifikasi peran admin, mengubah status Akun menjadi "Diblokir", menonaktifkan seluruh Barang milik akun tersebut agar hilang dari katalog dan pencarian, dan menonaktifkan SesiLogin aktif akun tersebut. Controller meminta NotifikasiController mengirim pemberitahuan beserta alasan melalui SurelAdapter dan menyimpannya sebagai Notifikasi. Tindakan dicatat ke LogAdmin dan LogAudit. Pada percobaan login berikutnya, AkunController menolak login akun yang berstatus "Diblokir" dengan pesan penangguhan.
+
+<p align="center">
+<img alt="Sequence Diagram UC23 - Skenario Normal" src="./assets/diagram/Sequence_UC23_Normal.png" width="95%">
+</p>
+<p align="center">
+<i>Gambar 3.76. Sequence Diagram UC23 - Skenario Normal</i>
+</p>
+
+### 3.23.3 Diagram Kelas
+
+Diagram kelas perancangan UC23 memodelkan DasborAdmin yang berasosiasi dengan ModerasiController. ModerasiController bergantung pada Otorisasi, Admin, Akun, SesiLogin, Barang, NotifikasiController, LogAudit, dan LogAdmin. Relasi Akun terhadap Barang (sebagai Penjual) adalah 1 ke 0..*, dan Akun terhadap SesiLogin adalah 1 ke 0..*. NotifikasiController bergantung pada Notifikasi dan SurelAdapter.
+
+<p align="center">
+<img alt="Diagram Kelas Use Case UC23" src="./assets/diagram/Diagram_Kelas_UC23.png" width="90%">
+</p>
+<p align="center">
+<i>Gambar 3.77. Diagram Kelas Use Case UC23</i>
+</p>
+
+---
+
+## 3.24 Use Case Membuka Blokir Akun Pengguna
+
+**ID Use Case:** UC24  
+**Nama Use Case:** Membuka Blokir Akun Pengguna
+
+### 3.24.1 Identifikasi Kelas
+
+Realisasi use case ini melibatkan antarmuka dasbor admin untuk memicu pembukaan blokir, controller moderasi untuk memulihkan status akun dan visibilitas listing, modul otorisasi, serta entitas Akun, Barang, dan LogAdmin.
+
+Tabel 3.24. Identifikasi Kelas Use Case UC24
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | DasborAdmin | C11 DasborAdmin | Menyediakan tombol "Buka Blokir" pada profil pengguna atau detail laporan beserta dialog konfirmasi. |
+| 2 | ModerasiController | C21 ModerasiController | Memverifikasi admin, memulihkan status akun, memulihkan listing ke katalog, dan mencatat ke log admin. |
+| 3 | Akun | C23 Akun | Entitas yang status blokirnya dikembalikan menjadi aktif sehingga pengguna dapat login kembali. |
+| 4 | Admin | C26 Admin | Aktor pelaku pembukaan blokir yang tercatat pada log admin. |
+| 5 | Barang | C29 Barang | Listing milik akun dikembalikan ke status publik sehingga tampil kembali pada katalog dan pencarian. |
+| 6 | LogAdmin | C39 LogAdmin | Mencatat tindakan "Buka Blokir" beserta pelaku, objek, dan waktu. |
+| 7 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token dan peran admin. |
+
+### 3.24.2 Sequence Diagram
+
+- **Skenario Normal**
+
+Admin menekan "Buka Blokir" pada akun yang sedang diblokir. ModerasiController memverifikasi peran admin melalui Otorisasi, mengubah status Akun menjadi aktif, memulihkan seluruh Barang milik akun tersebut ke katalog publik, lalu mencatat tindakan ke LogAdmin. DasborAdmin menampilkan status akun terbaru.
+
+<p align="center">
+<img alt="Sequence Diagram UC24 - Skenario Normal" src="./assets/diagram/Sequence_UC24_Normal.png" width="90%">
+</p>
+<p align="center">
+<i>Gambar 3.78. Sequence Diagram UC24 - Skenario Normal</i>
+</p>
+
+### 3.24.3 Diagram Kelas
+
+Diagram kelas perancangan UC24 memodelkan DasborAdmin yang berasosiasi dengan ModerasiController. ModerasiController bergantung pada Otorisasi, Admin, Akun, Barang, dan LogAdmin. Relasi Akun terhadap Barang adalah 1 ke 0..*, dan Admin berelasi 1 ke 0..* dengan LogAdmin.
+
+<p align="center">
+<img alt="Diagram Kelas Use Case UC24" src="./assets/diagram/Diagram_Kelas_UC24.png" width="85%">
+</p>
+<p align="center">
+<i>Gambar 3.79. Diagram Kelas Use Case UC24</i>
+</p>
+
+
 # BAB 4: Diagram Kelas Keseluruhan
 
 ## 4.1 Diagram Kelas
