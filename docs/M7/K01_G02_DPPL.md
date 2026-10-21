@@ -747,7 +747,7 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 
 <br>
 
-## 3.9 Use Case Melihat Daftar Listing Milik Sendiri
+## 3.9 Use Case Mengubah Listing
 
 **ID Use Case:** UC09  
 **Nama Use Case:** Mengubah Listing
@@ -781,31 +781,46 @@ Penjual membuka formulir yang telah berisi data lama, menyunting isian dan/atau 
 <i>Gambar 3.26. Sequence Diagram UC09 — Skenario Normal</i>
 </p>
 
-- **Skenario Alternatif 2**
+- **Skenario Alternatif 1:  Kolom Wajib Dikosongkan saat Pengubahan**
+
+Kolom wajib dikosongkan. FormulirBarang menghentikan pengiriman, menandai isian yang salah, dan mempertahankan data lama. Setelah diperbaiki, permintaan dikirim dan divalidasi ulang di server.
+
+<p align="center">
+<img alt="Gambar 3.27. Sequence Diagram UC09 — Skenario Alternatif 1" src="./assets/diagram/./assets/diagram/Sequence_UC09_Alt1.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.27. Sequence Diagram UC09 — Skenario Alternatif 1</i>
+</p>
+
+- **Skenario Alternatif 2: Pelanggaran Syarat Unggahan Foto saat Pengubahan**
 
 Berkas baru bukan JPG/PNG, lebih dari 5 MB, atau membuat total foto melebihi lima. FormulirBarang menolaknya beserta pratinjau; penjual tidak dapat menyimpan sampai pelanggaran diperbaiki.
 
 <p align="center">
-<img alt="Gambar 3.27. Sequence Diagram UC09 — Skenario Normal" src="./assets/diagram/Sequence_UC09_Normal.png" width="75%">
+<img alt="Gambar 3.28. Sequence Diagram UC09 — Alternatif 2" src="./assets/diagram/Sequence_UC09_Alt2.png" width="75%">
 </p>
 <p align="center">
-<i>Gambar 3.28. Sequence Diagram UC09 — Skenario Alternatif 2</i>
+<i>Gambar 3.28. Sequence Diagram UC09 — Alternatif 2</i>
 </p>
 
-- **Skenario Alternatif 3**
+- **Skenario Alternatif 3: Percobaan Pengubahan oleh Akun Bukan Pemilik**
 
 Pemohon bukan pemilik mencoba membuka URL pengubahan atau mengirim pembaruan secara langsung. Controller membandingkan idAkun pada sesi dengan idPenjual dan menolak keduanya tanpa mengubah data.
 
 <p align="center">
-<img alt="Gambar 3.28. Sequence Diagram UC09 — Skenario Normal" src="./assets/diagram/Sequence_UC09_Normal.png" width="75%">
+<img alt="Gambar 3.29. Sequence Diagram UC09 — Skenario Alternatif 3" src="./assets/diagram/Sequence_UC09_Alt3.png" width="75%">
 </p>
 <p align="center">
-<i>Gambar 3.28. Sequence Diagram UC09 — Skenario Alternatif 3</i>
+<i>Gambar 3.29. Sequence Diagram UC09 — Skenario Alternatif 3</i>
 </p>
 
 ### 3.9.3 Diagram Kelas
-
-Diagram kelas perancangan UC09 memperlihatkan kelas boundary, control, entity, dan komponen pendukung yang digunakan skenario ini. Atribut dan operasi diberi tipe serta visibilitas; dependensi tetap mengikuti pola **View → Controller → Model** dan akses Database hanya melalui Model.
+<p align="center">
+<img alt="Gambar 3.30. Diagram Kelas UC09 " src="./assets/diagram/Diagram_Kelas_UC09.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.30. Diagram Kelas UC09</i>
+</p>
 
 ---
 
