@@ -822,6 +822,70 @@ Pemohon bukan pemilik mencoba membuka URL pengubahan atau mengirim pembaruan sec
 <i>Gambar 3.30. Diagram Kelas UC09</i>
 </p>
 
+## 3.10 Use Case Menghapus Listing
+
+**ID Use Case:** UC10  
+**Nama Use Case:** Menghapus Listing
+
+### 3.10.1 Identifikasi Kelas
+
+Tabel 3.10. Identifikasi Kelas Use Case UC10
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanListingPenjual | C03 HalamanListingPenjual | Menampilkan Listing Saya, dialog konfirmasi, dan aksi kelola listing. |
+| 2 | BarangController | C14 BarangController | Memeriksa pemilik sebelum dialog dan sebelum operasi hapus; menghapus listing serta mengoordinasikan pembersihan foto. |
+| 3 | Penjual | C25 Penjual | Penjual pemilik listing yang mengonfirmasi penghapusan permanen. |
+| 4 | SesiLogin | C28 SesiLogin | Menyediakan idAkun dari token sesi aktif untuk otorisasi. |
+| 5 | Barang | C29 Barang | Menyimpan dan menyediakan data listing, status, idPenjual serta waktu perubahan. |
+| 6 | FotoBarang | C30 FotoBarang | Menyimpan metadata galeri/berkas foto barang dan urutannya. |
+| 7 | Otorisasi | C41 Otorisasi (Pendukung) | Mengesahkan token sesi dan mengenali idAkun pemohon di server. |
+| 8 | PenyimpananBerkas (Supabase Storage) | PenyimpananBerkas (Storage) | Menyimpan dan membersihkan berkas foto fisik pada Supabase Storage. |
+
+### 3.10.2 Sequence Diagram
+
+- **Skenario Normal**
+
+Penjual memilih Hapus Listing, melihat peringatan permanen dan mengonfirmasi. Controller menguji ulang kepemilikan, menghapus data listing beserta metadata fotonya, lalu memuat ulang daftar. Listing tak lagi muncul dalam katalog maupun pencarian.
+
+<p align="center">
+<img alt="Gambar 3.31. Sequence Diagram UC10 — Skenario Normal" src="./assets/diagram/Sequence_UC10_Normal.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.31. Sequence Diagram UC10 — Skenario Normal</i>
+</p>
+
+- **Skenario Alternatif 1: Penjual Membatalkan Konfirmasi Penghapusan**
+
+Penjual menekan Batal atau menutup dialog. Tidak ada permintaan penghapusan maupun perubahan pada Model; listing tetap pada daftar dengan status semula.
+
+<p align="center">
+<img alt="Gambar 3.32. Sequence Diagram UC10 — Skenario Alternatif 1" src="./assets/diagram/Sequence_UC10_Alt1.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.32. Sequence Diagram UC10 — Skenario Alternatif 1</i>
+</p>
+
+- **Skenario Alternatif 2: Percobaan Penghapusan oleh Akun Bukan Pemilik**
+
+Akun bukan pemilik mengirim permintaan hapus langsung. Controller memeriksa token dan idPenjual, mengembalikan penolakan akses, dan menjaga data listing tetap utuh.
+
+<p align="center">
+<img alt="Gambar 3.33. Sequence Diagram UC10 — Skenario Alternatif 2" src="./assets/diagram/Sequence_UC10_Alt2.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.33. Sequence Diagram UC10 — Skenario Alternatif 2</i>
+</p>
+
+### 3.10.3 Diagram Kelas
+
+<p align="center">
+<img alt="Gambar 3.34. Diagram Kelas UC10" src="./assets/diagram/Diagram_Kelas_UC10.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.34. Diagram Kelas UC10</i>
+</p>
+
 ---
 
 # BAB 4: Diagram Kelas Keseluruhan
