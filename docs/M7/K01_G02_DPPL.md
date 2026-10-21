@@ -747,6 +747,66 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 
 <br>
 
+## 3.9 Use Case Melihat Daftar Listing Milik Sendiri
+
+**ID Use Case:** UC09  
+**Nama Use Case:** Mengubah Listing
+
+### 3.9.1 Identifikasi Kelas
+
+Tabel 3.9. Identifikasi Kelas Use Case UC09
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanListingPenjual | C03 HalamanListingPenjual | Titik masuk tombol Ubah Listing pada daftar listing sendiri (UC08). |
+| 2 | FormulirBarang | C04 FormulirBarang | Merender formulir berisi atribut dan foto lama, memvalidasi kolom dan jumlah akhir foto. |
+| 3 | BarangController | C14 BarangController | Memverifikasi pemilik pada GET dan UPDATE; memvalidasi ulang data/foto sebelum memperbarui listing dan metadata. |
+| 4 | Penjual | C25 Penjual | Pemilik listing yang meminta pengubahan data dan galeri barang miliknya. |
+| 5 | SesiLogin | C28 SesiLogin | Menyediakan idAkun dari token sesi aktif untuk otorisasi. |
+| 6 | Barang | C29 Barang | Menyimpan dan menyediakan data listing, status, idPenjual serta waktu perubahan. |
+| 7 | FotoBarang | C30 FotoBarang | Menyimpan metadata galeri/berkas foto barang dan urutannya. |
+| 8 | Kategori | C31 Kategori | Menyediakan kategori baku untuk validasi, filter dan detail. |
+| 9 | LokasiCOD | C32 LokasiCOD | Menyediakan titik temu COD baku untuk pilihan/filter dan detail. |
+| 10 | Otorisasi | C41 Otorisasi (Pendukung) | Mengesahkan token sesi dan mengenali idAkun pemohon di server. |
+| 11 | PenyimpananBerkas (Supabase Storage) | PenyimpananBerkas (Storage) | Menyimpan dan membersihkan berkas foto fisik pada Supabase Storage. |
+
+- **Skenario Normal**
+
+Penjual membuka formulir yang telah berisi data lama, menyunting isian dan/atau galeri, lalu menyimpan. Controller memeriksa kembali pemilik, isian, kategori serta batas 1–5 foto JPG/PNG maksimal 5 MB per foto; data dan waktu pengubahan diperbarui, lalu penjual diarahkan ke detail listing.
+
+<p align="center">
+<img alt="Gambar 3.26. Sequence Diagram UC09 — Skenario Normal" src="./assets/diagram/Sequence_UC09_Normal.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.26. Sequence Diagram UC09 — Skenario Normal</i>
+</p>
+
+- **Skenario Alternatif 2**
+
+Berkas baru bukan JPG/PNG, lebih dari 5 MB, atau membuat total foto melebihi lima. FormulirBarang menolaknya beserta pratinjau; penjual tidak dapat menyimpan sampai pelanggaran diperbaiki.
+
+<p align="center">
+<img alt="Gambar 3.27. Sequence Diagram UC09 — Skenario Normal" src="./assets/diagram/Sequence_UC09_Normal.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.28. Sequence Diagram UC09 — Skenario Alternatif 2</i>
+</p>
+
+- **Skenario Alternatif 3**
+
+Pemohon bukan pemilik mencoba membuka URL pengubahan atau mengirim pembaruan secara langsung. Controller membandingkan idAkun pada sesi dengan idPenjual dan menolak keduanya tanpa mengubah data.
+
+<p align="center">
+<img alt="Gambar 3.28. Sequence Diagram UC09 — Skenario Normal" src="./assets/diagram/Sequence_UC09_Normal.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.28. Sequence Diagram UC09 — Skenario Alternatif 3</i>
+</p>
+
+### 3.9.3 Diagram Kelas
+
+Diagram kelas perancangan UC09 memperlihatkan kelas boundary, control, entity, dan komponen pendukung yang digunakan skenario ini. Atribut dan operasi diberi tipe serta visibilitas; dependensi tetap mengikuti pola **View → Controller → Model** dan akses Database hanya melalui Model.
+
 ---
 
 # BAB 4: Diagram Kelas Keseluruhan
