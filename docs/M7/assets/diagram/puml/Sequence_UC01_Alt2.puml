@@ -4,39 +4,20 @@ skinparam shadowing false
 skinparam defaultFontName Arial
 skinparam sequenceMessageAlign center
 skinparam backgroundColor #FFFFFF
-
-skinparam participant {
-    BackgroundColor #FFFFFF
-    BorderColor #000000
-}
-skinparam actor {
-    BackgroundColor #FFFFFF
-    BorderColor #000000
-}
-skinparam sequence {
-    LifeLineBackgroundColor #FFFFFF
-    LifeLineBorderColor #000000
-    ArrowColor #000000
-    ActorBorderColor #000000
-    ActorBackgroundColor #FFFFFF
-    GroupBorderColor #000000
-    GroupBackgroundColor #FFFFFF
-}
-
+skinparam responseMessageBelowArrow true
+title UC01 — Alternatif 2: Email Sudah Terdaftar
 actor "Calon Pengguna" as User
-boundary ":HalamanOtentikasi" as UI
-control ":AkunController" as Ctrl
-
-User -> UI: kirimFormulirPendaftaran(nama, nim, email, kataSandi, setujuKebijakan)
-activate UI
-UI -> Ctrl: daftarAkun(nama, nim, email, kataSandi, setujuKebijakan)
-activate Ctrl
-Ctrl -> Ctrl: validasiKelengkapanFormulir(nama, nim, email, kataSandi, setujuKebijakan)
-Ctrl -> Ctrl: validasiDomainEmail(email)
-Ctrl -> Ctrl: cekKeunikanEmail(email)
-note right of Ctrl: Email ditemukan di basis data\n(gagal uji keunikan)
-Ctrl --> UI: galatEmailSudahTerdaftar
-deactivate Ctrl
-UI --> User: tampilkanPesanGalat("Email sudah terdaftar. Silakan gunakan email lain atau masuk menggunakan akun tersebut.")
-deactivate UI
+boundary ":HalamanOtentikasi" as UIo
+control ":AkunController" as AC
+entity ":Akun" as Akun
+User -> UIo: kirimFormulirPendaftaran(nama, nim, email, kataSandi, setujuKebijakan)
+UIo -> AC: daftarAkun(nama, nim, email, kataSandi, setujuKebijakan)
+AC -> AC: validasiKelengkapanFormulir(nama, nim, email, kataSandi, setujuKebijakan)
+AC -> AC: validasiDomainEmail(email)
+AC -> AC: cekKeunikanEmail(email)
+AC -> Akun: cariByEmail(email)
+Akun --> AC: akun (surel sudah terdaftar)
+note right of AC: Pendaftaran dibatalkan (KF05)
+AC --> UIo: false (surel sudah terdaftar)
+UIo -> UIo: tampilkanPesanGalat("Email sudah terdaftar. Gunakan email lain atau masuk.")
 @enduml

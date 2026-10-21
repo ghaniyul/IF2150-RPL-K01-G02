@@ -96,16 +96,16 @@
 <text x="299" y="902" font-size="13" font-weight="bold" font-style="normal" fill="#000000" text-anchor="start">PENDUKUNG</text>
 <text x="591" y="902" font-size="11.5" font-weight="normal" font-style="normal" fill="#000000" text-anchor="end">dipanggil Controller</text>
 <rect x="299" y="918" width="140" height="34" rx="4" fill="#ffffff" stroke="#000000" stroke-width="1"/>
-<text x="309" y="940" font-size="13" font-weight="bold" font-style="normal" fill="#000000" text-anchor="start">Otorisasi</text>
+<text x="309" y="940" font-size="13" font-weight="bold" font-style="normal" fill="#000000" text-anchor="start">Otorisasi<tspan font-size="12" font-weight="normal"> (C41)</tspan></text>
 <rect x="451" y="918" width="140" height="34" rx="4" fill="#ffffff" stroke="#000000" stroke-width="1"/>
-<text x="461" y="940" font-size="13" font-weight="bold" font-style="normal" fill="#000000" text-anchor="start">Kriptografi</text>
+<text x="461" y="940" font-size="13" font-weight="bold" font-style="normal" fill="#000000" text-anchor="start">Kriptografi<tspan font-size="12" font-weight="normal"> (C42)</tspan></text>
 <text x="299" y="980" font-size="11.5" font-weight="normal" font-style="normal" fill="#000000" text-anchor="start">cek sesi &amp; peran · hash bcrypt · enkripsi pesan</text>
-<rect x="640" y="880" width="190" height="110" rx="4" fill="#ffffff" stroke="#000000" stroke-width="1.2"/>
+<rect x="640" y="880" width="225" height="110" rx="4" fill="#ffffff" stroke="#000000" stroke-width="1.2"/>
 <text x="652" y="902" font-size="12.5" font-weight="bold" font-style="normal" fill="#000000" text-anchor="start">INTEGRASI EKSTERNAL</text>
-<rect x="650" y="912" width="170" height="30" rx="4" fill="#ffffff" stroke="#000000" stroke-width="1"/>
-<text x="660" y="932" font-size="13" font-weight="bold" font-style="normal" fill="#000000" text-anchor="start">SurelAdapter</text>
-<rect x="650" y="950" width="170" height="30" rx="4" fill="#ffffff" stroke="#000000" stroke-width="1"/>
-<text x="660" y="970" font-size="13" font-weight="bold" font-style="normal" fill="#000000" text-anchor="start">PushNotifikasiAdapter</text>
+<rect x="650" y="912" width="205" height="30" rx="4" fill="#ffffff" stroke="#000000" stroke-width="1"/>
+<text x="660" y="932" font-size="13" font-weight="bold" font-style="normal" fill="#000000" text-anchor="start">SurelAdapter<tspan font-size="12" font-weight="normal"> (C43)</tspan></text>
+<rect x="650" y="950" width="205" height="30" rx="4" fill="#ffffff" stroke="#000000" stroke-width="1"/>
+<text x="660" y="970" font-size="13" font-weight="bold" font-style="normal" fill="#000000" text-anchor="start">PushNotifikasiAdapter<tspan font-size="12" font-weight="normal"> (C44)</tspan></text>
 <rect x="285" y="1090" width="275" height="80" rx="8" fill="#ffffff" stroke="#000000" stroke-width="1" stroke-dasharray="5 4"/>
 <text x="422" y="1122" font-size="13.5" font-weight="bold" font-style="normal" fill="#000000" text-anchor="middle">Layanan Web Push peramban</text>
 <text x="422" y="1142" font-size="12" font-weight="normal" font-style="normal" fill="#000000" text-anchor="middle">(di luar P/L, mis. milik Google</text>
@@ -116,7 +116,7 @@
 <text x="735" y="1158" font-size="12" font-weight="normal" font-style="normal" fill="#000000" text-anchor="middle">masuk @itb.ac.id</text>
 <rect x="905" y="1095" width="200" height="140" rx="4" fill="#ffffff" stroke="#000000" stroke-width="1.2"/>
 <text x="1005" y="1122" font-size="11.5" font-weight="bold" font-style="normal" fill="#000000" text-anchor="middle">PENYIMPANAN DATA</text>
-<text x="1005" y="1150" font-size="14" font-weight="bold" font-style="normal" fill="#000000" text-anchor="middle">PenyimpananBerkas</text>
+<text x="1005" y="1150" font-size="14" font-weight="bold" font-style="normal" fill="#000000" text-anchor="middle">PenyimpananBerkas<tspan font-size="12" font-weight="normal"> (C45)</tspan></text>
 <text x="1005" y="1172" font-size="12" font-weight="normal" font-style="normal" fill="#000000" text-anchor="middle">Supabase Storage</text>
 <text x="1005" y="1192" font-size="12" font-weight="normal" font-style="normal" fill="#000000" text-anchor="middle">foto listing &amp;</text>
 <text x="1005" y="1208" font-size="12" font-weight="normal" font-style="normal" fill="#000000" text-anchor="middle">bukti laporan</text>
@@ -153,12 +153,12 @@
 <text x="556" y="1033" font-size="12" font-weight="normal" font-style="normal" fill="#000000" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">kirim notifikasi push</text>
 <path d="M285 1130 L232 1130 L232 320 L283 320" fill="none" stroke="#000000" stroke-width="1.2" marker-end="url(#ah)"/>
 <text x="224" y="725" font-size="12" font-weight="normal" font-style="normal" fill="#000000" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round" transform="rotate(-90 224 725)">notifikasi push diterima Service Worker pada peramban penerima</text>
-<path d="M745 800 L870 800 L870 1165 L903 1165" fill="none" stroke="#000000" stroke-width="1.2" marker-end="url(#ah)"/>
-<text x="884" y="935" font-size="12" font-weight="normal" font-style="normal" fill="#000000" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round" transform="rotate(90 884 935)">unggah / ambil berkas</text>
+<path d="M745 800 L890 800 L890 1165 L903 1165" fill="none" stroke="#000000" stroke-width="1.2" marker-end="url(#ah)"/>
+<text x="904" y="935" font-size="12" font-weight="normal" font-style="normal" fill="#000000" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round" transform="rotate(90 904 935)">simpan / hapus berkas</text>
 <path d="M1217 825 L1217 1093" fill="none" stroke="#000000" stroke-width="1.2" marker-end="url(#ah)"/>
 <text x="1207" y="1033" font-size="12" font-weight="normal" font-style="normal" fill="#000000" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">membaca / menulis</text>
 <text x="1207" y="1048" font-size="12" font-weight="normal" font-style="normal" fill="#000000" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="5" stroke-linejoin="round">data (TLS)</text>
 <text x="20" y="1230" font-size="12" font-weight="bold" font-style="normal" fill="#000000" text-anchor="start">Keterangan:</text>
 <text x="20" y="1248" font-size="12" font-weight="normal" font-style="normal" fill="#000000" text-anchor="start">Kotak garis putus-putus besar = lingkungan operasi (Tabel 1.1). Kotak garis putus-putus kecil = layanan di luar P/L.</text>
-<text x="20" y="1266" font-size="12" font-weight="normal" font-style="normal" fill="#000000" text-anchor="start">Kode C01–C40 = kelas pada diagram kelas SKPL yang diwadahi komponen tersebut.</text>
+<text x="20" y="1266" font-size="12" font-weight="normal" font-style="normal" fill="#000000" text-anchor="start">Kode C01–C45 = kelas perancangan (Tabel 4.1) yang diwadahi komponen tersebut; C41–C45 adalah kelas baru pada tahap perancangan.</text>
 </svg>

@@ -4,38 +4,16 @@ skinparam shadowing false
 skinparam defaultFontName Arial
 skinparam sequenceMessageAlign center
 skinparam backgroundColor #FFFFFF
-
-skinparam participant {
-    BackgroundColor #FFFFFF
-    BorderColor #000000
-}
-skinparam actor {
-    BackgroundColor #FFFFFF
-    BorderColor #000000
-}
-skinparam sequence {
-    LifeLineBackgroundColor #FFFFFF
-    LifeLineBorderColor #000000
-    ArrowColor #000000
-    ActorBorderColor #000000
-    ActorBackgroundColor #FFFFFF
-    GroupBorderColor #000000
-    GroupBackgroundColor #FFFFFF
-}
-
+skinparam responseMessageBelowArrow true
+title UC01 — Alternatif 1: Domain Email Tidak Valid
 actor "Calon Pengguna" as User
-boundary ":HalamanOtentikasi" as UI
-control ":AkunController" as Ctrl
-
-User -> UI: kirimFormulirPendaftaran(nama, nim, email, kataSandi, setujuKebijakan)
-activate UI
-UI -> Ctrl: daftarAkun(nama, nim, email, kataSandi, setujuKebijakan)
-activate Ctrl
-Ctrl -> Ctrl: validasiKelengkapanFormulir(nama, nim, email, kataSandi, setujuKebijakan)
-Ctrl -> Ctrl: validasiDomainEmail(email)
-note right of Ctrl: Domain bukan @itb.ac.id\n(validasi gagal)
-Ctrl --> UI: galatDomainEmailInvalid
-deactivate Ctrl
-UI --> User: tampilkanPesanGalat("Harap gunakan email berdomain @itb.ac.id")
-deactivate UI
+boundary ":HalamanOtentikasi" as UIo
+control ":AkunController" as AC
+User -> UIo: kirimFormulirPendaftaran(nama, nim, email, kataSandi, setujuKebijakan)
+UIo -> AC: daftarAkun(nama, nim, email, kataSandi, setujuKebijakan)
+AC -> AC: validasiKelengkapanFormulir(nama, nim, email, kataSandi, setujuKebijakan)
+AC -> AC: validasiDomainEmail(email)
+note right of AC: Domain bukan @itb.ac.id,\npendaftaran dibatalkan (KF05)
+AC --> UIo: false (domain tidak valid)
+UIo -> UIo: tampilkanPesanGalat("Harap gunakan email berdomain @itb.ac.id")
 @enduml

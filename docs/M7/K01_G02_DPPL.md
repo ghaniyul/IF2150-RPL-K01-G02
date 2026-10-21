@@ -1,14 +1,13 @@
 <h1>
 IF2150 REKAYASA PERANGKAT LUNAK
 <br>
-TUGAS 5
+TUGAS 7
 <br>
 DESKRIPSI PERANCANGAN PERANGKAT LUNAK (DPPL)
 </h1>
 <br>
 
 ## *ITBELI*
-### *[Logo Perangkat Lunak]*
 
 ### Untuk:  *Mikhael Andrian Yonatan*
 
@@ -35,17 +34,10 @@ Dipersiapkan oleh:
 
 | Revisi | Deskripsi |
 | :--- | :--- |
-| *A* | *Deskripsikan perubahan yang dilakukan dari dokumen sebelumnya pada dokumen ini. Jika tidak terdapat perubahan, harap kosongkan tabel.* |
-| *B* |  |
-| *C* |  |
-| ... |  |
-
----
-
-<br>
->
->
-<br>
+| *A* | *Penyusunan awal DPPL: BAB 1 dan BAB 2 diturunkan dari dokumen SKPL dan APL, serta realisasi use case UC01–UC24 pada BAB 3.* |
+| *B* | *Diagram kelas per use case (UC01–UC24) dibangkitkan ulang dari satu model kelas sehingga nama, atribut, dan metode setiap kelas seragam di seluruh use case. Diagram kelas UC17–UC24 dilengkapi visibilitas, tipe data atribut, parameter, dan tipe kembalian operasi. Kelas Otorisasi, Kriptografi, SurelAdapter, PushNotifikasiAdapter, dan PenyimpananBerkas (C41–C45) digambarkan pada setiap use case yang memakainya, dan tabel identifikasi kelas disamakan dengan diagramnya.* |
+| *C* | *Sequence diagram UC01–UC08 dan UC17–UC24 diselaraskan sehingga setiap pesan merupakan operasi pada kelas tujuan, termasuk pemanggilan Otorisasi, Kriptografi, SurelAdapter, PushNotifikasiAdapter, dan PenyimpananBerkas.* |
+| *D* | *Penyusunan BAB 4 (diagram kelas perancangan keseluruhan dan Tabel 4.1) serta BAB 5 (matriks kerunutan kelas terhadap use case).* |
 
 ---
 
@@ -142,7 +134,7 @@ Tabel 2.1. Rancangan Lingkungan Implementasi
 | *Operating System* (Klien) | Windows 10/11, macOS, Linux, ChromeOS, dan Android 10 atau lebih baru. | Klien menjalankan peramban berbasis Chromium versi stabil terbaru, sedangkan iOS dan iPadOS tidak didukung karena seluruh perambannya memakai mesin WebKit. |
 | DBMS | PostgreSQL terkelola pada Supabase. | Menyimpan data seluruh komponen *Model* dan hanya diakses dari server melalui koneksi TLS. |
 | Bahasa Pemrograman | JavaScript pada *runtime* Node.js 22.x LTS; HTML5, CSS3, dan JavaScript pada peramban; SQL. | JavaScript pada Node.js dipakai untuk *Controller*, *Model*, *Pendukung*, dan *Integrasi Eksternal*, HTML5, CSS3, dan JavaScript untuk *View*, serta SQL untuk skema basis data. |
-| *Development Tools* | Visual Studio Code, Git dan GitHub, npm, mkcert, Supabase Dashboard, Chrome DevTools, serta draw.io dan StarUML. | Dipakai untuk penulisan kode, *version control*, pengelolaan pustaka, pembuatan sertifikat HTTPS lokal, pengelolaan basis data, pengujian pada peramban, dan penyusunan diagram. |
+| *Development Tools* | Visual Studio Code, Git dan GitHub, npm, mkcert, Supabase Dashboard, Chrome DevTools, serta PlantUML, draw.io, dan StarUML. | Dipakai untuk penulisan kode, *version control*, pengelolaan pustaka, pembuatan sertifikat HTTPS lokal, pengelolaan basis data, pengujian pada peramban, dan penyusunan diagram. |
 | *Filing System* | Sistem berkas OS server untuk kode program dan Supabase Storage untuk berkas unggahan pengguna. | Foto listing dan bukti laporan disimpan pada Supabase Storage, sedangkan *Model* Barang dan Laporan hanya menyimpan lokasi berkasnya. |
 
 ## 2.2 Style/Pattern Arsitektur Acuan
@@ -165,7 +157,7 @@ Agar pemisahan tersebut terjaga saat implementasi, ITBELI menetapkan aturan kete
 2. *Controller* tidak menyusun tampilan, melainkan hanya memilih *View* yang ditampilkan dan menyerahkan data yang dibutuhkan.
 3. *Model* tidak bergantung pada *View* maupun *Controller*, sehingga dapat diuji dan dipakai ulang tanpa antarmuka.
 4. Aturan bisnis dan hak akses ditegakkan di *Controller*. Validasi yang dilakukan di *View* selalu diulang di *Controller*.
-5. Komponen *Pendukung*, *Integrasi Eksternal*, dan PenyimpananBerkas hanya dipanggil oleh *Controller*, sedangkan Database hanya diakses oleh *Model*.
+5. Komponen *Pendukung*, *Integrasi Eksternal*, dan PenyimpananBerkas hanya dipanggil oleh *Controller*, sedangkan Database hanya diakses oleh *Model*. Otorisasi memang membaca data sesi dan peran dari *Model* Otentikasi dan Akun, tetapi hal ini tidak melanggar aturan karena Otorisasi sendiri tetap hanya dipanggil oleh *Controller*.
 
 ### 2.2.2 Alasan Pemilihan
 
@@ -188,11 +180,11 @@ Kelemahan MVC adalah bertambahnya jumlah kode untuk alur yang sederhana [4], mis
 <i>Gambar 2.1. Penerapan Pola MVC pada ITBELI</i>
 </p>
 
-Gambar 2.1 menempatkan seluruh komponen pada Tabel 2.3 ke dalam bagian MVC dengan nama yang sama, sekaligus menunjukkan lingkungan tempat setiap bagian dijalankan. Kotak *View* berisi 12 komponen yang berjalan pada peramban (zona Klien). Kotak *Controller* dan *Model* berada pada zona Server Web ITBELI bersama komponen *Pendukung* dan *Integrasi Eksternal*, sedangkan komponen *Penyimpanan Data* berada pada Supabase. Layanan Web Push dan layanan SMTP digambarkan dengan kotak bergaris putus-putus karena berada di luar P/L ITBELI. Kode kelas di samping nama komponen (misalnya C01) menunjukkan kelas analisis SKPL yang diwadahi komponen tersebut.
+Gambar 2.1 menempatkan seluruh komponen pada Tabel 2.3 ke dalam bagian MVC dengan nama yang sama, sekaligus menunjukkan lingkungan tempat setiap bagian dijalankan. Kotak *View* berisi 12 komponen yang berjalan pada peramban (zona Klien). Kotak *Controller* dan *Model* berada pada zona Server Web ITBELI bersama komponen *Pendukung* dan *Integrasi Eksternal*, sedangkan komponen *Penyimpanan Data* berada pada Supabase. Layanan Web Push dan layanan SMTP digambarkan dengan kotak bergaris putus-putus karena berada di luar P/L ITBELI. Kode kelas di samping nama komponen (misalnya C01) menunjukkan kelas perancangan pada Tabel 4.1 yang diwadahi komponen tersebut. Kode C01–C40 sama dengan kelas analisis SKPL, sedangkan C41–C45 adalah kelas baru pada tahap perancangan.
 
 ## 2.3 Identifikasi Komponen / Modul / Subsistem
 
-Komponen ITBELI diambil dari Tabel 2.1 dokumen APL dan dikelompokkan berdasarkan lapisan MVC yang ditetapkan pada subbab 2.2. Kelas *boundary* (C01–C12) menjadi komponen *View*, kelas *control* (C13–C22) menjadi komponen *Controller*, dan kelas *entity* (C23–C40) dikelompokkan berdasarkan data yang dikelolanya menjadi komponen *Model*, sehingga satu komponen *Model* dapat mewadahi lebih dari satu kelas. Selain itu, terdapat tiga kelompok komponen di luar lapisan MVC, yaitu *Pendukung* (fungsi bantu yang dipakai bersama oleh beberapa *Controller*), *Integrasi Eksternal* (penghubung ke layanan surel SMTP dan layanan Web Push), dan *Penyimpanan Data* (basis data dan penyimpanan berkas pada Supabase). Komponen *Pendukung* dan *Integrasi Eksternal* tidak memiliki padanan kelas analisis pada SKPL, sehingga kelasnya diberi ID lanjutan C41–C44 sesuai aturan penomoran pada subbab 1.4.
+Komponen ITBELI diambil dari Tabel 2.1 dokumen APL dan dikelompokkan berdasarkan lapisan MVC yang ditetapkan pada subbab 2.2. Kelas *boundary* (C01–C12) menjadi komponen *View*, kelas *control* (C13–C22) menjadi komponen *Controller*, dan kelas *entity* (C23–C40) dikelompokkan berdasarkan data yang dikelolanya menjadi komponen *Model*, sehingga satu komponen *Model* dapat mewadahi lebih dari satu kelas. Selain itu, terdapat tiga kelompok komponen di luar lapisan MVC, yaitu *Pendukung* (fungsi bantu yang dipakai bersama oleh beberapa *Controller*), *Integrasi Eksternal* (penghubung ke layanan surel SMTP dan layanan Web Push), dan *Penyimpanan Data* (basis data dan penyimpanan berkas pada Supabase). Komponen *Pendukung*, *Integrasi Eksternal*, dan PenyimpananBerkas tidak memiliki padanan kelas analisis pada SKPL, sehingga kelasnya diberi ID lanjutan C41–C45 sesuai aturan penomoran pada subbab 1.4.
 
 Tabel 2.3. Identifikasi Komponen/Modul/Subsistem
 
@@ -200,27 +192,27 @@ Tabel 2.3. Identifikasi Komponen/Modul/Subsistem
 | :--- | :--- | :--- |
 | **Lapisan *View*** | | |
 | OtentikasiView | *View* | Menampilkan formulir pendaftaran beserta kebijakan privasi dan kendali persetujuannya, formulir kode verifikasi beserta hitung mundur dan tombol kirim ulang, formulir *login*, serta tombol keluar. Seluruh aksi diteruskan ke AkunController. Mewadahi kelas C01 HalamanOtentikasi. |
-| ProfilView | *View* | Menampilkan nama, NIM, surel, dan daftar listing milik akun (melalui KartuProdukView), menu pengaturan akun, serta tautan Kebijakan Privasi. Mewadahi kelas C02 HalamanProfil. |
-| ListingPenjualView | *View* | Menampilkan seluruh listing milik penjual yang dikelompokkan per status ("Tersedia" dan "Terjual") beserta tombol hapus, tandai terjual, dan batalkan penandaan terjual, lalu meneruskan aksi tersebut ke BarangController. Mewadahi kelas C03 HalamanListingPenjual. |
+| ProfilView | *View* | Menampilkan nama, NIM, surel, dan daftar listing milik akun (melalui KartuProdukView), menu pengaturan akun, serta tautan Kebijakan Privasi. Aksi diteruskan ke AkunController. Mewadahi kelas C02 HalamanProfil. |
+| ListingPenjualView | *View* | Menampilkan seluruh listing milik penjual yang dikelompokkan per status ("Tersedia" dan "Terjual") beserta tombol ubah, hapus, tandai terjual, dan batalkan penandaan terjual. Aksi diteruskan ke BarangController, sedangkan tombol ubah membuka FormulirBarangView. Mewadahi kelas C03 HalamanListingPenjual. |
 | FormulirBarangView | *View* | Menampilkan formulir pembuatan dan pengubahan listing (judul, harga, deskripsi kondisi, kategori, lokasi titik temu COD, dan foto), melakukan validasi awal di sisi klien, dan menandai isian yang belum lengkap sebelum diteruskan ke BarangController. Mewadahi kelas C04 FormulirBarang. |
-| KatalogView | *View* | Menampilkan katalog listing berhalaman (maksimum 20 listing per halaman), kolom pencarian, pilihan filter dan pengurutan, serta pesan barang tidak ditemukan. Aksi diteruskan ke KatalogController, PencarianController, dan FilterController. Mewadahi kelas C05 HalamanKatalog. |
+| KatalogView | *View* | Menampilkan katalog listing berhalaman (maksimum 20 listing per halaman), kolom pencarian, pilihan filter dan pengurutan, serta pesan barang tidak ditemukan. Seluruh aksi (kata kunci, filter, pengurutan, dan perpindahan halaman) diteruskan ke KatalogController dalam satu permintaan. Mewadahi kelas C05 HalamanKatalog. |
 | KartuProdukView | *View* | Menampilkan ringkasan satu listing (foto utama, judul, harga, dan status). Dipakai bersama oleh KatalogView, ProfilView, dan ListingPenjualView. Mewadahi kelas C06 KartuProduk. |
-| DetailBarangView | *View* | Menampilkan seluruh foto, judul, harga, deskripsi kondisi, kategori, lokasi titik temu COD, dan identitas penjual sebuah listing, beserta tombol "Hubungi Penjual" yang diteruskan ke PercakapanController dan aksi pelaporan yang diteruskan ke LaporanController. Mewadahi kelas C07 HalamanDetailBarang. |
+| DetailBarangView | *View* | Menampilkan seluruh foto, judul, harga, deskripsi kondisi, kategori, lokasi titik temu COD, dan identitas penjual sebuah listing, beserta tombol "Hubungi Penjual" dan aksi pelaporan. Data listing diambil melalui BarangController, tombol "Hubungi Penjual" diteruskan ke PercakapanController lalu membuka PercakapanView, dan aksi pelaporan membuka FormulirLaporanView. Mewadahi kelas C07 HalamanDetailBarang. |
 | PercakapanView | *View* | Menampilkan daftar percakapan beserta cuplikan pesan terakhir dan penanda pesan belum dibaca, ruang percakapan berisi pesan yang berurutan beserta waktu pengiriman, kolom pengiriman pesan, serta tautan Kebijakan Privasi. Aksi diteruskan ke PercakapanController. Mewadahi kelas C08 HalamanPercakapan. |
 | NotifikasiView | *View* | Menampilkan daftar pemberitahuan serta penanda jumlah pesan atau notifikasi yang belum dibaca, lalu meneruskan penandaan sudah dibaca ke NotifikasiController. Mewadahi kelas C09 PanelNotifikasi. |
 | FormulirLaporanView | *View* | Menampilkan formulir pelaporan berisi pilihan kategori laporan (penipuan, konten tidak pantas, atau *bug*), isian alasan, dan unggahan bukti tangkapan layar, lalu meneruskannya ke LaporanController. Mewadahi kelas C10 FormulirLaporan. |
 | DasborAdminView | *View* | Menampilkan daftar laporan beserta penyaring status, detail laporan, serta tombol ubah status, hapus listing, blokir akun, dan buka blokir akun lengkap dengan isian alasan dan konfirmasi. Aksi diteruskan ke ModerasiController. Mewadahi kelas C11 DasborAdmin. |
-| DokumenLegalView | *View* | Menampilkan isi Kebijakan Privasi dan Ketentuan Penggunaan, termasuk menyoroti pernyataan bahwa isi percakapan pribadi tidak dapat diakses oleh admin maupun pengembang. Mewadahi kelas C12 HalamanDokumenLegal. |
+| DokumenLegalView | *View* | Menampilkan isi Kebijakan Privasi dan Ketentuan Penggunaan, termasuk menyoroti pernyataan bahwa isi percakapan pribadi tidak dapat diakses oleh admin maupun pengembang. Aksi diteruskan ke DokumenLegalController. Mewadahi kelas C12 HalamanDokumenLegal. |
 | **Lapisan *Controller*** | | |
 | AkunController | *Controller* | Memproses pendaftaran akun (validasi domain @itb.ac.id, keunikan surel, dan persetujuan kebijakan), pembuatan, pengiriman ulang, dan pencocokan kode verifikasi, *login* (pencocokan kata sandi dan pemeriksaan status akun), *logout*, serta pengambilan data profil. Mewadahi kelas C13 AkunController. |
 | BarangController | *Controller* | Memproses pembuatan, pengubahan, dan penghapusan listing, validasi isian dan foto, verifikasi kepemilikan listing, perubahan status "Tersedia"/"Terjual", pengambilan daftar listing milik penjual, serta pengambilan detail listing. Mewadahi kelas C14 BarangController. |
-| KatalogController | *Controller* | Mengambil listing berstatus "Tersedia" milik akun yang tidak diblokir, membaginya menjadi halaman berisi maksimum 20 listing, dan mengurutkannya sesuai kriteria terbaru, harga terendah, atau harga tertinggi. Mewadahi kelas C15 KatalogController. |
-| PencarianController | *Controller* | Menormalisasi kata kunci dan mencocokkannya dengan judul serta deskripsi listing yang tersedia. Mewadahi kelas C16 PencarianController. |
-| FilterController | *Controller* | Memvalidasi parameter filter dan menyaring listing berdasarkan kategori, rentang harga minimum–maksimum, dan lokasi titik temu COD. Mewadahi kelas C17 FilterController. |
+| KatalogController | *Controller* | Mengambil listing berstatus "Tersedia" milik akun yang tidak diblokir, membaginya menjadi halaman berisi maksimum 20 listing, dan mengurutkannya sesuai kriteria terbaru, harga terendah, atau harga tertinggi. Memanggil PencarianController dan FilterController untuk menyusun kriteria, lalu meminta *Model* Barang menjalankan kueri. Mewadahi kelas C15 KatalogController. |
+| PencarianController | *Controller* | Menormalisasi kata kunci dan menyusun kriteria kecocokannya terhadap judul serta deskripsi listing. Dipanggil oleh KatalogController. Mewadahi kelas C16 PencarianController. |
+| FilterController | *Controller* | Memvalidasi parameter filter dan menyusun kriteria penyaringan berdasarkan kategori, rentang harga minimum–maksimum, dan lokasi titik temu COD. Dipanggil oleh KatalogController. Mewadahi kelas C17 FilterController. |
 | PercakapanController | *Controller* | Membuka ruang percakapan antara pembeli dan penjual sebuah listing, memastikan hanya kedua peserta yang dapat mengaksesnya, mengenkripsi dan mendekripsi pesan melalui Kriptografi, menyimpan pesan, serta menyusun daftar percakapan beserta cuplikan pesan terakhir dan jumlah pesan belum dibaca. Meminta NotifikasiController mengirim notifikasi pesan baru. Mewadahi kelas C18 PercakapanController. |
 | NotifikasiController | *Controller* | Membuat dan mengirim pemberitahuan kepada pengguna, yaitu kode verifikasi dan pemberitahuan tindakan moderasi melalui SurelAdapter, notifikasi pesan baru melalui PushNotifikasiAdapter, serta notifikasi di dalam aplikasi. Juga memperbarui status baca notifikasi. Mewadahi kelas C19 NotifikasiController. |
 | LaporanController | *Controller* | Memproses pembuatan laporan, meliputi validasi data dan berkas bukti, penyusunan metadata percakapan tanpa isi pesan, penyimpanan laporan berstatus "Baru" beserta buktinya, serta pencatatan penerimaan laporan ke *log* audit. Mewadahi kelas C20 LaporanController. |
-| ModerasiController | *Controller* | Memproses fungsi moderasi khusus admin, meliputi penampilan dan penyaringan laporan, perubahan status penanganan, penghapusan listing yang dilaporkan, pemblokiran dan pembukaan blokir akun (termasuk menonaktifkan dan memulihkan listing milik akun tersebut), serta pencatatan tindakan ke *log* admin dan *log* audit. Mewadahi kelas C21 ModerasiController. |
+| ModerasiController | *Controller* | Memproses fungsi moderasi khusus admin, meliputi penampilan dan penyaringan laporan, perubahan status penanganan, penghapusan listing yang dilaporkan, pemblokiran dan pembukaan blokir akun (termasuk menonaktifkan dan memulihkan listing milik akun tersebut), serta pencatatan tindakan ke *log* admin dan *log* audit. Berkas foto listing yang dihapus ikut dihapus dari PenyimpananBerkas. Mewadahi kelas C21 ModerasiController. |
 | DokumenLegalController | *Controller* | Mengambil versi terbaru dokumen Kebijakan Privasi dan Ketentuan Penggunaan beserta klausul privasi percakapan. Mewadahi kelas C22 DokumenLegalController. |
 | **Lapisan *Model*** | | |
 | Akun | *Model* | Merepresentasikan data akun pengguna (identitas, *hash* kata sandi, status verifikasi, status blokir, dan peran) beserta peran Pembeli, Penjual, dan Admin, serta metode untuk mengakses dan mengubahnya. Mewadahi kelas C23 Akun, C24 Pembeli, C25 Penjual, dan C26 Admin. |
@@ -233,18 +225,18 @@ Tabel 2.3. Identifikasi Komponen/Modul/Subsistem
 | LogAktivitas | *Model* | Merepresentasikan *log* audit atas penerimaan dan tindak lanjut laporan yang hanya dapat ditambah, tidak dapat diubah maupun dihapus, serta *log* admin atas setiap tindakan moderasi beserta pelaku, objek, waktu, dan alasannya. Mewadahi kelas C38 LogAudit dan C39 LogAdmin. |
 | DokumenLegal | *Model* | Merepresentasikan dokumen Kebijakan Privasi dan Ketentuan Penggunaan beserta versi, status publikasi, dan tautannya. Mewadahi kelas C40 DokumenLegal. |
 | **Di luar lapisan MVC** | | |
-| Otorisasi | *Pendukung* | Memeriksa token sesi pada setiap permintaan yang memerlukan *login*, mengidentifikasi akun yang sedang masuk sebagai dasar verifikasi kepemilikan dan keanggotaan percakapan, serta menolak akses ke fungsi moderasi oleh akun yang tidak berperan admin. Dipakai bersama oleh AkunController, BarangController, PercakapanController, LaporanController, dan ModerasiController. Diwujudkan sebagai kelas C41 Otorisasi. |
+| Otorisasi | *Pendukung* | Memeriksa token sesi pada setiap permintaan yang memerlukan *login*, mengidentifikasi akun yang sedang masuk sebagai dasar verifikasi kepemilikan dan keanggotaan percakapan, serta menolak akses ke fungsi moderasi oleh akun yang tidak berperan admin. Data sesi dibaca dari *Model* Otentikasi dan peran admin diperiksa melalui *Model* Akun. Dipakai bersama oleh AkunController, BarangController, PercakapanController, LaporanController, dan ModerasiController. Diwujudkan sebagai kelas C41 Otorisasi. |
 | Kriptografi | *Pendukung* | Menyediakan fungsi *hash* dan pencocokan kata sandi dengan bcrypt untuk AkunController, serta enkripsi dan dekripsi isi pesan untuk PercakapanController, sehingga kata sandi dan isi pesan tidak pernah tersimpan dalam bentuk teks biasa. Diwujudkan sebagai kelas C42 Kriptografi. |
 | SurelAdapter | *Integrasi Eksternal* | Mengirim surel melalui layanan SMTP dengan TLS, yaitu kode verifikasi ke alamat surel @itb.ac.id pendaftar serta pemberitahuan tindakan moderasi beserta alasannya kepada pengguna yang bersangkutan. Dipanggil oleh NotifikasiController. Diwujudkan sebagai kelas C43 SurelAdapter. |
 | PushNotifikasiAdapter | *Integrasi Eksternal* | Mengirim notifikasi pesan baru melalui layanan Web Push milik peramban sehingga notifikasi muncul di perangkat penerima, termasuk saat ITBELI sedang tidak dibuka. Notifikasi ditampilkan oleh *Service Worker* ITBELI pada peramban penerima. Dipanggil oleh NotifikasiController. Diwujudkan sebagai kelas C44 PushNotifikasiAdapter. |
 | Database | *Penyimpanan Data* | Basis data PostgreSQL pada Supabase yang menyimpan seluruh data *Model* secara persisten dan terpusat sehingga data konsisten bagi seluruh perangkat. Hanya diakses oleh komponen *Model*. |
-| PenyimpananBerkas | *Penyimpanan Data* | Supabase Storage yang menyimpan berkas foto listing dan berkas bukti tangkapan layar laporan, sedangkan lokasi berkasnya dicatat pada *Model* Barang dan Laporan. Diakses oleh BarangController dan LaporanController. |
+| PenyimpananBerkas | *Penyimpanan Data* | Supabase Storage yang menyimpan berkas foto listing dan berkas bukti tangkapan layar laporan, sedangkan lokasi berkasnya dicatat pada *Model* Barang dan Laporan. Diakses oleh BarangController, LaporanController, dan ModerasiController. Diwujudkan sebagai kelas C45 PenyimpananBerkas yang membungkus akses ke Supabase Storage. |
 
-Seluruh 40 kelas analisis pada SKPL tercakup oleh 31 komponen *View*, *Controller*, dan *Model* di atas, sehingga seluruh use case UC01–UC24 dapat dijalankan oleh komponen-komponen tersebut. Nama komponen pada Tabel 2.3 menjadi acuan nama kelas perancangan pada BAB 3 hingga BAB 5.
+Seluruh 40 kelas analisis pada SKPL tercakup oleh 31 komponen *View*, *Controller*, dan *Model* di atas, sehingga seluruh use case UC01–UC24 dapat dijalankan oleh komponen-komponen tersebut. Nama komponen pada Tabel 2.3 menjadi acuan pengelompokan kelas perancangan pada BAB 3 hingga BAB 5. Alur antarkomponen pada tabel ini telah diselaraskan dengan realisasi use case pada BAB 3, misalnya KatalogView yang cukup memanggil KatalogController dan DetailBarangView yang membuka FormulirLaporanView.
 
 ## 2.4 Model Arsitektur Perangkat Lunak
 
-Model arsitektur ITBELI diambil dari BAB 3 dokumen APL dan digambarkan dengan satu *view*, yaitu ***logical view*** [7]. *View* lain tidak digambarkan karena belum memberi informasi tambahan yang berarti. *Physical view* hanya akan mengulang Gambar 2.1 yang sudah menunjukkan tempat setiap bagian dijalankan (peramban, server Node.js, dan Supabase). *Process view* kurang dibutuhkan karena hampir seluruh alur ITBELI berbentuk permintaan dan tanggapan, dan urutan interaksinya sudah dirinci per use case melalui *sequence diagram* pada BAB 3. *Development view* baru dapat digambarkan secara akurat setelah struktur kode program disusun pada tahap implementasi.
+Model arsitektur ITBELI diambil dari BAB 3 dokumen APL, lalu diselaraskan dengan hasil perancangan kelas pada BAB 3 dan BAB 4 dokumen ini, dan digambarkan dengan satu *view*, yaitu ***logical view*** [7]. *View* lain tidak digambarkan karena belum memberi informasi tambahan yang berarti. *Physical view* hanya akan mengulang Gambar 2.1 yang sudah menunjukkan tempat setiap bagian dijalankan (peramban, server Node.js, dan Supabase). *Process view* kurang dibutuhkan karena hampir seluruh alur ITBELI berbentuk permintaan dan tanggapan, dan urutan interaksinya sudah dirinci per use case melalui *sequence diagram* pada BAB 3. *Development view* baru dapat digambarkan secara akurat setelah struktur kode program disusun pada tahap implementasi.
 
 ### 2.4.1 Logical View
 
@@ -257,7 +249,14 @@ Model arsitektur ITBELI diambil dari BAB 3 dokumen APL dan digambarkan dengan sa
 <i>Gambar 2.2. Logical View ITBELI</i>
 </p>
 
-Gambar 2.2 membagi komponen ke dalam tiga lajur, yaitu *View*, *Controller*, dan *Model*, sedangkan komponen *Pendukung* dan *Integrasi Eksternal* berada di sebelah kanan dan komponen *Penyimpanan Data* di bagian bawah. Seluruh hubungan diturunkan dari tabel Hubungan Antarkelas pada subbab 5.3 dokumen SKPL. *View* memanggil *Controller* melalui 15 hubungan yang sesuai dengan 15 asosiasi *boundary–control* pada SKPL. *Controller* mengakses *Model*, memanggil Otorisasi dan Kriptografi, serta meminta NotifikasiController mengirim pemberitahuan melalui SurelAdapter dan PushNotifikasiAdapter ke layanan SMTP dan Web Push. Seluruh *Model* menyimpan datanya pada Database, dan di bawah lajur *Model* digambarkan 12 relasi antar-*Model* beserta multiplisitasnya, misalnya komposisi Akun–Barang dan asosiasi Barang–Percakapan.
+Gambar 2.2 membagi komponen ke dalam tiga lajur, yaitu *View*, *Controller*, dan *Model*. Komponen *Pendukung* dan *Integrasi Eksternal* berada di sebelah kanan, sedangkan komponen *Penyimpanan Data* berada di bagian bawah. Garis putus-putus berpanah berarti "memanggil" atau "bergantung pada", garis tegas berlabel "akses" berarti *Controller* mengakses *Model*, dan garis tegas di bawah lajur *Model* adalah relasi antar-*Model* beserta multiplisitasnya. Seluruh hubungan diturunkan dari relasi kelas perancangan pada Gambar 4.1 dengan memetakan setiap kelas ke komponen yang mewadahinya pada Tabel 2.3.
+
+1. ***View***. Terdapat 12 hubungan "memanggil" dari *View* ke *Controller*. KatalogView cukup memanggil KatalogController, sedangkan DetailBarangView memanggil BarangController untuk data listing dan PercakapanController untuk tombol "Hubungi Penjual". Tiga hubungan "membuka" menggambarkan perpindahan halaman, yaitu ListingPenjualView ke FormulirBarangView, serta DetailBarangView ke PercakapanView dan FormulirLaporanView. KatalogView, ProfilView, dan ListingPenjualView memuat KartuProdukView melalui komposisi.
+2. ***Controller***. KatalogController memanggil PencarianController dan FilterController untuk menyusun kriteria kata kunci dan filter. AkunController, PercakapanController, dan ModerasiController meminta NotifikasiController mengirim pemberitahuan melalui SurelAdapter dan PushNotifikasiAdapter. Lima *controller* yang memerlukan *login* memanggil Otorisasi, yang kemudian membaca data sesi pada Otentikasi dan memeriksa peran admin pada Akun.
+3. ***Controller* → *Model***. Akses ke Barang, Akun, dan Otentikasi yang dilakukan beberapa *controller* digambarkan sebagai jalur bersama (bus) berlabel "akses ke Barang", "akses ke Akun", dan "akses ke Otentikasi (sesi aktif)". Setiap *controller* yang terhubung ke jalur tersebut mengakses *Model* yang dituju.
+4. ***Model***. Terdapat 12 relasi antar-*Model*, misalnya komposisi Akun–Barang dan asosiasi Barang–Percakapan, dan seluruh *Model* menyimpan datanya pada Database.
+
+Dibandingkan dengan Logical View pada dokumen APL, Gambar 2.2 memuat penyesuaian hasil perancangan berikut. Hubungan langsung KatalogView ke PencarianController dan FilterController, DetailBarangView ke LaporanController, serta PencarianController dan FilterController ke Barang dihapus. Sebaliknya, ditambahkan hubungan "membuka" antar-*View*, pemanggilan PencarianController dan FilterController oleh KatalogController, akses beberapa *controller* ke Otentikasi, Akun, Barang, dan Percakapan, penghapusan berkas oleh ModerasiController, serta pemeriksaan peran admin oleh Otorisasi.
 
 Seluruh hubungan tersebut mematuhi aturan ketergantungan pada subbab 2.2.1. Salah satu akibatnya, ModerasiController tidak mengakses *Model* Percakapan, sehingga tidak ada jalur dari DasborAdminView menuju isi pesan (KF35).
 
@@ -268,7 +267,7 @@ Seluruh hubungan tersebut mematuhi aturan ketergantungan pada subbab 2.2.1. Sala
 
 # BAB 3: Realisasi Use Case
 
-Bab ini mendeskripsikan realisasi use case ITBELI ke dalam perancangan perangkat lunak untuk use case UC01 sampai dengan UC08. Setiap subbab use case memuat identifikasi kelas perancangan yang terlibat, *sequence diagram* untuk skenario normal dan seluruh skenario alternatif berdasarkan dokumen SKPL, serta diagram kelas perancangan yang memuat spesifikasi lengkap atribut dan operasi.
+Bab ini mendeskripsikan realisasi use case ITBELI ke dalam perancangan perangkat lunak untuk use case UC01 sampai dengan UC24. Setiap subbab use case memuat identifikasi kelas perancangan yang terlibat, *sequence diagram* untuk skenario normal dan seluruh skenario alternatif berdasarkan dokumen SKPL, serta diagram kelas perancangan yang memuat spesifikasi lengkap atribut dan operasi. Seluruh diagram kelas per use case diturunkan dari satu model kelas yang sama dengan BAB 4, sehingga setiap kelas memakai nama, atribut, dan metode yang konsisten di semua use case.
 
 ---
 
@@ -332,7 +331,7 @@ Skenario ini terjadi apabila calon pengguna mendaftar dengan surel yang telah te
 
 ### 3.1.3 Diagram Kelas
 
-Diagram kelas perancangan UC01 menggambarkan struktur statis kelas perancangan yang merealisasikan proses pendaftaran akun. HalamanOtentikasi berasosiasi langsung dengan AkunController. AkunController bergantung pada Akun, TokenVerifikasi, DokumenLegal, Kriptografi, serta NotifikasiController. NotifikasiController selanjutnya berkolaborasi dengan SurelAdapter dan entitas Notifikasi. Multiplisitas relasi antar-entitas menunjukkan bahwa satu Akun dapat memiliki banyak TokenVerifikasi dan Notifikasi, serta merujuk ke satu versi DokumenLegal yang disetujui.
+HalamanOtentikasi berasosiasi dengan AkunController. AkunController bergantung pada Akun, TokenVerifikasi, DokumenLegal, NotifikasiController, dan Kriptografi. NotifikasiController bergantung pada Notifikasi dan SurelAdapter. Relasi antar-*entity* pada diagram ini adalah Akun ke TokenVerifikasi berupa asosiasi 1 ke 0..*, Akun ke Notifikasi berupa asosiasi 1 ke 0..*, dan Akun ke DokumenLegal berupa asosiasi 0..* ke 1. Setiap kelas menampilkan atribut bertipe data dan operasi yang dipakai pada UC01, sehingga seluruh operasi yang dipanggil pada *sequence diagram* subbab sebelumnya tercantum pada kelas yang bersangkutan.
 
 <p align="center">
 <img alt="Diagram Kelas Use Case UC01" src="./assets/diagram/Diagram_Kelas_UC01.png" width="85%">
@@ -401,7 +400,7 @@ Skenario ini terjadi saat pengguna menekan tombol "Kirim Ulang Kode". Sistem men
 
 ### 3.2.3 Diagram Kelas
 
-Diagram kelas perancangan UC02 mendefinisikan kelas dan operasi yang dibutuhkan untuk validasi dan pengiriman ulang token verifikasi. HalamanOtentikasi berasosiasi dengan AkunController. AkunController bergantung pada Akun, TokenVerifikasi, dan NotifikasiController. NotifikasiController berkolaborasi dengan SurelAdapter dan entitas Notifikasi.
+HalamanOtentikasi berasosiasi dengan AkunController. AkunController bergantung pada Akun, TokenVerifikasi, dan NotifikasiController. NotifikasiController bergantung pada Notifikasi dan SurelAdapter. Relasi antar-*entity* pada diagram ini adalah Akun ke TokenVerifikasi berupa asosiasi 1 ke 0..* dan Akun ke Notifikasi berupa asosiasi 1 ke 0..*. Setiap kelas menampilkan atribut bertipe data dan operasi yang dipakai pada UC02, sehingga seluruh operasi yang dipanggil pada *sequence diagram* subbab sebelumnya tercantum pada kelas yang bersangkutan.
 
 <p align="center">
 <img alt="Diagram Kelas Use Case UC02" src="./assets/diagram/Diagram_Kelas_UC02.png" width="75%">
@@ -479,7 +478,7 @@ Skenario ini terjadi jika kredensial cocok dan akun terverifikasi, namun nilai a
 
 ### 3.3.3 Diagram Kelas
 
-Diagram kelas perancangan UC03 memodelkan komponen autentikasi pengguna. HalamanOtentikasi berasosiasi dengan AkunController. AkunController bergantung pada Akun, SesiLogin, dan kelas utilitas Kriptografi. Satu entitas Akun berelasi 1 ke 0..* dengan SesiLogin.
+HalamanOtentikasi berasosiasi dengan AkunController. AkunController bergantung pada Akun, SesiLogin, dan Kriptografi. Relasi antar-*entity* pada diagram ini adalah Akun ke SesiLogin berupa asosiasi 1 ke 0..*. Setiap kelas menampilkan atribut bertipe data dan operasi yang dipakai pada UC03, sehingga seluruh operasi yang dipanggil pada *sequence diagram* subbab sebelumnya tercantum pada kelas yang bersangkutan.
 
 <p align="center">
 <img alt="Diagram Kelas Use Case UC03" src="./assets/diagram/Diagram_Kelas_UC03.png" width="65%">
@@ -524,7 +523,7 @@ Pengguna yang sedang masuk mengklik menu profil dan memilih "Keluar". Permintaan
 
 ### 3.4.3 Diagram Kelas
 
-Diagram kelas perancangan UC04 menunjukkan relasi antara HalamanOtentikasi, AkunController, entitas SesiLogin dan Akun, serta komponen pendukung Otorisasi. Operasi cabutSesi() dan nonaktifkan() menjamin integritas penutupan sesi.
+HalamanOtentikasi berasosiasi dengan AkunController. AkunController bergantung pada SesiLogin dan Otorisasi. Otorisasi bergantung pada SesiLogin. Relasi antar-*entity* pada diagram ini adalah Akun ke SesiLogin berupa asosiasi 1 ke 0..*. Setiap kelas menampilkan atribut bertipe data dan operasi yang dipakai pada UC04, sehingga seluruh operasi yang dipanggil pada *sequence diagram* subbab sebelumnya tercantum pada kelas yang bersangkutan.
 
 <p align="center">
 <img alt="Diagram Kelas Use Case UC04" src="./assets/diagram/Diagram_Kelas_UC04.png" width="50%">
@@ -574,7 +573,7 @@ Pengguna membuka menu profil. Sistem mengekstrak idAkun dari token sesi melalui 
 
 ### 3.5.3 Diagram Kelas
 
-Diagram kelas perancangan UC05 menggambarkan struktur komponen tampilan profil. HalamanProfil memiliki relasi komposisi 1 ke 0..* dengan KartuProduk, berasosiasi dengan AkunController. AkunController bergantung pada Akun, SesiLogin, Barang, DokumenLegal, dan Otorisasi. Akun memiliki subtipe generalisasi Pembeli dan Penjual.
+HalamanProfil berasosiasi dengan AkunController. HalamanProfil memiliki relasi komposisi 1 ke 0..* terhadap KartuProduk. AkunController bergantung pada Akun, SesiLogin, Barang, DokumenLegal, dan Otorisasi. Otorisasi bergantung pada SesiLogin. Pembeli dan Penjual merupakan turunan (generalisasi) dari Akun. Relasi antar-*entity* pada diagram ini adalah Akun ke SesiLogin berupa asosiasi 1 ke 0..*, Akun ke DokumenLegal berupa asosiasi 0..* ke 1, dan Penjual ke Barang berupa komposisi 1 ke 0..*. Setiap kelas menampilkan atribut bertipe data dan operasi yang dipakai pada UC05, sehingga seluruh operasi yang dipanggil pada *sequence diagram* subbab sebelumnya tercantum pada kelas yang bersangkutan.
 
 <p align="center">
 <img alt="Diagram Kelas Use Case UC05" src="./assets/diagram/Diagram_Kelas_UC05.png" width="85%">
@@ -617,7 +616,7 @@ Pengguna mengklik tautan dokumen hukum dari formulir pendaftaran, profil, atau r
 
 ### 3.6.3 Diagram Kelas
 
-Diagram kelas perancangan UC06 memiliki struktur yang sederhana dan modular: HalamanDokumenLegal memanggil DokumenLegalController, yang kemudian mengakses entitas DokumenLegal untuk mengambil data dokumen dan klausul privasi.
+HalamanDokumenLegal berasosiasi dengan DokumenLegalController. DokumenLegalController bergantung pada DokumenLegal. Setiap kelas menampilkan atribut bertipe data dan operasi yang dipakai pada UC06, sehingga seluruh operasi yang dipanggil pada *sequence diagram* subbab sebelumnya tercantum pada kelas yang bersangkutan.
 
 <p align="center">
 <img alt="Diagram Kelas Use Case UC06" src="./assets/diagram/Diagram_Kelas_UC06.png" width="40%">
@@ -650,7 +649,7 @@ Tabel 3.7. Identifikasi Kelas Use Case UC07
 | 7 | Kategori | C31 Kategori | Menyediakan daftar kategori barang tetap dan memvalidasi keabsahan kategori yang dipilih. |
 | 8 | LokasiCOD | C32 LokasiCOD | Menyediakan pilihan titik temu fisik transaksi COD di wilayah kampus ITB. |
 | 9 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token sesi dan memastikan idAkun berstatus aktif. |
-| 10 | PenyimpananBerkas | PenyimpananBerkas (Storage) | Layanan Supabase Storage untuk menyimpan fisik berkas foto produk secara persisten. |
+| 10 | PenyimpananBerkas | C45 PenyimpananBerkas (Penyimpanan Data) | Layanan Supabase Storage untuk menyimpan fisik berkas foto produk secara persisten. |
 
 ### 3.7.2 Sequence Diagram
 
@@ -689,7 +688,7 @@ Skenario ini terjadi ketika penjual mencoba mengunggah foto berformat di luar JP
 
 ### 3.7.3 Diagram Kelas
 
-Diagram kelas perancangan UC07 memodelkan struktur pembuatan listing. FormulirBarang berasosiasi ke BarangController. BarangController bergantung pada SesiLogin, Penjual, Kategori, LokasiCOD, Barang, FotoBarang, dan Otorisasi. Multiplisitas relasi komposisi Barang terhadap FotoBarang adalah 1 ke 1..5, menjamin setiap barang wajib memiliki sekurang-kurangnya satu foto dan paling banyak lima foto.
+FormulirBarang berasosiasi dengan BarangController. BarangController bergantung pada SesiLogin, Barang, FotoBarang, Kategori, LokasiCOD, Otorisasi, dan PenyimpananBerkas. Otorisasi bergantung pada SesiLogin. Relasi antar-*entity* pada diagram ini adalah Penjual ke Barang berupa komposisi 1 ke 0..*, Barang ke FotoBarang berupa komposisi 1 ke 1..5, Kategori ke Barang berupa asosiasi 1 ke 0..*, dan LokasiCOD ke Barang berupa asosiasi 1 ke 0..*. Setiap kelas menampilkan atribut bertipe data dan operasi yang dipakai pada UC07, sehingga seluruh operasi yang dipanggil pada *sequence diagram* subbab sebelumnya tercantum pada kelas yang bersangkutan.
 
 <p align="center">
 <img alt="Diagram Kelas Use Case UC07" src="./assets/diagram/Diagram_Kelas_UC07.png" width="90%">
@@ -736,7 +735,7 @@ Penjual membuka menu "Listing Saya". Sistem memvalidasi token sesi, mengambil se
 
 ### 3.8.3 Diagram Kelas
 
-Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang mengomposisikan 1 ke 0..* KartuProduk, berasosiasi dengan BarangController. BarangController bergantung pada Penjual, SesiLogin, Barang, dan Otorisasi. Relasi Penjual dan Barang berupa komposisi 1 ke 0..*.
+HalamanListingPenjual berasosiasi dengan BarangController. HalamanListingPenjual memiliki relasi komposisi 1 ke 0..* terhadap KartuProduk. BarangController bergantung pada SesiLogin, Barang, dan Otorisasi. Otorisasi bergantung pada SesiLogin. Relasi antar-*entity* pada diagram ini adalah Penjual ke Barang berupa komposisi 1 ke 0..*. Setiap kelas menampilkan atribut bertipe data dan operasi yang dipakai pada UC08, sehingga seluruh operasi yang dipanggil pada *sequence diagram* subbab sebelumnya tercantum pada kelas yang bersangkutan.
 
 <p align="center">
 <img alt="Diagram Kelas Use Case UC08" src="./assets/diagram/Diagram_Kelas_UC08.png" width="75%">
@@ -756,21 +755,29 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 
 ### 3.9.1 Identifikasi Kelas
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | 
-| :--- | :--- | :--- | 
-| 1 | HalamanListingPenjual | C03 HalamanListingPenjual | 
-| 2 | FormulirBarang | C04 FormulirBarang | 
-| 3 | BarangController | C14 BarangController |
-| 4 | Penjual | C25 Penjual | 
-| 5 | SesiLogin | C28 SesiLogin | 
-| 6 | Barang | C29 Barang | 
-| 7 | FotoBarang | C30 FotoBarang | 
-| 8 | Kategori | C31 Kategori | 
-| 9 | LokasiCOD | C32 LokasiCOD | 
-| 10 | Otorisasi | C41 Otorisasi (Pendukung) | 
-| 11 | PenyimpananBerkas (Supabase Storage) | PenyimpananBerkas (Storage) | 
+Realisasi use case pengubahan listing melibatkan antarmuka daftar listing penjual sebagai titik masuk, formulir barang untuk menyunting isian dan galeri foto beserta validasi sisi klien, controller barang untuk verifikasi kepemilikan dan validasi ulang di sisi server, modul otorisasi untuk identifikasi penjual, entitas Barang, FotoBarang, Kategori, dan LokasiCOD, serta penyimpanan berkas untuk foto baru maupun foto yang dibuang.
+
+Tabel 3.9. Identifikasi Kelas Use Case UC09
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanListingPenjual | C03 HalamanListingPenjual | Menyediakan tombol "Ubah Listing" pada kartu listing milik penjual sebagai titik masuk pengubahan. |
+| 2 | FormulirBarang | C04 FormulirBarang | Menampilkan formulir berisi nilai lama dan galeri foto, memvalidasi tipe data, isian wajib, serta ketentuan foto di sisi klien, lalu mengirim perubahan. |
+| 3 | BarangController | C14 BarangController | Memverifikasi kepemilikan, mengulang validasi isian dan foto di sisi server, mengunggah foto baru, menghapus foto yang dibuang, dan menyimpan perubahan. |
+| 4 | Penjual | C25 Penjual | Peran pemilik listing yang berwenang mengubah listing. |
+| 5 | SesiLogin | C28 SesiLogin | Menyediakan idAkun penjual dari sesi aktif untuk verifikasi kepemilikan. |
+| 6 | Barang | C29 Barang | Menyimpan perubahan atribut listing beserta waktu pengubahan. |
+| 7 | FotoBarang | C30 FotoBarang | Menyediakan galeri foto lama dan memperbarui susunan foto (1 sampai 5 berkas). |
+| 8 | Kategori | C31 Kategori | Menyediakan daftar kategori tetap dan memvalidasi kategori yang dipilih. |
+| 9 | LokasiCOD | C32 LokasiCOD | Menyediakan daftar titik temu COD dan memvalidasi lokasi yang dipilih. |
+| 10 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token sesi penjual. |
+| 11 | PenyimpananBerkas | C45 PenyimpananBerkas (Penyimpanan Data) | Menyimpan foto baru dan menghapus berkas foto yang dibuang pada Supabase Storage. |
+
+### 3.9.2 Sequence Diagram
 
 - **Skenario Normal**
+
+Penjual menekan "Ubah Listing" pada halaman "Listing Saya". BarangController memverifikasi token melalui Otorisasi, mencocokkan idAkun dari sesi dengan pemilik listing, lalu mengirim data listing, galeri foto, daftar kategori, dan daftar lokasi untuk ditampilkan pada FormulirBarang. Penjual menyunting isian dan mengganti sebagian foto, sementara FormulirBarang memvalidasi tipe data dan ketentuan foto di sisi klien. Saat "Simpan Perubahan" ditekan, BarangController mengulang verifikasi kepemilikan serta validasi isian dan foto, mengunggah foto baru ke PenyimpananBerkas, menghapus berkas foto yang dibuang, memperbarui galeri FotoBarang, dan menyimpan perubahan Barang. Penjual kemudian diarahkan ke halaman detail listing.
 
 <p align="center">
 <img alt="Gambar 3.26. Sequence Diagram UC09 - Skenario Normal" src="./assets/diagram/Sequence_UC09_Normal.png" width="75%">
@@ -781,6 +788,8 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 
 - **Skenario Alternatif 1:  Kolom Wajib Dikosongkan saat Pengubahan**
 
+Skenario ini terjadi apabila penjual mengosongkan kolom wajib, misalnya harga atau kategori, lalu menekan "Simpan Perubahan". FormulirBarang mendeteksi isian wajib yang kosong, menandai kolom tersebut, dan tidak mengirim perubahan, sehingga listing tetap pada versi lamanya (KF18). Setelah kolom dilengkapi dan disimpan ulang, penyimpanan berjalan seperti skenario normal.
+
 <p align="center">
 <img alt="Gambar 3.27. Sequence Diagram UC09 - Skenario Alternatif 1" src="./assets/diagram/Sequence_UC09_Alt1.png" width="75%">
 </p>
@@ -789,6 +798,8 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 </p>
 
 - **Skenario Alternatif 2: Pelanggaran Syarat Unggahan Foto saat Pengubahan**
+
+Skenario ini terjadi apabila penjual menambahkan foto berformat selain JPG/PNG, berukuran lebih dari 5 MB, atau membuat jumlah foto melebihi 5. FormulirBarang menolak pratinjau berkas tersebut dan menampilkan pesan ketentuan yang dilanggar. Penyimpanan tidak dijalankan sampai berkas diperbaiki (KF24).
 
 <p align="center">
 <img alt="Gambar 3.28. Sequence Diagram UC09 - Alternatif 2" src="./assets/diagram/Sequence_UC09_Alt2.png" width="75%">
@@ -799,6 +810,8 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 
 - **Skenario Alternatif 3: Percobaan Pengubahan oleh Akun Bukan Pemilik**
 
+Skenario ini terjadi apabila akun yang bukan pemilik mencoba membuka atau mengirim perubahan listing milik penjual lain. BarangController membandingkan idAkun dari sesi dengan pemilik listing, mendapati keduanya berbeda, dan menolak permintaan tanpa mengubah data listing (KF22).
+
 <p align="center">
 <img alt="Gambar 3.29. Sequence Diagram UC09 - Skenario Alternatif 3" src="./assets/diagram/Sequence_UC09_Alt3.png" width="75%">
 </p>
@@ -807,6 +820,9 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 </p>
 
 ### 3.9.3 Diagram Kelas
+
+HalamanListingPenjual berasosiasi dengan BarangController dan FormulirBarang. FormulirBarang berasosiasi dengan BarangController. BarangController bergantung pada SesiLogin, Barang, FotoBarang, Kategori, LokasiCOD, Otorisasi, dan PenyimpananBerkas. Otorisasi bergantung pada SesiLogin. Relasi antar-*entity* pada diagram ini adalah Penjual ke Barang berupa komposisi 1 ke 0..*, Barang ke FotoBarang berupa komposisi 1 ke 1..5, Kategori ke Barang berupa asosiasi 1 ke 0..*, dan LokasiCOD ke Barang berupa asosiasi 1 ke 0..*. Setiap kelas menampilkan atribut bertipe data dan operasi yang dipakai pada UC09, sehingga seluruh operasi yang dipanggil pada *sequence diagram* subbab sebelumnya tercantum pada kelas yang bersangkutan.
+
 <p align="center">
 <img alt="Gambar 3.30. Diagram Kelas UC09 " src="./assets/diagram/Diagram_Kelas_UC09.png" width="75%">
 </p>
@@ -823,20 +839,27 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 
 ### 3.10.1 Identifikasi Kelas
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | 
-| :--- | :--- | :--- | 
-| 1 | HalamanListingPenjual | C03 HalamanListingPenjual | 
-| 2 | BarangController | C14 BarangController | 
-| 3 | Penjual | C25 Penjual | 
-| 4 | SesiLogin | C28 SesiLogin |  
-| 5 | Barang | C29 Barang |  
-| 6 | FotoBarang | C30 FotoBarang | 
-| 7 | Otorisasi | C41 Otorisasi (Pendukung) | 
-| 8 | PenyimpananBerkas (Supabase Storage) | PenyimpananBerkas (Storage) | 
+Realisasi use case penghapusan listing melibatkan antarmuka daftar listing penjual untuk aksi hapus dan dialog konfirmasi, controller barang untuk verifikasi kepemilikan dan penghapusan, modul otorisasi, entitas Barang dan FotoBarang, serta penyimpanan berkas untuk menghapus berkas foto.
+
+Tabel 3.10. Identifikasi Kelas Use Case UC10
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanListingPenjual | C03 HalamanListingPenjual | Menyediakan aksi "Hapus Listing" dan dialog konfirmasi, lalu memuat ulang daftar listing setelah penghapusan. |
+| 2 | BarangController | C14 BarangController | Memverifikasi kepemilikan sebelum konfirmasi dan sebelum penghapusan, lalu menghapus listing beserta fotonya. |
+| 3 | Penjual | C25 Penjual | Pemilik listing yang berwenang menghapus listing. |
+| 4 | SesiLogin | C28 SesiLogin | Menyediakan idAkun penjual dari sesi aktif. |
+| 5 | Barang | C29 Barang | Entitas listing yang dihapus dari sistem. |
+| 6 | FotoBarang | C30 FotoBarang | Menyediakan daftar foto listing dan menghapus metadata fotonya. |
+| 7 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token sesi penjual. |
+| 8 | PenyimpananBerkas | C45 PenyimpananBerkas (Penyimpanan Data) | Menghapus berkas foto listing dari Supabase Storage. |
 
 ### 3.10.2 Sequence Diagram
 
 - **Skenario Normal**
+
+Penjual memilih "Hapus Listing" pada halaman "Listing Saya". BarangController memverifikasi token dan kepemilikan listing, lalu HalamanListingPenjual menampilkan dialog konfirmasi berisi judul listing dan peringatan bahwa penghapusan bersifat permanen. Setelah penjual mengonfirmasi, BarangController mengulang verifikasi kepemilikan, mengambil galeri foto, menghapus FotoBarang dan Barang, lalu menghapus berkas fotonya dari PenyimpananBerkas. Dialog ditutup, notifikasi berhasil ditampilkan, dan daftar listing dimuat ulang sehingga listing tidak lagi muncul di katalog maupun pencarian.
+
 <p align="center">
 <img alt="Gambar 3.31. Sequence Diagram UC10 - Skenario Normal" src="./assets/diagram/Sequence_UC10_Normal.png" width="75%">
 </p>
@@ -845,6 +868,9 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 </p>
 
 - **Skenario Alternatif 1: Penjual Membatalkan Konfirmasi Penghapusan**
+
+Skenario ini terjadi apabila penjual menekan "Batal" atau menutup dialog konfirmasi. HalamanListingPenjual menutup dialog tanpa mengirim permintaan penghapusan, sehingga listing tetap utuh beserta status semula.
+
 <p align="center">
 <img alt="Gambar 3.32. Sequence Diagram UC10 - Skenario Alternatif 1" src="./assets/diagram/Sequence_UC10_Alt1.png" width="75%">
 </p>
@@ -853,6 +879,9 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 </p>
 
 - **Skenario Alternatif 2: Percobaan Penghapusan oleh Akun Bukan Pemilik**
+
+Skenario ini terjadi apabila akun yang bukan pemilik mengirim permintaan penghapusan listing milik penjual lain. BarangController mendapati idAkun dari sesi berbeda dengan pemilik listing, menolak permintaan sebelum menyentuh data, dan menampilkan pesan bahwa pengguna tidak memiliki izin (KF22).
+
 <p align="center">
 <img alt="Gambar 3.33. Sequence Diagram UC10 - Skenario Alternatif 2" src="./assets/diagram/Sequence_UC10_Alt2.png" width="75%">
 </p>
@@ -861,6 +890,8 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 </p>
 
 ### 3.10.3 Diagram Kelas
+
+HalamanListingPenjual berasosiasi dengan BarangController. BarangController bergantung pada SesiLogin, Barang, FotoBarang, Otorisasi, dan PenyimpananBerkas. Otorisasi bergantung pada SesiLogin. Relasi antar-*entity* pada diagram ini adalah Penjual ke Barang berupa komposisi 1 ke 0..* dan Barang ke FotoBarang berupa komposisi 1 ke 1..5. Setiap kelas menampilkan atribut bertipe data dan operasi yang dipakai pada UC10, sehingga seluruh operasi yang dipanggil pada *sequence diagram* subbab sebelumnya tercantum pada kelas yang bersangkutan.
 
 <p align="center">
 <img alt="Gambar 3.34. Diagram Kelas UC10" src="./assets/diagram/Diagram_Kelas_UC10.png" width="75%">
@@ -878,19 +909,26 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 
 ### 3.11.1 Identifikasi Kelas
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | 
-| :--- | :--- | :--- |
-| 1 | HalamanListingPenjual | C03 HalamanListingPenjual | 
-| 2 | KartuProduk | C06 KartuProduk | 
-| 3 | BarangController | C14 BarangController | 
-| 4 | Penjual | C25 Penjual | 
-| 5 | SesiLogin | C28 SesiLogin | 
-| 6 | Barang | C29 Barang | 
-| 7 | Otorisasi | C41 Otorisasi (Pendukung) |
+Realisasi use case penandaan terjual melibatkan antarmuka daftar listing penjual dan kartu produk, controller barang untuk verifikasi kepemilikan dan status asal, modul otorisasi untuk identifikasi penjual, serta entitas Penjual, SesiLogin, dan Barang.
+
+Tabel 3.11. Identifikasi Kelas Use Case UC11
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanListingPenjual | C03 HalamanListingPenjual | Menyediakan tombol "Tandai Terjual" dan dialog konfirmasi, lalu memindahkan kartu listing ke tab "Terjual". |
+| 2 | KartuProduk | C06 KartuProduk | Merender ulang kartu listing dengan label status terbaru. |
+| 3 | BarangController | C14 BarangController | Memverifikasi kepemilikan dan status asal "Tersedia", lalu mengubah status listing menjadi "Terjual". |
+| 4 | Penjual | C25 Penjual | Pemilik listing yang berwenang menandai listing terjual. |
+| 5 | SesiLogin | C28 SesiLogin | Menyediakan idAkun penjual dari sesi aktif. |
+| 6 | Barang | C29 Barang | Menyimpan status "Terjual" beserta waktu perubahan sehingga listing tidak lagi tampil pada katalog dan pencarian. |
+| 7 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token sesi penjual. |
 
 ### 3.11.2 Sequence Diagram
 
 - **Skenario Normal**
+
+Penjual menekan "Tandai Terjual" pada listing berstatus "Tersedia". BarangController memverifikasi token, kepemilikan, dan status asal listing, lalu HalamanListingPenjual menampilkan dialog konfirmasi. Setelah penjual mengonfirmasi, BarangController mengubah status Barang dari "Tersedia" menjadi "Terjual" beserta waktu perubahannya. Daftar listing dimuat ulang, kartu listing berpindah ke tab riwayat "Terjual", dan listing tidak lagi muncul pada katalog maupun pencarian (KF40, KF42).
+
 <p align="center">
 <img alt="Gambar 3.35. Sequence Diagram UC11 — Skenario Normal" src="./assets/diagram/Sequence_UC11_Normal.png" width="75%">
 </p>
@@ -899,6 +937,9 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 </p>
 
 - **Skenario Alternatif 1: Penjual Membatalkan Dialog Konfirmasi**
+
+Skenario ini terjadi apabila penjual menekan "Batal" pada dialog konfirmasi. Dialog ditutup tanpa mengirim perubahan status, sehingga listing tetap berstatus "Tersedia" dan tetap tampil pada katalog.
+
 <p align="center">
 <img alt="Gambar 3.36. Sequence Diagram UC11 - Skenario Alternatif 1" src="./assets/diagram/Sequence_UC11_Alt1.png" width="75%">
 </p>
@@ -907,6 +948,9 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 </p>
 
 - **Skenario Alternatif 2: Listing Sudah Berstatus Terjual**
+
+Skenario ini terjadi apabila listing ternyata sudah berstatus "Terjual", misalnya karena penandaan sudah dilakukan dari perangkat lain. BarangController mendapati status asal tidak lagi "Tersedia", menolak perubahan, menampilkan pesan bahwa listing sudah terjual, dan memuat ulang daftar listing dengan status terkini.
+
 <p align="center">
 <img alt="Gambar 3.37. Sequence Diagram UC11 - Skenario Alternatif 2" src="./assets/diagram/Sequence_UC11_Alt2.png" width="75%">
 </p>
@@ -915,6 +959,9 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 </p>
 
 ### 3.11.3 Diagram Kelas
+
+HalamanListingPenjual berasosiasi dengan BarangController. HalamanListingPenjual memiliki relasi komposisi 1 ke 0..* terhadap KartuProduk. BarangController bergantung pada SesiLogin, Barang, dan Otorisasi. Otorisasi bergantung pada SesiLogin. Relasi antar-*entity* pada diagram ini adalah Penjual ke Barang berupa komposisi 1 ke 0..*. Setiap kelas menampilkan atribut bertipe data dan operasi yang dipakai pada UC11, sehingga seluruh operasi yang dipanggil pada *sequence diagram* subbab sebelumnya tercantum pada kelas yang bersangkutan.
+
 <p align="center">
 <img alt="Gambar 3.38. Diagram Kelas UC11" src="./assets/diagram/Diagram_Kelas_UC11.png" width="75%">
 </p>
@@ -929,19 +976,27 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 **Nama Use Case:** Membatalkan Penandaan Terjual
 
 ### 3.12.1 Identifikasi Kelas
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |  
-| :--- | :--- | :--- | 
-| 1 | HalamanListingPenjual | C03 HalamanListingPenjual | 
-| 2 | KartuProduk | C06 KartuProduk | 
-| 3 | BarangController | C14 BarangController | 
-| 4 | Penjual | C25 Penjual | 
-| 5 | SesiLogin | C28 SesiLogin |
-| 6 | Barang | C29 Barang | 
-| 7 | Otorisasi | C41 Otorisasi (Pendukung) | 
+
+Realisasi use case pembatalan penandaan terjual melibatkan antarmuka daftar listing penjual dan kartu produk, controller barang untuk verifikasi kepemilikan dan status asal, modul otorisasi untuk identifikasi penjual, serta entitas Penjual, SesiLogin, dan Barang.
+
+Tabel 3.12. Identifikasi Kelas Use Case UC12
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanListingPenjual | C03 HalamanListingPenjual | Menyediakan tombol "Batalkan Penandaan Terjual" pada tab "Terjual" beserta dialog konfirmasi, lalu memindahkan kartu kembali ke tab "Tersedia". |
+| 2 | KartuProduk | C06 KartuProduk | Merender ulang kartu listing tanpa label "Terjual". |
+| 3 | BarangController | C14 BarangController | Memverifikasi kepemilikan dan status asal "Terjual", lalu mengembalikan status listing menjadi "Tersedia". |
+| 4 | Penjual | C25 Penjual | Pemilik listing yang berwenang membatalkan penandaan terjual. |
+| 5 | SesiLogin | C28 SesiLogin | Menyediakan idAkun penjual dari sesi aktif. |
+| 6 | Barang | C29 Barang | Menyimpan status "Tersedia" beserta waktu perubahan sehingga listing tampil kembali pada katalog dan pencarian. |
+| 7 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token sesi penjual. |
 
 ### 3.12.2 Sequence Diagram
 
 - **Skenario Normal**
+
+Penjual menekan "Batalkan Penandaan Terjual" pada tab riwayat "Terjual". BarangController memverifikasi token, kepemilikan, dan status asal listing, lalu HalamanListingPenjual menampilkan dialog konfirmasi. Setelah penjual mengonfirmasi, BarangController mengembalikan status Barang dari "Terjual" menjadi "Tersedia" beserta waktu perubahannya. Daftar listing dimuat ulang, kartu berpindah ke tab "Tersedia", dan listing kembali tampil pada katalog dan pencarian (KF41).
+
 <p align="center">
 <img alt="Gambar 3.39. Sequence Diagram UC12 - Skenario Normal" src="./assets/diagram/Sequence_UC12_Normal.png" width="75%">
 </p>
@@ -950,6 +1005,9 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 </p>
 
 - **Skenario Alternatif 1: Penjual Membatalkan Dialog Konfirmasi**
+
+Skenario ini terjadi apabila penjual menekan "Batal" atau menutup dialog konfirmasi. Dialog ditutup tanpa mengirim perubahan status, sehingga listing tetap berstatus "Terjual" dan tetap tersembunyi dari katalog.
+
 <p align="center">
 <img alt="Gambar 3.40. Sequence Diagram UC12 - Skenario Alternatif 1" src="./assets/diagram/Sequence_UC12_Alt1.png" width="75%">
 </p>
@@ -958,6 +1016,9 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 </p>
 
 - **Skenario Alternatif 2: Listing Sudah Kembali Berstatus Tersedia**
+
+Skenario ini terjadi apabila listing ternyata sudah kembali berstatus "Tersedia" karena pembatalan pernah dilakukan sebelumnya. BarangController mendapati status asal tidak lagi "Terjual", menolak permintaan, menampilkan pesan bahwa listing sudah tersedia, dan memuat ulang daftar listing tanpa menggandakan data.
+
 <p align="center">
 <img alt="Gambar 3.41. Sequence Diagram UC12 - Skenario Alternatif 2" src="./assets/diagram/Sequence_UC12_Alt2.png" width="75%">
 </p>
@@ -967,6 +1028,9 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 
 
 ### 3.12.3 Diagram Kelas
+
+HalamanListingPenjual berasosiasi dengan BarangController. HalamanListingPenjual memiliki relasi komposisi 1 ke 0..* terhadap KartuProduk. BarangController bergantung pada SesiLogin, Barang, dan Otorisasi. Otorisasi bergantung pada SesiLogin. Relasi antar-*entity* pada diagram ini adalah Penjual ke Barang berupa komposisi 1 ke 0..*. Setiap kelas menampilkan atribut bertipe data dan operasi yang dipakai pada UC12, sehingga seluruh operasi yang dipanggil pada *sequence diagram* subbab sebelumnya tercantum pada kelas yang bersangkutan.
+
 <p align="center">
 <img alt="Gambar 3.42. Diagram Kelas UC12" src="./assets/diagram/Diagram_Kelas_UC12.png" width="75%">
 </p>
@@ -983,19 +1047,26 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 
 ### 3.13.1 Identifikasi Kelas
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | 
-| :--- | :--- | :--- | 
-| 1 | HalamanKatalog | C05 HalamanKatalog | 
-| 2 | KartuProduk | C06 KartuProduk | 
-| 3 | KatalogController | C15 KatalogController | 
-| 4 | Akun | C23 Akun | 
-| 5 | Penjual | C25 Penjual |
-| 6 | Barang | C29 Barang | 
-| 7 | FotoBarang | C30 FotoBarang |
+Realisasi use case melihat katalog melibatkan antarmuka katalog dan kartu produk, controller katalog untuk menyusun permintaan dan paginasi, entitas Barang yang menjalankan kueri listing berstatus "Tersedia", entitas Akun dan Penjual untuk memastikan pemilik listing tidak diblokir, serta FotoBarang untuk foto utama setiap kartu.
+
+Tabel 3.13. Identifikasi Kelas Use Case UC13
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanKatalog | C05 HalamanKatalog | Menampilkan katalog berhalaman (maksimum 20 listing per halaman), navigasi antarhalaman, dan pesan saat katalog kosong. |
+| 2 | KartuProduk | C06 KartuProduk | Merender ringkasan setiap listing (foto utama, judul, harga, kategori, dan lokasi) dan mengarahkan ke halaman detail. |
+| 3 | KatalogController | C15 KatalogController | Menyusun permintaan katalog dan menghitung paginasi 20 listing per halaman dengan urutan baku terbaru. |
+| 4 | Akun | C23 Akun | Menyediakan syarat bahwa akun pemilik listing tidak diblokir (KF30, KF54). |
+| 5 | Penjual | C25 Penjual | Pemilik listing yang tampil pada katalog. |
+| 6 | Barang | C29 Barang | Menjalankan kueri listing berstatus "Tersedia" beserta jumlah totalnya. |
+| 7 | FotoBarang | C30 FotoBarang | Menyediakan foto utama setiap listing. |
 
 ### 3.13.2 Sequence Diagram
 
 - **Skenario Normal**
+
+Pembeli membuka halaman katalog. HalamanKatalog meminta data ke KatalogController, yang menghitung paginasi dan meminta Barang menjalankan kueri katalog. Kueri selalu mensyaratkan status "Tersedia" dan akun pemilik yang tidak diblokir melalui Akun, lalu foto utama setiap listing diambil dari FotoBarang. HalamanKatalog menampilkan maksimum 20 kartu produk beserta navigasi antarhalaman. Saat pembeli berpindah halaman, kriteria yang sama dipakai kembali dan tampilan digulir ke atas (KF28, KF30).
+
 <p align="center">
 <img alt="Gambar 3.43. Sequence Diagram UC13 - Skenario Normal" src="./assets/diagram/Sequence_UC13_Normal.png" width="75%">
 </p>
@@ -1004,6 +1075,9 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 </p>
 
 - **Skenario Alternatif 1: Katalog Masih Kosong**
+
+Skenario ini terjadi apabila tidak ada satu pun listing yang memenuhi syarat katalog. HalamanKatalog tidak menampilkan kartu produk maupun navigasi antarhalaman, melainkan pesan bahwa belum ada barang yang tersedia.
+
 <p align="center">
 <img alt="Gambar 3.44. Sequence Diagram UC13 - Skenario Alternatif 1" src="./assets/diagram/Sequence_UC13_Alt1.png" width="75%">
 </p>
@@ -1012,6 +1086,9 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 </p>
 
 - **Skenario Alternatif 2: Listing Menjadi Tidak Tersedia saat Katalog Dibuka**
+
+Skenario ini terjadi apabila sebuah listing ditandai terjual atau akun pemiliknya diblokir ketika pembeli sedang menelusuri katalog. Saat halaman disegarkan atau berpindah halaman, kueri katalog dijalankan ulang sehingga listing tersebut tidak lagi disertakan dan jumlah total listing diperbarui (KF42, KF54).
+
 <p align="center">
 <img alt="Gambar 3.45. Sequence Diagram UC13 — Skenario Alternatif 2" src="./assets/diagram/Sequence_UC13_Alt2.png" width="75%">
 </p>
@@ -1020,6 +1097,9 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 </p>
 
 ### 3.13.3 Diagram Kelas
+
+HalamanKatalog berasosiasi dengan KatalogController. HalamanKatalog memiliki relasi komposisi 1 ke 0..20 terhadap KartuProduk. KatalogController bergantung pada Barang. Barang bergantung pada Akun. Penjual merupakan turunan (generalisasi) dari Akun. Relasi antar-*entity* pada diagram ini adalah Penjual ke Barang berupa komposisi 1 ke 0..* dan Barang ke FotoBarang berupa komposisi 1 ke 1..5. Setiap kelas menampilkan atribut bertipe data dan operasi yang dipakai pada UC13, sehingga seluruh operasi yang dipanggil pada *sequence diagram* subbab sebelumnya tercantum pada kelas yang bersangkutan.
+
 <p align="center">
 <img alt="Gambar 3.46. Diagram Kelas UC13" src="./assets/diagram/Diagram_Kelas_UC13.png" width="75%">
 </p>
@@ -1035,22 +1115,31 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 **Nama Use Case:** Mencari dan Menyaring Listing
 
 ### 3.14.1 Identifikasi Kelas
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | 
-| :--- | :--- | :--- | 
-| 1 | HalamanKatalog | C05 HalamanKatalog | 
-| 2 | KartuProduk | C06 KartuProduk | 
-| 3 | KatalogController | C15 KatalogController | 
-| 4 | PencarianController | C16 PencarianController | 
-| 5 | FilterController | C17 FilterController |
-| 6 | Akun | C23 Akun | 
-| 7 | Penjual | C25 Penjual | 
-| 8 | Barang | C29 Barang | 
-| 9 | Kategori | C31 Kategori | 
-| 10 | LokasiCOD | C32 LokasiCOD | 
+
+Realisasi use case pencarian dan penyaringan melibatkan antarmuka katalog untuk menangkap kata kunci, filter, dan urutan, controller katalog yang mengorkestrasi controller pencarian dan controller filter, entitas Barang yang menjalankan kueri, entitas Akun, Penjual, Kategori, dan LokasiCOD sebagai syarat dan acuan filter, serta FotoBarang untuk foto utama hasil pencarian.
+
+Tabel 3.14. Identifikasi Kelas Use Case UC14
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanKatalog | C05 HalamanKatalog | Menangkap kata kunci, filter, dan kriteria urutan, memvalidasi rentang harga, serta menampilkan hasil, filter aktif, dan pesan barang tidak ditemukan. |
+| 2 | KartuProduk | C06 KartuProduk | Merender setiap listing hasil pencarian. |
+| 3 | KatalogController | C15 KatalogController | Mengorkestrasi pencarian: meminta kriteria kata kunci dan filter, mengurutkan hasil, dan membagi hasil per halaman. |
+| 4 | PencarianController | C16 PencarianController | Menormalisasi kata kunci dan menyusun kriteria kecocokan pada judul atau deskripsi listing. |
+| 5 | FilterController | C17 FilterController | Memvalidasi parameter filter dan menyusun kriteria kategori, rentang harga, dan lokasi titik temu. |
+| 6 | Akun | C23 Akun | Menyediakan syarat bahwa akun pemilik listing tidak diblokir. |
+| 7 | Penjual | C25 Penjual | Pemilik listing yang tampil pada hasil pencarian. |
+| 8 | Barang | C29 Barang | Menjalankan kueri dengan seluruh kriteria yang aktif secara bersamaan. |
+| 9 | FotoBarang | C30 FotoBarang | Menyediakan foto utama setiap listing hasil pencarian. |
+| 10 | Kategori | C31 Kategori | Memvalidasi kategori yang dipilih pada filter. |
+| 11 | LokasiCOD | C32 LokasiCOD | Memvalidasi lokasi titik temu yang dipilih pada filter. |
 
 ### 3.14.2 Sequence Diagram
 
 - **Skenario Normal**
+
+Pembeli memasukkan kata kunci, memilih filter kategori, rentang harga, atau lokasi, dan memilih kriteria urutan. Setiap perubahan mengembalikan tampilan ke halaman pertama, lalu HalamanKatalog mengirim seluruh kriteria ke KatalogController. KatalogController meminta PencarianController menormalisasi kata kunci dan menyusun kriteria kecocokan, meminta FilterController memvalidasi dan menyusun kriteria filter, lalu mengurutkan dan membagi hasil per halaman. Barang menjalankan kueri dengan seluruh kriteria sekaligus, tetap mensyaratkan status "Tersedia" dan pemilik yang tidak diblokir. HalamanKatalog menampilkan hasil, navigasi antarhalaman, dan filter yang sedang aktif (KF25–KF28).
+
 <p align="center">
 <img alt="Gambar 3.47. Sequence Diagram UC14 - Skenario Normal" src="./assets/diagram/Sequence_UC14_Normal.png" width="75%">
 </p>
@@ -1059,6 +1148,9 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 </p>
 
 - **Skenario Alternatif 1: Tidak Ada Barang yang Cocok**
+
+Skenario ini terjadi apabila kombinasi kata kunci dan filter tidak menghasilkan listing apa pun. HalamanKatalog menampilkan pesan "Barang tidak ditemukan" beserta tombol "Hapus Semua Filter". Saat tombol tersebut ditekan, seluruh kriteria dikosongkan dan katalog penuh ditampilkan kembali dari halaman pertama (KF29).
+
 <p align="center">
 <img alt="Gambar 3.48. Sequence Diagram UC14 - Skenario Alternatif 1" src="./assets/diagram/Sequence_UC14_Alt1.png" width="75%">
 </p>
@@ -1067,6 +1159,9 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 </p>
 
 - **Skenario Alternatif 2: Rentang Harga Tidak Masuk Akal**
+
+Skenario ini terjadi apabila harga minimum lebih besar daripada harga maksimum. HalamanKatalog mendeteksi rentang harga yang tidak sah, menandai kedua kolom harga, dan tidak menerapkan filter sampai rentang diperbaiki. Validasi yang sama diulang di sisi server oleh FilterController.
+
 <p align="center">
 <img alt="Gambar 3.49. Sequence Diagram UC14 - Skenario Alternatif 2" src="./assets/diagram/Sequence_UC14_Alt2.png" width="75%">
 </p>
@@ -1075,6 +1170,9 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 </p>
 
 ### 3.14.3 Diagram Kelas
+
+HalamanKatalog berasosiasi dengan KatalogController. HalamanKatalog memiliki relasi komposisi 1 ke 0..20 terhadap KartuProduk. KatalogController bergantung pada Barang, PencarianController, dan FilterController. FilterController bergantung pada Kategori dan LokasiCOD. Barang bergantung pada Akun. Penjual merupakan turunan (generalisasi) dari Akun. Relasi antar-*entity* pada diagram ini adalah Penjual ke Barang berupa komposisi 1 ke 0..*, Barang ke FotoBarang berupa komposisi 1 ke 1..5, Kategori ke Barang berupa asosiasi 1 ke 0..*, dan LokasiCOD ke Barang berupa asosiasi 1 ke 0..*. Setiap kelas menampilkan atribut bertipe data dan operasi yang dipakai pada UC14, sehingga seluruh operasi yang dipanggil pada *sequence diagram* subbab sebelumnya tercantum pada kelas yang bersangkutan.
+
 <p align="center">
 <img alt="Gambar 3.50. Diagram Kelas UC14" src="./assets/diagram/Diagram_Kelas_UC14.png" width="75%">
 </p>
@@ -1091,21 +1189,28 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 
 ### 3.15.1 Identifikasi Kelas
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
-| :--- | :--- | :--- | 
-| 1 | HalamanDetailBarang | C07 HalamanDetailBarang | 
-| 2 | BarangController | C14 BarangController | 
-| 3 | Penjual | C25 Penjual | 
-| 4 | SesiLogin | C28 SesiLogin |
-| 5 | Barang | C29 Barang | 
-| 6 | FotoBarang | C30 FotoBarang | 
-| 7 | Kategori | C31 Kategori |
-| 8 | LokasiCOD | C32 LokasiCOD | 
-| 9 | Otorisasi | C41 Otorisasi (Pendukung) | 
+Realisasi use case melihat detail listing melibatkan antarmuka detail barang, controller barang untuk mengambil detail listing beserta relasinya, modul otorisasi untuk mengenali pemohon, serta entitas Penjual, SesiLogin, Barang, FotoBarang, Kategori, dan LokasiCOD.
+
+Tabel 3.15. Identifikasi Kelas Use Case UC15
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanDetailBarang | C07 HalamanDetailBarang | Menampilkan galeri foto beserta tampilan penuh (lightbox), informasi listing, identitas penjual, serta tombol aksi sesuai peran pemohon dan status listing. |
+| 2 | BarangController | C14 BarangController | Mengambil detail listing beserta foto, kategori, lokasi, dan identitas penjual, serta menentukan apakah pemohon adalah pemilik listing. |
+| 3 | Penjual | C25 Penjual | Menyediakan identitas penjual yang ditampilkan pada halaman detail. |
+| 4 | SesiLogin | C28 SesiLogin | Menyediakan idAkun pemohon dari sesi aktif. |
+| 5 | Barang | C29 Barang | Menyediakan data listing beserta status terkininya. |
+| 6 | FotoBarang | C30 FotoBarang | Menyediakan galeri foto listing (hingga 5 foto). |
+| 7 | Kategori | C31 Kategori | Menyediakan nama kategori listing. |
+| 8 | LokasiCOD | C32 LokasiCOD | Menyediakan nama lokasi titik temu COD listing. |
+| 9 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token sesi pemohon. |
 
 ### 3.15.2 Sequence Diagram
 
 - **Skenario Normal**
+
+Pengguna menekan sebuah kartu produk. HalamanDetailBarang meminta detail listing ke BarangController, yang mengambil Barang, memverifikasi token melalui Otorisasi bila pengguna sedang masuk (detail listing tetap dapat dibuka tanpa sesi), galeri FotoBarang, Kategori, LokasiCOD, dan identitas Penjual. HalamanDetailBarang menampilkan seluruh foto, judul, harga, deskripsi kondisi, kategori, lokasi COD, dan identitas penjual, beserta tombol "Hubungi Penjual" dan "Laporkan". Foto dapat dibuka dalam ukuran penuh, dan nama penjual mengarah ke profilnya (KF17).
+
 <p align="center">
 <img alt="Gambar 3.51. Sequence Diagram UC15 - Skenario Normal" src="./assets/diagram/Sequence_UC15_Normal.png" width="75%">
 </p>
@@ -1114,14 +1219,20 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 </p>
 
 - **Skenario Alternatif 1: Pengguna adalah Pemilik Listing**
+
+Skenario ini terjadi apabila pemohon adalah pemilik listing. Detail yang dikembalikan BarangController memuat idAkun pemohon, dan karena nilainya sama dengan pemilik listing, HalamanDetailBarang menggantikan tombol "Hubungi Penjual" dengan tombol pengelolaan listing, yaitu ubah, hapus, serta tandai atau batalkan penandaan terjual.
+
 <p align="center">
-<img alt="ambar 3.52. Sequence Diagram UC15 - Skenario Alternatif 1" src="./assets/diagram/Sequence_UC15_Alt1.png" width="75%">
+<img alt="Gambar 3.52. Sequence Diagram UC15 - Skenario Alternatif 1" src="./assets/diagram/Sequence_UC15_Alt1.png" width="75%">
 </p>
 <p align="center">
 <i>Gambar 3.52. Sequence Diagram UC15 - Skenario Alternatif 1</i>
 </p>
 
 - **Skenario Alternatif 2: Listing Sudah Dihapus atau Tidak Ditemukan**
+
+Skenario ini terjadi apabila listing sudah dihapus atau tidak ditemukan. BarangController tidak menemukan data listing, dan HalamanDetailBarang menampilkan pemberitahuan bahwa listing tidak ditemukan beserta tautan kembali ke katalog.
+
 <p align="center">
 <img alt="Gambar 3.53. Sequence Diagram UC15 — Skenario Alternatif 2" src="./assets/diagram/Sequence_UC15_Alt2.png" width="75%">
 </p>
@@ -1130,6 +1241,9 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 </p>
  
 - **Skenario Alternatif 3: Listing Sudah Berstatus Terjual**
+
+Skenario ini terjadi apabila listing sudah berstatus "Terjual". HalamanDetailBarang tetap menampilkan informasi listing sebagai arsip, memberi label "Terjual", dan menonaktifkan tombol "Hubungi Penjual".
+
 <p align="center">
 <img alt="Gambar 3.54. Sequence Diagram UC15 - Skenario Alternatif 3" src="./assets/diagram/Sequence_UC15_Alt3.png" width="75%">
 </p>
@@ -1138,6 +1252,9 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 </p>
 
 ### 3.15.3 Diagram Kelas
+
+HalamanDetailBarang berasosiasi dengan BarangController. BarangController bergantung pada Penjual, SesiLogin, Barang, FotoBarang, Kategori, LokasiCOD, dan Otorisasi. Otorisasi bergantung pada SesiLogin. Relasi antar-*entity* pada diagram ini adalah Penjual ke Barang berupa komposisi 1 ke 0..*, Barang ke FotoBarang berupa komposisi 1 ke 1..5, Kategori ke Barang berupa asosiasi 1 ke 0..*, dan LokasiCOD ke Barang berupa asosiasi 1 ke 0..*. Setiap kelas menampilkan atribut bertipe data dan operasi yang dipakai pada UC15, sehingga seluruh operasi yang dipanggil pada *sequence diagram* subbab sebelumnya tercantum pada kelas yang bersangkutan.
+
 <p align="center">
 <img alt="Gambar 3.55. Diagram Kelas UC15" src="./assets/diagram/Diagram_Kelas_UC15.png" width="75%">
 </p>
@@ -1154,24 +1271,31 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 
 ### 3.16.1 Identifikasi Kelas
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | 
-| :--- | :--- | :--- |
-| 1 | HalamanDetailBarang | C07 HalamanDetailBarang | 
-| 2 | HalamanPercakapan | C08 HalamanPercakapan | 
-| 3 | PercakapanController | C18 PercakapanController | 
-| 4 | Akun | C23 Akun |
-| 5 | Pembeli | C24 Pembeli |
-| 6 | Penjual | C25 Penjual | 
-| 7 | SesiLogin | C28 SesiLogin | 
-| 8 | Barang | C29 Barang | 
-| 9 | Percakapan | C33 Percakapan | 
-| 10 | Pesan | C34 Pesan |
-| 11 | Otorisasi | C41 Otorisasi (Pendukung) | 
-| 12 | Kriptografi | C42 Kriptografi (Pendukung) | 
+Realisasi use case menghubungi penjual melibatkan antarmuka detail barang dan ruang percakapan, controller percakapan untuk memeriksa prasyarat serta mencari atau membuat ruang percakapan, modul otorisasi dan kriptografi sebagai kelas pendukung, serta entitas Akun, Pembeli, Penjual, SesiLogin, Barang, Percakapan, dan Pesan.
+
+Tabel 3.16. Identifikasi Kelas Use Case UC16
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanDetailBarang | C07 HalamanDetailBarang | Menyediakan tombol "Hubungi Penjual" dan menampilkan pesan galat apabila percakapan tidak dapat dibuka. |
+| 2 | HalamanPercakapan | C08 HalamanPercakapan | Menampilkan ruang percakapan, riwayat pesan, dan tautan Kebijakan Privasi, serta menampilkan penolakan akses bagi pihak ketiga. |
+| 3 | PercakapanController | C18 PercakapanController | Memverifikasi sesi, memeriksa listing dan status blokir penjual, mencari atau membuat ruang percakapan, memverifikasi peserta, dan mendekripsi riwayat pesan. |
+| 4 | Akun | C23 Akun | Menyediakan status blokir akun penjual. |
+| 5 | Pembeli | C24 Pembeli | Peran pembeli sebagai pemrakarsa percakapan. |
+| 6 | Penjual | C25 Penjual | Peran penjual sebagai lawan bicara beserta identitasnya. |
+| 7 | SesiLogin | C28 SesiLogin | Menyediakan idAkun pemohon dari sesi aktif. |
+| 8 | Barang | C29 Barang | Listing yang menjadi konteks percakapan. |
+| 9 | Percakapan | C33 Percakapan | Menyimpan ruang percakapan beserta daftar pesertanya yang sah. |
+| 10 | Pesan | C34 Pesan | Menyediakan riwayat pesan terenkripsi pada ruang percakapan. |
+| 11 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token sesi pemohon. |
+| 12 | Kriptografi | C42 Kriptografi (Pendukung) | Mendekripsi riwayat pesan sebelum ditampilkan kepada peserta. |
 
 ### 3.16.2 Sequence Diagram
 
 - **Skenario Normal**
+
+Pembeli menekan "Hubungi Penjual" pada halaman detail listing. PercakapanController memverifikasi token melalui Otorisasi, mengambil listing, dan memastikan akun penjual tidak diblokir. Controller kemudian mencari ruang percakapan untuk kombinasi listing, pembeli, dan penjual, lalu membuat ruang baru bila belum ada dan memverifikasi bahwa pemohon adalah peserta sah. Setelah identitas penjual diambil, HalamanPercakapan menampilkan ruang percakapan beserta tautan Kebijakan Privasi, dan pengiriman pesan dilanjutkan pada UC17 (KF31, KF39).
+
 <p align="center">
 <img alt="Gambar 3.56. Sequence Diagram UC16 - Skenario Normal" src="./assets/diagram/Sequence_UC16_Normal.png" width="75%">
 </p>
@@ -1180,6 +1304,9 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 </p>
 
 - **Skenario Alternatif 1: Akun Penjual Sedang Diblokir**
+
+Skenario ini terjadi apabila akun penjual sedang diblokir. PercakapanController mendapati status blokir penjual bernilai benar, membatalkan pembukaan ruang percakapan, dan HalamanDetailBarang menampilkan pesan bahwa penjual tidak dapat dihubungi.
+
 <p align="center">
 <img alt="Gambar 3.57. Sequence Diagram UC16 — Skenario Alternatif 1" src="./assets/diagram/Sequence_UC16_Alt1.png" width="75%">
 </p>
@@ -1188,6 +1315,9 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 </p>
 
 - **Skenario Alternatif 2: Ruang Percakapan untuk Listing Tersebut Sudah Ada**
+
+Skenario ini terjadi apabila ruang percakapan untuk listing tersebut sudah pernah dibuat. PercakapanController tidak membuat ruang baru, melainkan membuka ruang yang ada, mengambil riwayat pesannya, mendekripsi melalui Kriptografi, lalu HalamanPercakapan menampilkan riwayat secara berurutan dan menggulir ke pesan terakhir.
+
 <p align="center">
 <img alt="Gambar 3.58. Sequence Diagram UC16 - Skenario Alternatif 2" src="./assets/diagram/Sequence_UC16_Alt2.png" width="75%">
 </p>
@@ -1196,6 +1326,9 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 </p>
 
 - **Skenario Alternatif 3: Percobaan Akses Ruang Percakapan oleh Pihak Ketiga**
+
+Skenario ini terjadi apabila akun yang bukan peserta, termasuk admin, mencoba membuka ruang percakapan melalui tautan langsung. PercakapanController mendapati pemohon tidak termasuk peserta sah, menolak permintaan tanpa mengirim isi pesan apa pun, dan HalamanPercakapan menampilkan penolakan akses (KF35).
+
 <p align="center">
 <img alt="Gambar 3.59. Sequence Diagram UC16 - Skenario Alternatif 3" src="./assets/diagram/Sequence_UC16_Alt3.png" width="75%">
 </p>
@@ -1204,6 +1337,9 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 </p>
 
 ### 3.16.3 Diagram Kelas
+
+HalamanDetailBarang berasosiasi dengan HalamanPercakapan dan PercakapanController. HalamanPercakapan berasosiasi dengan PercakapanController. PercakapanController bergantung pada Akun, Penjual, SesiLogin, Barang, Percakapan, Pesan, Otorisasi, dan Kriptografi. Otorisasi bergantung pada SesiLogin. Pembeli dan Penjual merupakan turunan (generalisasi) dari Akun. Relasi antar-*entity* pada diagram ini adalah Akun ke SesiLogin berupa asosiasi 1 ke 0..*, Penjual ke Barang berupa komposisi 1 ke 0..*, Pembeli ke Percakapan berupa asosiasi 1 ke 0..*, Penjual ke Percakapan berupa asosiasi 1 ke 0..*, Barang ke Percakapan berupa asosiasi 1 ke 0..*, Percakapan ke Pesan berupa komposisi 1 ke 0..*, dan Akun ke Pesan berupa asosiasi 1 ke 0..*. Setiap kelas menampilkan atribut bertipe data dan operasi yang dipakai pada UC16, sehingga seluruh operasi yang dipanggil pada *sequence diagram* subbab sebelumnya tercantum pada kelas yang bersangkutan.
+
 <p align="center">
 <img alt="Gambar 3.60. Diagram Kelas UC16" src="./assets/diagram/Diagram_Kelas_UC16.png" width="75%">
 </p>
@@ -1265,7 +1401,7 @@ Skenario ini terjadi apabila pengguna tidak mengetik teks apa pun atau hanya men
 
 ### 3.17.3 Diagram Kelas
 
-Diagram kelas perancangan UC17 memodelkan HalamanPercakapan dan PanelNotifikasi yang berasosiasi ke PercakapanController dan NotifikasiController. PercakapanController bergantung pada Otorisasi, SesiLogin, Kriptografi, Percakapan, Pesan, dan Akun. Percakapan memiliki relasi komposisi 1 ke 0..* terhadap Pesan. NotifikasiController bergantung pada Notifikasi dan PushNotifikasiAdapter, sedangkan Akun berelasi 1 ke 0..* dengan Notifikasi.
+HalamanPercakapan berasosiasi dengan PercakapanController. PanelNotifikasi berasosiasi dengan NotifikasiController. PercakapanController bergantung pada SesiLogin, Percakapan, Pesan, Otorisasi, Kriptografi, dan NotifikasiController. NotifikasiController bergantung pada Notifikasi dan PushNotifikasiAdapter. Otorisasi bergantung pada SesiLogin. Relasi antar-*entity* pada diagram ini adalah Akun ke SesiLogin berupa asosiasi 1 ke 0..*, Akun ke Notifikasi berupa asosiasi 1 ke 0..*, Percakapan ke Pesan berupa komposisi 1 ke 0..*, dan Akun ke Pesan berupa asosiasi 1 ke 0..*. Setiap kelas menampilkan atribut bertipe data dan operasi yang dipakai pada UC17, sehingga seluruh operasi yang dipanggil pada *sequence diagram* subbab sebelumnya tercantum pada kelas yang bersangkutan.
 
 <p align="center">
 <img alt="Diagram Kelas Use Case UC17" src="./assets/diagram/Diagram_Kelas_UC17.png" width="90%">
@@ -1312,7 +1448,7 @@ Pengguna membuka halaman "Daftar Percakapan" dari menu navigasi. PercakapanContr
 
 ### 3.18.3 Diagram Kelas
 
-Diagram kelas perancangan UC18 memodelkan HalamanPercakapan yang berasosiasi dengan PercakapanController. PercakapanController bergantung pada Otorisasi, SesiLogin, Kriptografi, Percakapan, dan Pesan. Relasi Percakapan terhadap Pesan berupa komposisi 1 ke 0..*.
+HalamanPercakapan berasosiasi dengan PercakapanController. PercakapanController bergantung pada SesiLogin, Percakapan, Pesan, Otorisasi, dan Kriptografi. Otorisasi bergantung pada SesiLogin. Relasi antar-*entity* pada diagram ini adalah Percakapan ke Pesan berupa komposisi 1 ke 0..*. Setiap kelas menampilkan atribut bertipe data dan operasi yang dipakai pada UC18, sehingga seluruh operasi yang dipanggil pada *sequence diagram* subbab sebelumnya tercantum pada kelas yang bersangkutan.
 
 <p align="center">
 <img alt="Diagram Kelas Use Case UC18" src="./assets/diagram/Diagram_Kelas_UC18.png" width="85%">
@@ -1347,13 +1483,13 @@ Tabel 3.19. Identifikasi Kelas Use Case UC19
 | 9 | BuktiLaporan | C37 BuktiLaporan | Menyimpan metadata berkas bukti tangkapan layar. |
 | 10 | LogAudit | C38 LogAudit | Mencatat penerimaan laporan sebagai rekam jejak permanen yang tidak dapat diubah atau dihapus. |
 | 11 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token sesi pelapor. |
-| 12 | PenyimpananBerkas | PenyimpananBerkas (Storage) | Menyimpan fisik berkas bukti tangkapan layar pada Supabase Storage. |
+| 12 | PenyimpananBerkas | C45 PenyimpananBerkas (Penyimpanan Data) | Menyimpan fisik berkas bukti tangkapan layar pada Supabase Storage. |
 
 ### 3.19.2 Sequence Diagram
 
 - **Skenario Normal**
 
-Pengguna menekan "Laporkan" dari halaman detail listing, profil pengguna, ruang percakapan, atau menu bantuan, lalu FormulirLaporan ditampilkan sesuai konteks. Pengguna memilih kategori, mengisi alasan, melampirkan bukti, dan menekan "Kirim Laporan". LaporanController memverifikasi sesi melalui Otorisasi dan SesiLogin, memvalidasi kelengkapan data dan bukti, dan apabila laporan berasal dari percakapan, hanya menyusun ID percakapan, waktu pelaporan, dan identitas pelapor tanpa isi pesan. Bukti diunggah ke PenyimpananBerkas dan dicatat sebagai BuktiLaporan, Laporan disimpan dengan status "Baru", penerimaan dicatat ke LogAudit, dan notifikasi "Laporan berhasil dikirim" ditampilkan.
+Pengguna menekan "Laporkan" dari halaman detail listing, profil pengguna, ruang percakapan, atau menu bantuan, lalu FormulirLaporan ditampilkan sesuai konteks. Pengguna memilih kategori, mengisi alasan, melampirkan bukti, dan menekan "Kirim Laporan". LaporanController memverifikasi sesi melalui Otorisasi dan SesiLogin, memvalidasi kelengkapan data dan bukti, dan apabila laporan berasal dari percakapan, hanya menyusun ID percakapan, waktu pelaporan, dan identitas pelapor tanpa isi pesan. Laporan disimpan dengan status "Baru", bukti diunggah ke PenyimpananBerkas dan dicatat sebagai BuktiLaporan, penerimaan dicatat ke LogAudit, dan notifikasi "Laporan berhasil dikirim" ditampilkan.
 
 <p align="center">
 <img alt="Sequence Diagram UC19 - Skenario Normal" src="./assets/diagram/Sequence_UC19_Normal.png" width="95%">
@@ -1375,7 +1511,7 @@ Skenario ini terjadi apabila pengguna mengosongkan kolom alasan atau tidak melam
 
 ### 3.19.3 Diagram Kelas
 
-Diagram kelas perancangan UC19 memodelkan HalamanDetailBarang yang membuka FormulirLaporan, dan FormulirLaporan yang berasosiasi dengan LaporanController. LaporanController bergantung pada Otorisasi, SesiLogin, Akun, Barang, Percakapan, Laporan, BuktiLaporan, LogAudit, dan PenyimpananBerkas. Relasi komposisi Laporan terhadap BuktiLaporan adalah 1 ke 1..*, karena setiap laporan wajib memiliki bukti. Akun berelasi 1 ke 0..* dengan Laporan sebagai pelapor.
+HalamanDetailBarang berasosiasi dengan FormulirLaporan. FormulirLaporan berasosiasi dengan LaporanController. LaporanController bergantung pada SesiLogin, Barang, Percakapan, Laporan, BuktiLaporan, LogAudit, Otorisasi, dan PenyimpananBerkas. Otorisasi bergantung pada SesiLogin. Relasi antar-*entity* pada diagram ini adalah Akun ke SesiLogin berupa asosiasi 1 ke 0..*, Barang ke Percakapan berupa asosiasi 1 ke 0..*, Akun ke Laporan berupa asosiasi 1 ke 0..*, Laporan ke BuktiLaporan berupa komposisi 1 ke 1..*, Laporan ke Barang berupa asosiasi 0..* ke 0..1, Laporan ke Percakapan berupa asosiasi 0..* ke 0..1, dan Laporan ke LogAudit berupa asosiasi 1 ke 0..*. Setiap kelas menampilkan atribut bertipe data dan operasi yang dipakai pada UC19, sehingga seluruh operasi yang dipanggil pada *sequence diagram* subbab sebelumnya tercantum pada kelas yang bersangkutan.
 
 <p align="center">
 <img alt="Diagram Kelas Use Case UC19" src="./assets/diagram/Diagram_Kelas_UC19.png" width="90%">
@@ -1432,7 +1568,7 @@ Skenario ini terjadi apabila pengguna biasa membuka URL daftar laporan secara la
 
 ### 3.20.3 Diagram Kelas
 
-Diagram kelas perancangan UC20 memodelkan DasborAdmin yang berasosiasi dengan ModerasiController. ModerasiController bergantung pada Otorisasi, SesiLogin, Admin, dan Laporan. Admin merupakan generalisasi (turunan) dari Akun, dan relasi ModerasiController ke Laporan berupa 1 ke 0..*.
+DasborAdmin berasosiasi dengan ModerasiController. ModerasiController bergantung pada Otorisasi, SesiLogin, dan Laporan. Otorisasi bergantung pada SesiLogin dan Admin. Setiap kelas menampilkan atribut bertipe data dan operasi yang dipakai pada UC20, sehingga seluruh operasi yang dipanggil pada *sequence diagram* subbab sebelumnya tercantum pada kelas yang bersangkutan.
 
 <p align="center">
 <img alt="Diagram Kelas Use Case UC20" src="./assets/diagram/Diagram_Kelas_UC20.png" width="80%">
@@ -1479,7 +1615,7 @@ Admin membuka detail laporan, meninjau isinya, memilih status baru pada dropdown
 
 ### 3.21.3 Diagram Kelas
 
-Diagram kelas perancangan UC21 memodelkan DasborAdmin yang berasosiasi dengan ModerasiController. ModerasiController bergantung pada Otorisasi, SesiLogin, Admin, Laporan, dan LogAudit. Setiap Laporan berelasi 1 ke 0..* dengan LogAudit.
+DasborAdmin berasosiasi dengan ModerasiController. ModerasiController bergantung pada Otorisasi, SesiLogin, Laporan, dan LogAudit. Otorisasi bergantung pada SesiLogin dan Admin. Relasi antar-*entity* pada diagram ini adalah Laporan ke LogAudit berupa asosiasi 1 ke 0..*. Setiap kelas menampilkan atribut bertipe data dan operasi yang dipakai pada UC21, sehingga seluruh operasi yang dipanggil pada *sequence diagram* subbab sebelumnya tercantum pada kelas yang bersangkutan.
 
 <p align="center">
 <img alt="Diagram Kelas Use Case UC21" src="./assets/diagram/Diagram_Kelas_UC21.png" width="80%">
@@ -1514,7 +1650,9 @@ Tabel 3.22. Identifikasi Kelas Use Case UC22
 | 9 | LogAdmin | C39 LogAdmin | Mencatat tindakan "Hapus Listing" beserta pelaku, objek, waktu, dan alasan. |
 | 10 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token dan peran admin. |
 | 11 | SurelAdapter | C43 SurelAdapter (Integrasi) | Mengirim surel pemberitahuan penghapusan kepada pemilik listing. |
-| 12 | PenyimpananBerkas | PenyimpananBerkas (Storage) | Menghapus berkas foto listing dari Supabase Storage. |
+| 12 | PenyimpananBerkas | C45 PenyimpananBerkas (Penyimpanan Data) | Menghapus berkas foto listing dari Supabase Storage. |
+| 13 | Akun | C23 Akun | Menyediakan alamat surel pemilik listing untuk pemberitahuan penghapusan. |
+| 14 | FotoBarang | C30 FotoBarang | Menyediakan daftar foto listing agar ikut dihapus bersama listing. |
 
 ### 3.22.2 Sequence Diagram
 
@@ -1531,7 +1669,7 @@ Dari halaman detail laporan, admin menekan "Hapus Listing", mengisi alasan pada 
 
 ### 3.22.3 Diagram Kelas
 
-Diagram kelas perancangan UC22 memodelkan DasborAdmin yang berasosiasi dengan ModerasiController. ModerasiController bergantung pada Otorisasi, SesiLogin, Admin, Barang, NotifikasiController, LogAudit, LogAdmin, dan PenyimpananBerkas. NotifikasiController bergantung pada Notifikasi dan SurelAdapter. Admin berelasi 1 ke 0..* dengan LogAdmin.
+DasborAdmin berasosiasi dengan ModerasiController. NotifikasiController bergantung pada Notifikasi dan SurelAdapter. ModerasiController bergantung pada Otorisasi, SesiLogin, LogAudit, LogAdmin, Barang, FotoBarang, Akun, NotifikasiController, dan PenyimpananBerkas. Otorisasi bergantung pada SesiLogin dan Admin. Admin merupakan turunan (generalisasi) dari Akun. Relasi antar-*entity* pada diagram ini adalah Akun ke SesiLogin berupa asosiasi 1 ke 0..*, Akun ke Notifikasi berupa asosiasi 1 ke 0..*, Barang ke FotoBarang berupa komposisi 1 ke 1..5, dan Admin ke LogAdmin berupa asosiasi 1 ke 0..*. Setiap kelas menampilkan atribut bertipe data dan operasi yang dipakai pada UC22, sehingga seluruh operasi yang dipanggil pada *sequence diagram* subbab sebelumnya tercantum pada kelas yang bersangkutan.
 
 <p align="center">
 <img alt="Diagram Kelas Use Case UC22" src="./assets/diagram/Diagram_Kelas_UC22.png" width="90%">
@@ -1567,6 +1705,7 @@ Tabel 3.23. Identifikasi Kelas Use Case UC23
 | 10 | LogAdmin | C39 LogAdmin | Mencatat tindakan "Blokir Akun" beserta pelaku, objek, waktu, dan alasan. |
 | 11 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token dan peran admin. |
 | 12 | SurelAdapter | C43 SurelAdapter (Integrasi) | Mengirim surel pemberitahuan penangguhan beserta alasan. |
+| 13 | Penjual | C25 Penjual | Peran penjual dari akun yang diblokir; seluruh listing miliknya dinonaktifkan. |
 
 ### 3.23.2 Sequence Diagram
 
@@ -1583,7 +1722,7 @@ Admin menekan "Blokir Akun" dari detail laporan atau profil pengguna, mengisi al
 
 ### 3.23.3 Diagram Kelas
 
-Diagram kelas perancangan UC23 memodelkan DasborAdmin yang berasosiasi dengan ModerasiController. ModerasiController bergantung pada Otorisasi, Admin, Akun, SesiLogin, Barang, NotifikasiController, LogAudit, dan LogAdmin. Relasi Akun terhadap Barang (sebagai Penjual) adalah 1 ke 0..*, dan Akun terhadap SesiLogin adalah 1 ke 0..*. NotifikasiController bergantung pada Notifikasi dan SurelAdapter.
+DasborAdmin berasosiasi dengan ModerasiController. NotifikasiController bergantung pada Notifikasi dan SurelAdapter. ModerasiController bergantung pada Otorisasi, SesiLogin, LogAudit, LogAdmin, Barang, Akun, dan NotifikasiController. Otorisasi bergantung pada SesiLogin dan Admin. Penjual dan Admin merupakan turunan (generalisasi) dari Akun. Relasi antar-*entity* pada diagram ini adalah Akun ke SesiLogin berupa asosiasi 1 ke 0..*, Akun ke Notifikasi berupa asosiasi 1 ke 0..*, Penjual ke Barang berupa komposisi 1 ke 0..*, dan Admin ke LogAdmin berupa asosiasi 1 ke 0..*. Setiap kelas menampilkan atribut bertipe data dan operasi yang dipakai pada UC23, sehingga seluruh operasi yang dipanggil pada *sequence diagram* subbab sebelumnya tercantum pada kelas yang bersangkutan.
 
 <p align="center">
 <img alt="Diagram Kelas Use Case UC23" src="./assets/diagram/Diagram_Kelas_UC23.png" width="90%">
@@ -1614,6 +1753,8 @@ Tabel 3.24. Identifikasi Kelas Use Case UC24
 | 5 | Barang | C29 Barang | Listing milik akun dikembalikan ke status publik sehingga tampil kembali pada katalog dan pencarian. |
 | 6 | LogAdmin | C39 LogAdmin | Mencatat tindakan "Buka Blokir" beserta pelaku, objek, dan waktu. |
 | 7 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token dan peran admin. |
+| 8 | SesiLogin | C28 SesiLogin | Menyediakan identitas admin dari token sesi aktif. |
+| 9 | Penjual | C25 Penjual | Peran penjual dari akun yang dibuka blokirnya; listing miliknya dipulihkan ke katalog. |
 
 ### 3.24.2 Sequence Diagram
 
@@ -1630,7 +1771,7 @@ Admin menekan "Buka Blokir" pada akun yang sedang diblokir. ModerasiController m
 
 ### 3.24.3 Diagram Kelas
 
-Diagram kelas perancangan UC24 memodelkan DasborAdmin yang berasosiasi dengan ModerasiController. ModerasiController bergantung pada Otorisasi, Admin, Akun, Barang, dan LogAdmin. Relasi Akun terhadap Barang adalah 1 ke 0..*, dan Admin berelasi 1 ke 0..* dengan LogAdmin.
+DasborAdmin berasosiasi dengan ModerasiController. ModerasiController bergantung pada Otorisasi, SesiLogin, LogAdmin, Barang, dan Akun. Otorisasi bergantung pada SesiLogin dan Admin. Penjual dan Admin merupakan turunan (generalisasi) dari Akun. Relasi antar-*entity* pada diagram ini adalah Akun ke SesiLogin berupa asosiasi 1 ke 0..*, Penjual ke Barang berupa komposisi 1 ke 0..*, dan Admin ke LogAdmin berupa asosiasi 1 ke 0..*. Setiap kelas menampilkan atribut bertipe data dan operasi yang dipakai pada UC24, sehingga seluruh operasi yang dipanggil pada *sequence diagram* subbab sebelumnya tercantum pada kelas yang bersangkutan.
 
 <p align="center">
 <img alt="Diagram Kelas Use Case UC24" src="./assets/diagram/Diagram_Kelas_UC24.png" width="85%">
@@ -1639,28 +1780,97 @@ Diagram kelas perancangan UC24 memodelkan DasborAdmin yang berasosiasi dengan Mo
 <i>Gambar 3.79. Diagram Kelas Use Case UC24</i>
 </p>
 
+<br>
+
+---
 
 # BAB 4: Diagram Kelas Keseluruhan
 
 ## 4.1 Diagram Kelas
 
-**Bagian ini diisi dengan diagram kelas keseluruhan.**
+Diagram kelas perancangan keseluruhan merupakan gabungan dari seluruh diagram kelas per use case pada BAB 3. Setiap kelas hanya digambarkan satu kali, dan atribut serta metodenya merupakan gabungan dari seluruh kemunculannya pada BAB 3. Sebaliknya, setiap atribut dan metode pada diagram kelas per use case selalu tercantum pada Tabel 4.1 dengan penulisan yang sama, karena kedua bagian disusun dari satu model kelas yang sama. Agar tetap terbaca, kotak kelas pada Gambar 4.1 hanya memuat ID dan nama kelas, sedangkan atribut dan metode lengkap setiap kelas disajikan pada Tabel 4.1.
+
+Gambar 4.1 disusun dalam empat kolom sesuai *pattern* MVC pada subbab 2.2:
+
+- **View (C01–C12)**: kelas antarmuka yang berasosiasi searah dengan kelas *Controller*. KatalogView, ProfilView, dan HalamanListingPenjual memiliki relasi komposisi terhadap KartuProduk.
+- **Controller (C13–C22)**: kelas pengendali yang bergantung pada kelas *Model*, kelas *Pendukung*, kelas *Integrasi Eksternal*, PenyimpananBerkas, dan pada NotifikasiController bila perlu mengirim pemberitahuan.
+- **Pendukung, Integrasi Eksternal, dan Penyimpanan Data (C41–C45)**: kelas baru pada tahap perancangan, yaitu C41 Otorisasi, C42 Kriptografi, C43 SurelAdapter, C44 PushNotifikasiAdapter, dan C45 PenyimpananBerkas. Otorisasi bergantung pada SesiLogin dan Admin untuk memeriksa sesi dan peran.
+- **Model (C23–C40)**: kelas data yang saling berelasi melalui asosiasi bermultiplisitas, komposisi, dan generalisasi.
+
+Secara keseluruhan, diagram memuat **45 kelas** dengan **15 asosiasi berarah** dari *View*, **7 komposisi**, **3 generalisasi**, **15 asosiasi antar-*Model***, dan **55 dependensi**, tanpa kelas yang terduplikasi.
 
 <p align="center">
-<img alt="Contoh Logical View pada P/L E-Commerce" src="./assets/diagram/contoh-class_diargam.png" width="35%">
+<img alt="Diagram Kelas Perancangan Keseluruhan ITBELI" src="./assets/diagram/Diagram_Kelas_Keseluruhan.png" width="100%">
 </p>
 <p align="center">
-<i>Gambar 4.1. Diagram Kelas Perancangan Keseluruhan [Nama P/L]</i>
+<i>Gambar 4.1. Diagram Kelas Perancangan Keseluruhan ITBELI</i>
 </p>
+
+Kelas perancangan pada Tabel 4.1 mengikuti ketentuan berikut.
+
+1. **Visibilitas.** Atribut bersifat *private* (`-`) dan hanya diakses melalui operasi, sedangkan operasi bersifat *public* (`+`).
+2. **Tipe data.** Tipe yang dipakai adalah `String`, `Integer`, `Long`, `Double`, `Boolean`, `Date`, `DateTime`, `File`, `List<T>`, `Map<K, V>`, dan `Any`, serta nama kelas lain bila nilai yang dikembalikan berupa objek kelas tersebut (misalnya `SesiLogin`).
+3. **Satu nama, satu tanda tangan.** Implementasi ITBELI memakai JavaScript yang tidak mendukung *overloading*, sehingga setiap nama operasi pada satu kelas hanya memiliki satu daftar parameter dan satu tipe kembalian.
+4. **Kelas peran.** C24 Pembeli, C25 Penjual, dan C26 Admin mewarisi seluruh atribut C23 Akun dan hanya menambahkan operasi yang khusus untuk perannya.
+
+Dibandingkan dengan diagram kelas analisis pada subbab 5.3 dokumen SKPL, diagram kelas perancangan memuat penyempurnaan berikut.
+
+1. **Kelas baru C41–C45.** Komponen *Pendukung*, *Integrasi Eksternal*, dan PenyimpananBerkas pada Tabel 2.3 diwujudkan sebagai kelas tersendiri.
+2. **Pemeriksaan sesi terpusat.** Setiap *Controller* yang memerlukan *login* memanggil Otorisasi untuk memeriksa token sesi, lalu mengambil identitas akun dari SesiLogin. ModerasiController memakai `verifikasiAdmin()` yang sekaligus memeriksa peran admin (KF56).
+3. **Orkestrasi pencarian dan penyaringan.** HalamanKatalog hanya berasosiasi dengan KatalogController, sedangkan KatalogController memanggil PencarianController dan FilterController. Dengan demikian, halaman katalog cukup mengirim satu permintaan untuk kata kunci, filter, pengurutan, dan halaman sekaligus.
+4. **Alur pelaporan.** HalamanDetailBarang membuka FormulirLaporan, lalu FormulirLaporan meneruskan laporan ke LaporanController.
+5. **Penyeragaman operasi.** Operasi yang sama tetapi bernama berbeda antar-use case disatukan, misalnya `Barang.getByPemilik()` menjadi `Barang.getListingPenjual()`. Pengelompokan listing per status dipindahkan ke `HalamanListingPenjual.kelompokkanBerdasarkanStatus()` karena merupakan urusan tampilan. Operasi peran pada SKPL yang tidak pernah dipanggil pada *sequence diagram*, seperti `lihatProfil()` dan `buatListing()`, tidak dipertahankan.
+6. **Penyaringan akun terblokir.** Barang bergantung pada Akun melalui `getSyaratTidakDiblokir()`, sehingga katalog dan hasil pencarian hanya memuat listing milik akun yang tidak diblokir (KF30, KF54).
 
 Tabel 4.1. Daftar Kelas Perancangan Keseluruhan
 
-| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
-| :--- | :--- | :--- | :--- |
-| *[C01]* | *[Nama kelas]* | *[Daftar atribut]* | *[Daftar metode/operasi]* |
-| *[C02]* | *[Nama kelas]* | *[Daftar atribut]* | *[Daftar metode/operasi]* |
-| *[C03]* | *[Nama kelas]* | *[Daftar atribut]* | *[Daftar metode/operasi]* |
-| *...* | *...* | *...* | *...* |
+| ID Kelas | Nama Kelas | Jenis | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- | :--- |
+| C01 | HalamanOtentikasi | View | - nama: String<br>- nim: String<br>- email: String<br>- kataSandi: String<br>- setujuKebijakan: Boolean<br>- kodeVerifikasi: String<br>- sisaWaktu: Integer<br>- token: String | + tampilkanFormulirPendaftaran(): void<br>+ tampilkanKebijakanPrivasi(tautan: String): void<br>+ kirimFormulirPendaftaran(nama: String, nim: String, email: String, kataSandi: String, setujuKebijakan: Boolean): void<br>+ arahkanKeHalamanVerifikasi(): void<br>+ tampilkanFormulirVerifikasi(): void<br>+ kirimKodeVerifikasi(email: String, kode: String): void<br>+ mintaKirimUlang(email: String): void<br>+ resetHitungMundur(): void<br>+ tampilkanPesanSukses(pesan: String): void<br>+ tampilkanFormulirLogin(): void<br>+ kirimFormulirLogin(email: String, kataSandi: String): void<br>+ arahkanKeBeranda(): void<br>+ tampilkanPesanGalat(pesan: String): void<br>+ tampilkanTombolKeluar(): void<br>+ kirimPermintaanLogout(token: String): void<br>+ hapusTokenLokal(): void<br>+ arahkanKeHalamanLogin(): void |
+| C02 | HalamanProfil | View | - dataAkun: Akun<br>- daftarKartuProduk: List&lt;KartuProduk&gt; | + muatProfil(): void<br>+ tampilkanProfil(data: Akun): void<br>+ tampilkanDaftarListing(daftarBarang: List&lt;Barang&gt;): void<br>+ bukaPengaturanAkun(): void<br>+ tampilkanTautanKebijakan(tautan: String): void |
+| C03 | HalamanListingPenjual | View | - daftarTersedia: List&lt;Barang&gt;<br>- daftarTerjual: List&lt;Barang&gt;<br>- tabAktif: String<br>- idBarangTerpilih: String | + muatDaftarListing(): void<br>+ tampilkanDaftarListing(daftarListing: List&lt;Barang&gt;): void<br>+ kelompokkanBerdasarkanStatus(daftarListing: List&lt;Barang&gt;): void<br>+ pilihTab(namaTab: String): void<br>+ onClickUbah(idBarang: String): void<br>+ onClickHapus(idBarang: String): void<br>+ onClickTandaiTerjual(idBarang: String): void<br>+ onClickBatalTerjual(idBarang: String): void<br>+ tampilkanKonfirmasi(barang: Barang, aksi: String): void<br>+ konfirmasiAksi(): void<br>+ batalkanKonfirmasi(): void<br>+ tutupDialog(): void<br>+ tampilkanNotifikasi(kodePesan: String): void |
+| C04 | FormulirBarang | View | - judul: String<br>- harga: Double<br>- deskripsiKondisi: String<br>- idKategori: String<br>- idLokasi: String<br>- daftarFoto: List&lt;FotoBarang&gt;<br>- fotoBaru: List&lt;File&gt; | + bukaFormulir(): void<br>+ tampilkanFormulir(barang: Barang, daftarFoto: List&lt;FotoBarang&gt;, daftarKategori: List&lt;Kategori&gt;, daftarLokasi: List&lt;LokasiCOD&gt;): void<br>+ suntingIsian(data: Map&lt;String, Any&gt;): void<br>+ pilihFoto(fotoBaru: List&lt;File&gt;): void<br>+ validasiTipeData(data: Map&lt;String, Any&gt;): Boolean<br>+ validasiFotoSisiKlien(fotoBaru: List&lt;File&gt;, fotoDipertahankan: List&lt;FotoBarang&gt;): Boolean<br>+ validasiIsianWajib(data: Map&lt;String, Any&gt;, galeri: List&lt;Any&gt;): Boolean<br>+ tandaiIsianKosong(): void<br>+ tolakPratinjau(): void<br>+ kirimFormulir(data: Map&lt;String, Any&gt;, fotoBaru: List&lt;File&gt;): void<br>+ onClickUpdate(): void<br>+ arahkanKeDetail(idBarang: String): void<br>+ tampilkanNotifikasi(kodePesan: String): void |
+| C05 | HalamanKatalog | View | - listProduk: List&lt;Barang&gt;<br>- halamanAktif: Integer<br>- total: Integer<br>- kataKunci: String<br>- filterAktif: Map&lt;String, Any&gt;<br>- kriteriaUrutan: String | + showKatalog(): void<br>+ inputPencarian(kataKunci: String): void<br>+ pilihFilter(filterAktif: Map&lt;String, Any&gt;): void<br>+ pilihUrutan(kriteriaUrutan: String): void<br>+ validasiRentangHarga(hargaMin: Double, hargaMax: Double): Boolean<br>+ tandaiRentangHarga(): void<br>+ tampilkanFilterAktif(filterAktif: Map&lt;String, Any&gt;): void<br>+ hapusSemuaFilter(): void<br>+ resetHalaman(): void<br>+ tampilkanHasil(hasil: Map&lt;String, Any&gt;): void<br>+ pindahHalaman(halaman: Integer): void<br>+ gulirKeAtas(): void<br>+ tampilkanPagination(total: Integer, halaman: Integer): void<br>+ sembunyikanPagination(): void<br>+ tampilkanPesanKosong(kodePesan: String): void |
+| C06 | KartuProduk | View | - idBarang: String<br>- judul: String<br>- harga: Double<br>- fotoUtama: String<br>- status: String<br>- namaKategori: String<br>- namaLokasi: String | + render(barang: Barang): void<br>+ onClickDetail(idBarang: String): void |
+| C07 | HalamanDetailBarang | View | - barang: Barang<br>- daftarFoto: List&lt;FotoBarang&gt;<br>- fotoUtama: String | + showBarang(idBarang: String): void<br>+ tampilkanDetail(detail: Map&lt;String, Any&gt;): void<br>+ pilihFoto(indeksFoto: Integer): void<br>+ tampilkanLightbox(indeksFoto: Integer): void<br>+ bukaProfilPenjual(idPenjual: String): void<br>+ tampilkanAksiPemilik(status: String): void<br>+ tampilkanTombolPembeli(): void<br>+ tampilkanArsipTerjual(): void<br>+ tampilkanTidakDitemukan(): void<br>+ onClickContact(): void<br>+ arahkanKeKatalog(): void<br>+ tampilkanNotifikasi(kodePesan: String): void<br>+ onClickLapor(): void |
+| C08 | HalamanPercakapan | View | - percakapanAktif: Percakapan<br>- daftarPercakapan: List&lt;Map&lt;String, Any&gt;&gt;<br>- isiTeksInput: String | + bukaPercakapan(idPercakapan: String): void<br>+ showPercakapan(ruang: Map&lt;String, Any&gt;): void<br>+ gulirKePesanTerakhir(): void<br>+ tampilkanAksesDitolak(): void<br>+ tampilkanTautanKebijakan(): void<br>+ kirimPesan(isi: String): void<br>+ validasiInputKosong(isi: String): Boolean<br>+ tampilkanUrutanPesan(daftarPesan: List&lt;Map&lt;String, Any&gt;&gt;): void<br>+ bukaDaftarPercakapan(): void<br>+ showDaftarPercakapan(daftar: List&lt;Map&lt;String, Any&gt;&gt;): void |
+| C09 | PanelNotifikasi | View | - daftarNotifikasi: List&lt;Notifikasi&gt;<br>- jumlahBelumDibaca: Integer | + tampilkanDaftarNotifikasi(daftar: List&lt;Notifikasi&gt;): void<br>+ tampilkanPenandaBelumDibaca(jumlah: Integer): void |
+| C10 | FormulirLaporan | View | - jenisPelanggaran: String<br>- teksAlasan: String<br>- objekDilaporkan: String<br>- berkasBukti: List&lt;File&gt; | + tampilkanFormulirLaporan(objekDilaporkan: String): void<br>+ unggahBukti(berkas: List&lt;File&gt;): void<br>+ validasiIsianWajib(): Boolean<br>+ tandaiIsianKosong(): void<br>+ kirimLaporan(): void<br>+ tampilkanNotifikasi(pesan: String): void |
+| C11 | DasborAdmin | View | - daftarLaporan: List&lt;Laporan&gt;<br>- filterStatus: String<br>- detailLaporan: Laporan<br>- statusBaru: String<br>- alasanTindakan: String | + bukaDaftarLaporan(): void<br>+ tampilkanDaftarLaporan(daftar: List&lt;Laporan&gt;): void<br>+ filterLaporan(status: String): void<br>+ tampilkanAksesDitolak(): void<br>+ bukaDetailLaporan(idLaporan: String): void<br>+ tampilkanDetailLaporan(laporan: Laporan): void<br>+ onClickUbahStatus(idLaporan: String, statusBaru: String): void<br>+ onClickHapusListing(idBarang: String): void<br>+ onClickBlokirAkun(idAkun: String): void<br>+ onClickBukaBlokir(idAkun: String): void<br>+ tampilkanModalKonfirmasi(aksi: String): void<br>+ konfirmasiTindakan(alasan: String): void<br>+ tampilkanStatusTerbaru(pesan: String): void |
+| C12 | HalamanDokumenLegal | View | - judul: String<br>- isiDokumen: String | + bukaDokumen(jenis: String): void<br>+ tampilkanDokumen(judul: String, isi: String): void<br>+ sorotKlausaPrivasi(klausa: String): void |
+| C13 | AkunController | Controller | — | + daftarAkun(nama: String, nim: String, email: String, kataSandi: String, setujuKebijakan: Boolean): Boolean<br>+ validasiKelengkapanFormulir(nama: String, nim: String, email: String, kataSandi: String, setujuKebijakan: Boolean): Boolean<br>+ validasiDomainEmail(email: String): Boolean<br>+ cekKeunikanEmail(email: String): Boolean<br>+ hashKataSandi(kataSandi: String): String<br>+ buatKodeVerifikasi(idAkun: String): String<br>+ getTautanDokumenLegal(): String<br>+ verifikasiAkun(email: String, kode: String): Boolean<br>+ validasiKodeVerifikasi(kode: String): Boolean<br>+ cekKedaluwarsaKode(idToken: String): Boolean<br>+ hanguskanKodeLama(idAkun: String): void<br>+ kirimUlangKode(email: String): Boolean<br>+ login(email: String, kataSandi: String): Map&lt;String, Any&gt;<br>+ cariAkunByEmail(email: String): Akun<br>+ verifikasiKataSandi(kataSandi: String, kataSandiHash: String): Boolean<br>+ cekStatusAkun(idAkun: String): String<br>+ buatSesiLogin(idAkun: String): SesiLogin<br>+ logout(token: String): Boolean<br>+ cabutSesi(token: String): void<br>+ getProfil(token: String): Map&lt;String, Any&gt;<br>+ getIdAkunDariSesi(token: String): String<br>+ getDaftarBarangAkun(idAkun: String): List&lt;Barang&gt; |
+| C14 | BarangController | Controller | — | + getDataFormulir(): Map&lt;String, Any&gt;<br>+ buatBarang(token: String, data: Map&lt;String, Any&gt;, fotoBaru: List&lt;File&gt;): Boolean<br>+ getIdPenjualDariSesi(token: String): String<br>+ validasiKelengkapanIsian(data: Map&lt;String, Any&gt;, galeri: List&lt;Any&gt;): Boolean<br>+ validasiFoto(fotoBaru: List&lt;File&gt;, fotoDipertahankan: List&lt;FotoBarang&gt;): Boolean<br>+ simpanFoto(idBarang: String, fotoBaru: List&lt;File&gt;): List&lt;String&gt;<br>+ terbitkanKeKatalog(idBarang: String): void<br>+ getListingSaya(token: String): List&lt;Barang&gt;<br>+ getBarang(idBarang: String, token: String, tujuan: String): Map&lt;String, Any&gt;<br>+ updateBarang(token: String, idBarang: String, data: Map&lt;String, Any&gt;, fotoBaru: List&lt;File&gt;, fotoDihapus: List&lt;String&gt;): Boolean<br>+ verifikasiKepemilikan(idAkun: String, idPenjual: String): Boolean<br>+ siapkanPenghapusan(token: String, idBarang: String): Barang<br>+ deleteBarang(token: String, idBarang: String): Boolean<br>+ siapkanPerubahanStatus(token: String, idBarang: String, statusAsal: String): Barang<br>+ ubahStatusBarang(token: String, idBarang: String, statusAsal: String, statusTujuan: String): Boolean |
+| C15 | KatalogController | Controller | — | + getProduk(kataKunci: String, filterAktif: Map&lt;String, Any&gt;, kriteriaUrutan: String, halaman: Integer): Map&lt;String, Any&gt;<br>+ paginasi(halaman: Integer, batas: Integer): Integer<br>+ urutkanHasil(kriteriaUrutan: String): String |
+| C16 | PencarianController | Controller | — | + normalisasiKataKunci(kataKunci: String): String<br>+ cocokkanKataKunci(kataKunci: String): Map&lt;String, Any&gt; |
+| C17 | FilterController | Controller | — | + validasiParameterFilter(filterAktif: Map&lt;String, Any&gt;): Boolean<br>+ filterCategory(idKategori: String): Map&lt;String, Any&gt;<br>+ filterPrice(hargaMin: Double, hargaMax: Double): Map&lt;String, Any&gt;<br>+ filterLocation(idLokasi: String): Map&lt;String, Any&gt; |
+| C18 | PercakapanController | Controller | — | + mulaiPercakapan(token: String, idBarang: String): Map&lt;String, Any&gt;<br>+ bukaPercakapan(token: String, idPercakapan: String): Map&lt;String, Any&gt;<br>+ verifikasiPeserta(idAkun: String, percakapan: Percakapan): Boolean<br>+ dekripsiPesan(daftarPesan: List&lt;Pesan&gt;): List&lt;String&gt;<br>+ kirimPesan(token: String, idPercakapan: String, isi: String): Map&lt;String, Any&gt;<br>+ enkripsiPesan(isi: String): String<br>+ getDaftarPercakapan(token: String): List&lt;Map&lt;String, Any&gt;&gt;<br>+ ambilCuplikanPesanTerakhir(idPercakapan: String): String<br>+ hitungPesanBelumDibaca(idPercakapan: String, idAkun: String): Integer |
+| C19 | NotifikasiController | Controller | — | + kirimEmailVerifikasi(email: String, kode: String): Boolean<br>+ kirimNotifikasi(idPenerima: String, jenis: String, isi: String): Boolean<br>+ kirimPushNotifikasi(idPenerima: String, isi: String): Boolean<br>+ kirimPeringatanPenghapusan(idPemilik: String, email: String, judulBarang: String, alasan: String): Boolean<br>+ kirimPesanPenangguhan(idAkun: String, email: String, alasan: String): Boolean |
+| C20 | LaporanController | Controller | — | + buatLaporan(token: String, data: Map&lt;String, Any&gt;, berkasBukti: List&lt;File&gt;): Boolean<br>+ getIdPelaporDariSesi(token: String): String<br>+ validasiDataLaporan(data: Map&lt;String, Any&gt;): Boolean<br>+ susunMetadataPercakapan(idPercakapan: String, idPelapor: String): Map&lt;String, Any&gt;<br>+ validasiBukti(berkasBukti: List&lt;File&gt;): Boolean<br>+ simpanBukti(idLaporan: String, berkasBukti: List&lt;File&gt;): List&lt;String&gt;<br>+ simpanLaporan(data: Map&lt;String, Any&gt;): String<br>+ catatLogAudit(idLaporan: String, idPelapor: String): void |
+| C21 | ModerasiController | Controller | — | + otorisasiAdmin(token: String): String<br>+ getAllLaporan(token: String): List&lt;Laporan&gt;<br>+ filterByStatus(token: String, status: String): List&lt;Laporan&gt;<br>+ getDetailLaporan(token: String, idLaporan: String): Laporan<br>+ ubahStatusLaporan(token: String, idLaporan: String, statusBaru: String): Boolean<br>+ hapusListingDilaporkan(token: String, idLaporan: String, idBarang: String, alasan: String): Boolean<br>+ blokirAkun(token: String, idLaporan: String, idAkun: String, alasan: String): Boolean<br>+ nonaktifkanListingPengguna(idAkun: String): Boolean<br>+ bukaBlokirAkun(token: String, idAkun: String): Boolean<br>+ pulihkanListingPengguna(idAkun: String): Boolean<br>+ catatLogAdmin(idAdmin: String, jenisTindakan: String, objekDitindak: String, alasan: String): void<br>+ catatLogAudit(idLaporan: String, idAdmin: String, tindakan: String): void |
+| C22 | DokumenLegalController | Controller | — | + getDokumen(jenis: String): DokumenLegal<br>+ getKlausaPrivasi(): String |
+| C23 | Akun | Model | - idAkun: String<br>- nama: String<br>- nim: String<br>- email: String<br>- kataSandiHash: String<br>- statusAkun: String<br>- statusBlokir: Boolean<br>- peran: String<br>- setujuKebijakan: Boolean<br>- waktuDaftar: DateTime | + simpan(nama: String, nim: String, email: String, kataSandiHash: String, statusAkun: String, setujuKebijakan: Boolean): String<br>+ cariByEmail(email: String): Akun<br>+ cariById(idAkun: String): Akun<br>+ perbaruiStatusAkun(status: String): Boolean<br>+ getStatusAkun(): String<br>+ getDataIdentitas(): Map&lt;String, String&gt;<br>+ getSyaratTidakDiblokir(): Map&lt;String, Any&gt;<br>+ getStatusBlokir(idAkun: String): Boolean<br>+ blokir(): Boolean<br>+ bukaBlokir(): Boolean |
+| C24 | Pembeli | Model | — (diwarisi dari C23 Akun) | — (memakai metode yang diwarisi dari C23 Akun) |
+| C25 | Penjual | Model | — (diwarisi dari C23 Akun) | + getIdentitas(idPenjual: String): Map&lt;String, Any&gt; |
+| C26 | Admin | Model | — (diwarisi dari C23 Akun) | + verifikasiPeran(idAkun: String): Boolean |
+| C27 | TokenVerifikasi | Model | - idToken: String<br>- idAkun: String<br>- kode: String<br>- waktuBuat: DateTime<br>- waktuKedaluwarsa: DateTime<br>- statusPakai: String | + simpan(idAkun: String, kode: String, waktuBuat: DateTime, waktuKedaluwarsa: DateTime, statusPakai: String): Boolean<br>+ cariTokenAktif(idAkun: String): TokenVerifikasi<br>+ cocokkanKode(kodeInput: String): Boolean<br>+ sudahKedaluwarsa(): Boolean<br>+ tandaiTerpakai(): void<br>+ tandaiHangus(): void |
+| C28 | SesiLogin | Model | - idSesi: String<br>- idAkun: String<br>- token: String<br>- waktuMulai: DateTime<br>- waktuKedaluwarsa: DateTime<br>- statusAktif: Boolean | + buatToken(idAkun: String): String<br>+ simpan(idAkun: String, token: String, waktuMulai: DateTime, waktuKedaluwarsa: DateTime): Boolean<br>+ cariSesiAktif(token: String): SesiLogin<br>+ getIdAkun(): String<br>+ nonaktifkan(token: String): void<br>+ nonaktifkanByAkun(idAkun: String): void |
+| C29 | Barang | Model | - idBarang: String<br>- idPenjual: String<br>- judul: String<br>- harga: Double<br>- deskripsiKondisi: String<br>- idKategori: String<br>- idLokasi: String<br>- status: String<br>- waktuUnggah: DateTime<br>- waktuUbah: DateTime | + simpan(data: Map&lt;String, Any&gt;, waktu: DateTime): String<br>+ cariById(idBarang: String): Barang<br>+ getListingPenjual(idPenjual: String): List&lt;Barang&gt;<br>+ getStatus(): String<br>+ setStatus(idBarang: String, idPenjual: String, statusAsal: String, statusTujuan: String, waktuUbah: DateTime): Boolean<br>+ getKatalog(kriteria: Map&lt;String, Any&gt;, urutan: String, halaman: Integer, batas: Integer): Map&lt;String, Any&gt;<br>+ hapus(idBarang: String): Boolean<br>+ nonaktifkanByPemilik(idPenjual: String): Boolean<br>+ pulihkanKatalog(idPenjual: String): Boolean |
+| C30 | FotoBarang | Model | - idFoto: String<br>- idBarang: String<br>- namaBerkas: String<br>- format: String<br>- ukuran: Long<br>- urutan: Integer<br>- pathBerkas: String | + validasiFormat(format: String): Boolean<br>+ validasiUkuran(ukuran: Long): Boolean<br>+ simpan(idBarang: String, namaBerkas: String, format: String, ukuran: Long, urutan: Integer, pathBerkas: String): Boolean<br>+ getGaleri(idBarang: String): List&lt;FotoBarang&gt;<br>+ perbaruiGaleri(idBarang: String, fotoDipertahankan: List&lt;FotoBarang&gt;, pathBaru: List&lt;String&gt;): Boolean<br>+ getFotoUtama(idBarang: String): String<br>+ hapus(idBarang: String): Boolean |
+| C31 | Kategori | Model | - idKategori: String<br>- namaKategori: String | + getDaftarKategori(): List&lt;Kategori&gt;<br>+ validasiKategori(idKategori: String): Boolean<br>+ getKategori(idKategori: String): Kategori |
+| C32 | LokasiCOD | Model | - idLokasi: String<br>- namaLokasi: String<br>- kampus: String | + getDaftarLokasi(): List&lt;LokasiCOD&gt;<br>+ validasiLokasi(idLokasi: String): Boolean<br>+ getLokasi(idLokasi: String): LokasiCOD |
+| C33 | Percakapan | Model | - idPercakapan: String<br>- idPembeli: String<br>- idPenjual: String<br>- idBarang: String<br>- waktuDibuat: DateTime<br>- waktuPembaruanTerakhir: DateTime | + cariById(idPercakapan: String): Percakapan<br>+ cariByKombinasi(idBarang: String, idPembeli: String, idPenjual: String): Percakapan<br>+ simpan(idBarang: String, idPembeli: String, idPenjual: String): Percakapan<br>+ cekPeserta(idAkun: String): Boolean<br>+ addPesan(idPengirim: String, isiPesanTerenkripsi: String): Pesan<br>+ perbaruiWaktuTerakhir(waktu: DateTime): void<br>+ getDaftarPercakapanByPengguna(idAkun: String): List&lt;Percakapan&gt;<br>+ getLawanBicara(idAkun: String): Map&lt;String, String&gt; |
+| C34 | Pesan | Model | - idPesan: String<br>- idPercakapan: String<br>- idPengirim: String<br>- isiPesanTerenkripsi: String<br>- waktuKirim: DateTime<br>- statusBaca: Boolean | + getDaftarPesan(idPercakapan: String): List&lt;Pesan&gt;<br>+ simpanPesan(idPercakapan: String, idPengirim: String, isiPesanTerenkripsi: String): Pesan<br>+ getCuplikanPesanTerakhir(idPercakapan: String): Pesan<br>+ hitungPesanBelumDibaca(idPercakapan: String, idAkun: String): Integer |
+| C35 | Notifikasi | Model | - idNotifikasi: String<br>- idAkun: String<br>- jenis: String<br>- isi: String<br>- waktuKirim: DateTime<br>- statusBaca: Boolean | + simpan(idAkun: String, jenis: String, isi: String, waktuKirim: DateTime, statusBaca: Boolean): Boolean<br>+ hitungBelumDibaca(idAkun: String): Integer |
+| C36 | Laporan | Model | - idLaporan: String<br>- idPelapor: String<br>- objekDilaporkan: String<br>- jenisPelanggaran: String<br>- teksAlasan: String<br>- waktuLapor: DateTime<br>- statusPenanganan: String<br>- waktuPerubahan: DateTime | + simpanLaporanBaru(data: Map&lt;String, Any&gt;): String<br>+ getAllLaporan(): List&lt;Laporan&gt;<br>+ filterByStatus(status: String): List&lt;Laporan&gt;<br>+ getDetailLaporan(idLaporan: String): Laporan<br>+ updateStatusPenanganan(idLaporan: String, statusBaru: String, waktuPerubahan: DateTime): Boolean |
+| C37 | BuktiLaporan | Model | - idBukti: String<br>- idLaporan: String<br>- namaBerkas: String<br>- pathBerkas: String | + validasiLampiranWajib(berkas: List&lt;File&gt;): Boolean<br>+ simpan(idLaporan: String, namaBerkas: String, pathBerkas: String): Boolean |
+| C38 | LogAudit | Model | - idLog: String<br>- idLaporan: String<br>- waktu: DateTime<br>- identitasAktor: String<br>- tindakan: String | + catatPenerimaanLaporan(idLaporan: String, idPelapor: String): void<br>+ catatPerubahanStatusLaporan(idLaporan: String, idAdmin: String, statusBaru: String): void<br>+ catatPenghapusanListing(idLaporan: String, idAdmin: String, idBarang: String): void<br>+ catatPemblokiranAkun(idLaporan: String, idAdmin: String, idAkun: String): void |
+| C39 | LogAdmin | Model | - idLogAdmin: String<br>- idAdmin: String<br>- jenisTindakan: String<br>- objekDitindak: String<br>- waktu: DateTime<br>- alasan: String | + catatTindakan(idAdmin: String, jenisTindakan: String, objekDitindak: String, alasan: String): void |
+| C40 | DokumenLegal | Model | - idDokumen: String<br>- jenisDokumen: String<br>- judul: String<br>- isi: String<br>- klausaPrivasiPesan: String<br>- versi: String<br>- tanggalBerlaku: Date<br>- statusPublikasi: Boolean<br>- tautan: String | + getVersiTerbaru(jenis: String): DokumenLegal<br>+ getTautan(): String<br>+ getIsi(): String |
+| C41 | Otorisasi | Pendukung | — | + verifikasiToken(token: String): SesiLogin<br>+ verifikasiAdmin(token: String): SesiLogin |
+| C42 | Kriptografi | Pendukung | - saltRounds: Integer<br>- kunciEnkripsi: String | + hash(teks: String): String<br>+ cocokkanHash(teks: String, hash: String): Boolean<br>+ enkripsi(teks: String): String<br>+ dekripsi(isiPesanTerenkripsi: String): String |
+| C43 | SurelAdapter | Integrasi Eksternal | - hostSmtp: String<br>- portSmtp: Integer<br>- alamatPengirim: String | + kirimSurel(tujuan: String, subjek: String, isi: String): Boolean |
+| C44 | PushNotifikasiAdapter | Integrasi Eksternal | - kunciPublikVapid: String<br>- kunciPrivatVapid: String | + kirimPush(idPenerima: String, judul: String, isi: String): Boolean |
+| C45 | PenyimpananBerkas | Penyimpanan Data | - namaBucket: String | + simpan(idObjek: String, berkas: List&lt;File&gt;): List&lt;String&gt;<br>+ hapus(pathBerkas: List&lt;String&gt;): Boolean |
 
 <br>
 
@@ -1668,12 +1878,109 @@ Tabel 4.1. Daftar Kelas Perancangan Keseluruhan
 
 # BAB 5: Matriks Kerunutan
 
-Petakan kelas perancangan dengan use case yang terkait. Gunakan **BAB 6 Traceability pada dokumen SKPL** sebagai acuan keterkaitan kelas analisis dan use case, lalu sesuaikan dengan realisasi use case dan kelas perancangan pada BAB 3–BAB 5 DPPL.
+Matriks kerunutan memetakan setiap kelas perancangan terhadap use case yang direalisasikannya. Pemetaan disusun dengan BAB 6 *Traceability* pada dokumen SKPL sebagai acuan, lalu disesuaikan dengan realisasi use case pada BAB 3. Sebuah kelas dipetakan ke suatu use case jika kelas tersebut tercantum pada tabel identifikasi kelas dan digambarkan pada diagram kelas use case itu di BAB 3. Karena tabel dan diagram tersebut disusun dari model yang sama, keduanya selalu identik.
 
-Tabel 7.1. Matriks Kerunutan Kelas terhadap Use Case
+## 5.1 Matriks Kerunutan Kelas terhadap Use Case
+
+Tabel 5.1. Matriks Kerunutan Kelas terhadap Use Case
 
 | Kelas | Use Case Terkait |
 | :--- | :--- |
-| *[ID kelas - Nama kelas]* | *[ID UC - Nama use case]* |
-| *[ID kelas - Nama kelas]* | *[ID UC - Nama use case]* |
-| *...* | *...* |
+| C01 - HalamanOtentikasi | UC01 - Mendaftar Akun<br>UC02 - Memverifikasi Surel<br>UC03 - Masuk ke Sistem (Login)<br>UC04 - Keluar dari Sistem (Logout) |
+| C02 - HalamanProfil | UC05 - Melihat Profil Akun |
+| C03 - HalamanListingPenjual | UC08 - Melihat Daftar Listing Milik Sendiri<br>UC09 - Mengubah Listing<br>UC10 - Menghapus Listing<br>UC11 - Menandai Listing Terjual<br>UC12 - Membatalkan Penandaan Terjual |
+| C04 - FormulirBarang | UC07 - Membuat Listing<br>UC09 - Mengubah Listing |
+| C05 - HalamanKatalog | UC13 - Melihat Katalog Listing<br>UC14 - Mencari dan Menyaring Listing |
+| C06 - KartuProduk | UC05 - Melihat Profil Akun<br>UC08 - Melihat Daftar Listing Milik Sendiri<br>UC11 - Menandai Listing Terjual<br>UC12 - Membatalkan Penandaan Terjual<br>UC13 - Melihat Katalog Listing<br>UC14 - Mencari dan Menyaring Listing |
+| C07 - HalamanDetailBarang | UC15 - Melihat Detail Listing<br>UC16 - Menghubungi Penjual<br>UC19 - Mengirimkan Laporan |
+| C08 - HalamanPercakapan | UC16 - Menghubungi Penjual<br>UC17 - Mengirim Pesan dalam Percakapan<br>UC18 - Melihat Daftar Percakapan |
+| C09 - PanelNotifikasi | UC17 - Mengirim Pesan dalam Percakapan |
+| C10 - FormulirLaporan | UC19 - Mengirimkan Laporan |
+| C11 - DasborAdmin | UC20 - Melihat dan Menyaring Daftar Laporan<br>UC21 - Mengubah Status Penanganan Laporan<br>UC22 - Menghapus Listing yang Dilaporkan<br>UC23 - Memblokir Akun Pengguna<br>UC24 - Membuka Blokir Akun Pengguna |
+| C12 - HalamanDokumenLegal | UC06 - Melihat Kebijakan Privasi dan Ketentuan Penggunaan |
+| C13 - AkunController | UC01 - Mendaftar Akun<br>UC02 - Memverifikasi Surel<br>UC03 - Masuk ke Sistem (Login)<br>UC04 - Keluar dari Sistem (Logout)<br>UC05 - Melihat Profil Akun |
+| C14 - BarangController | UC07 - Membuat Listing<br>UC08 - Melihat Daftar Listing Milik Sendiri<br>UC09 - Mengubah Listing<br>UC10 - Menghapus Listing<br>UC11 - Menandai Listing Terjual<br>UC12 - Membatalkan Penandaan Terjual<br>UC15 - Melihat Detail Listing |
+| C15 - KatalogController | UC13 - Melihat Katalog Listing<br>UC14 - Mencari dan Menyaring Listing |
+| C16 - PencarianController | UC14 - Mencari dan Menyaring Listing |
+| C17 - FilterController | UC14 - Mencari dan Menyaring Listing |
+| C18 - PercakapanController | UC16 - Menghubungi Penjual<br>UC17 - Mengirim Pesan dalam Percakapan<br>UC18 - Melihat Daftar Percakapan |
+| C19 - NotifikasiController | UC01 - Mendaftar Akun<br>UC02 - Memverifikasi Surel<br>UC17 - Mengirim Pesan dalam Percakapan<br>UC22 - Menghapus Listing yang Dilaporkan<br>UC23 - Memblokir Akun Pengguna |
+| C20 - LaporanController | UC19 - Mengirimkan Laporan |
+| C21 - ModerasiController | UC20 - Melihat dan Menyaring Daftar Laporan<br>UC21 - Mengubah Status Penanganan Laporan<br>UC22 - Menghapus Listing yang Dilaporkan<br>UC23 - Memblokir Akun Pengguna<br>UC24 - Membuka Blokir Akun Pengguna |
+| C22 - DokumenLegalController | UC06 - Melihat Kebijakan Privasi dan Ketentuan Penggunaan |
+| C23 - Akun | UC01 - Mendaftar Akun<br>UC02 - Memverifikasi Surel<br>UC03 - Masuk ke Sistem (Login)<br>UC04 - Keluar dari Sistem (Logout)<br>UC05 - Melihat Profil Akun<br>UC13 - Melihat Katalog Listing<br>UC14 - Mencari dan Menyaring Listing<br>UC16 - Menghubungi Penjual<br>UC17 - Mengirim Pesan dalam Percakapan<br>UC19 - Mengirimkan Laporan<br>UC22 - Menghapus Listing yang Dilaporkan<br>UC23 - Memblokir Akun Pengguna<br>UC24 - Membuka Blokir Akun Pengguna |
+| C24 - Pembeli | UC05 - Melihat Profil Akun<br>UC16 - Menghubungi Penjual |
+| C25 - Penjual | UC05 - Melihat Profil Akun<br>UC07 - Membuat Listing<br>UC08 - Melihat Daftar Listing Milik Sendiri<br>UC09 - Mengubah Listing<br>UC10 - Menghapus Listing<br>UC11 - Menandai Listing Terjual<br>UC12 - Membatalkan Penandaan Terjual<br>UC13 - Melihat Katalog Listing<br>UC14 - Mencari dan Menyaring Listing<br>UC15 - Melihat Detail Listing<br>UC16 - Menghubungi Penjual<br>UC23 - Memblokir Akun Pengguna<br>UC24 - Membuka Blokir Akun Pengguna |
+| C26 - Admin | UC20 - Melihat dan Menyaring Daftar Laporan<br>UC21 - Mengubah Status Penanganan Laporan<br>UC22 - Menghapus Listing yang Dilaporkan<br>UC23 - Memblokir Akun Pengguna<br>UC24 - Membuka Blokir Akun Pengguna |
+| C27 - TokenVerifikasi | UC01 - Mendaftar Akun<br>UC02 - Memverifikasi Surel |
+| C28 - SesiLogin | UC03 - Masuk ke Sistem (Login)<br>UC04 - Keluar dari Sistem (Logout)<br>UC05 - Melihat Profil Akun<br>UC07 - Membuat Listing<br>UC08 - Melihat Daftar Listing Milik Sendiri<br>UC09 - Mengubah Listing<br>UC10 - Menghapus Listing<br>UC11 - Menandai Listing Terjual<br>UC12 - Membatalkan Penandaan Terjual<br>UC15 - Melihat Detail Listing<br>UC16 - Menghubungi Penjual<br>UC17 - Mengirim Pesan dalam Percakapan<br>UC18 - Melihat Daftar Percakapan<br>UC19 - Mengirimkan Laporan<br>UC20 - Melihat dan Menyaring Daftar Laporan<br>UC21 - Mengubah Status Penanganan Laporan<br>UC22 - Menghapus Listing yang Dilaporkan<br>UC23 - Memblokir Akun Pengguna<br>UC24 - Membuka Blokir Akun Pengguna |
+| C29 - Barang | UC05 - Melihat Profil Akun<br>UC07 - Membuat Listing<br>UC08 - Melihat Daftar Listing Milik Sendiri<br>UC09 - Mengubah Listing<br>UC10 - Menghapus Listing<br>UC11 - Menandai Listing Terjual<br>UC12 - Membatalkan Penandaan Terjual<br>UC13 - Melihat Katalog Listing<br>UC14 - Mencari dan Menyaring Listing<br>UC15 - Melihat Detail Listing<br>UC16 - Menghubungi Penjual<br>UC19 - Mengirimkan Laporan<br>UC22 - Menghapus Listing yang Dilaporkan<br>UC23 - Memblokir Akun Pengguna<br>UC24 - Membuka Blokir Akun Pengguna |
+| C30 - FotoBarang | UC07 - Membuat Listing<br>UC09 - Mengubah Listing<br>UC10 - Menghapus Listing<br>UC13 - Melihat Katalog Listing<br>UC14 - Mencari dan Menyaring Listing<br>UC15 - Melihat Detail Listing<br>UC22 - Menghapus Listing yang Dilaporkan |
+| C31 - Kategori | UC07 - Membuat Listing<br>UC09 - Mengubah Listing<br>UC14 - Mencari dan Menyaring Listing<br>UC15 - Melihat Detail Listing |
+| C32 - LokasiCOD | UC07 - Membuat Listing<br>UC09 - Mengubah Listing<br>UC14 - Mencari dan Menyaring Listing<br>UC15 - Melihat Detail Listing |
+| C33 - Percakapan | UC16 - Menghubungi Penjual<br>UC17 - Mengirim Pesan dalam Percakapan<br>UC18 - Melihat Daftar Percakapan<br>UC19 - Mengirimkan Laporan |
+| C34 - Pesan | UC16 - Menghubungi Penjual<br>UC17 - Mengirim Pesan dalam Percakapan<br>UC18 - Melihat Daftar Percakapan |
+| C35 - Notifikasi | UC01 - Mendaftar Akun<br>UC02 - Memverifikasi Surel<br>UC17 - Mengirim Pesan dalam Percakapan<br>UC22 - Menghapus Listing yang Dilaporkan<br>UC23 - Memblokir Akun Pengguna |
+| C36 - Laporan | UC19 - Mengirimkan Laporan<br>UC20 - Melihat dan Menyaring Daftar Laporan<br>UC21 - Mengubah Status Penanganan Laporan |
+| C37 - BuktiLaporan | UC19 - Mengirimkan Laporan |
+| C38 - LogAudit | UC19 - Mengirimkan Laporan<br>UC21 - Mengubah Status Penanganan Laporan<br>UC22 - Menghapus Listing yang Dilaporkan<br>UC23 - Memblokir Akun Pengguna |
+| C39 - LogAdmin | UC22 - Menghapus Listing yang Dilaporkan<br>UC23 - Memblokir Akun Pengguna<br>UC24 - Membuka Blokir Akun Pengguna |
+| C40 - DokumenLegal | UC01 - Mendaftar Akun<br>UC05 - Melihat Profil Akun<br>UC06 - Melihat Kebijakan Privasi dan Ketentuan Penggunaan |
+| C41 - Otorisasi | UC04 - Keluar dari Sistem (Logout)<br>UC05 - Melihat Profil Akun<br>UC07 - Membuat Listing<br>UC08 - Melihat Daftar Listing Milik Sendiri<br>UC09 - Mengubah Listing<br>UC10 - Menghapus Listing<br>UC11 - Menandai Listing Terjual<br>UC12 - Membatalkan Penandaan Terjual<br>UC15 - Melihat Detail Listing<br>UC16 - Menghubungi Penjual<br>UC17 - Mengirim Pesan dalam Percakapan<br>UC18 - Melihat Daftar Percakapan<br>UC19 - Mengirimkan Laporan<br>UC20 - Melihat dan Menyaring Daftar Laporan<br>UC21 - Mengubah Status Penanganan Laporan<br>UC22 - Menghapus Listing yang Dilaporkan<br>UC23 - Memblokir Akun Pengguna<br>UC24 - Membuka Blokir Akun Pengguna |
+| C42 - Kriptografi | UC01 - Mendaftar Akun<br>UC03 - Masuk ke Sistem (Login)<br>UC16 - Menghubungi Penjual<br>UC17 - Mengirim Pesan dalam Percakapan<br>UC18 - Melihat Daftar Percakapan |
+| C43 - SurelAdapter | UC01 - Mendaftar Akun<br>UC02 - Memverifikasi Surel<br>UC22 - Menghapus Listing yang Dilaporkan<br>UC23 - Memblokir Akun Pengguna |
+| C44 - PushNotifikasiAdapter | UC17 - Mengirim Pesan dalam Percakapan |
+| C45 - PenyimpananBerkas | UC07 - Membuat Listing<br>UC09 - Mengubah Listing<br>UC10 - Menghapus Listing<br>UC19 - Mengirimkan Laporan<br>UC22 - Menghapus Listing yang Dilaporkan |
+
+## 5.2 Pemeriksaan Balik per Use Case
+
+Tabel 5.2 memeriksa arah sebaliknya, yaitu kelas perancangan yang merealisasikan setiap use case. Setiap use case UC01–UC24 direalisasikan oleh sekurang-kurangnya satu kelas *View*, satu kelas *Controller*, dan satu kelas *Model*, sehingga tidak ada use case yang belum dirancang.
+
+Tabel 5.2. Kelas Perancangan per Use Case
+
+| ID Use Case | Nama Use Case | Kelas Perancangan yang Merealisasikan | Jumlah |
+| :--- | :--- | :--- | :---: |
+| UC01 | Mendaftar Akun | C01 HalamanOtentikasi, C13 AkunController, C19 NotifikasiController, C23 Akun, C27 TokenVerifikasi, C35 Notifikasi, C40 DokumenLegal, C42 Kriptografi, C43 SurelAdapter | 9 |
+| UC02 | Memverifikasi Surel | C01 HalamanOtentikasi, C13 AkunController, C19 NotifikasiController, C23 Akun, C27 TokenVerifikasi, C35 Notifikasi, C43 SurelAdapter | 7 |
+| UC03 | Masuk ke Sistem (Login) | C01 HalamanOtentikasi, C13 AkunController, C23 Akun, C28 SesiLogin, C42 Kriptografi | 5 |
+| UC04 | Keluar dari Sistem (Logout) | C01 HalamanOtentikasi, C13 AkunController, C23 Akun, C28 SesiLogin, C41 Otorisasi | 5 |
+| UC05 | Melihat Profil Akun | C02 HalamanProfil, C06 KartuProduk, C13 AkunController, C23 Akun, C24 Pembeli, C25 Penjual, C28 SesiLogin, C29 Barang, C40 DokumenLegal, C41 Otorisasi | 10 |
+| UC06 | Melihat Kebijakan Privasi dan Ketentuan Penggunaan | C12 HalamanDokumenLegal, C22 DokumenLegalController, C40 DokumenLegal | 3 |
+| UC07 | Membuat Listing | C04 FormulirBarang, C14 BarangController, C25 Penjual, C28 SesiLogin, C29 Barang, C30 FotoBarang, C31 Kategori, C32 LokasiCOD, C41 Otorisasi, C45 PenyimpananBerkas | 10 |
+| UC08 | Melihat Daftar Listing Milik Sendiri | C03 HalamanListingPenjual, C06 KartuProduk, C14 BarangController, C25 Penjual, C28 SesiLogin, C29 Barang, C41 Otorisasi | 7 |
+| UC09 | Mengubah Listing | C03 HalamanListingPenjual, C04 FormulirBarang, C14 BarangController, C25 Penjual, C28 SesiLogin, C29 Barang, C30 FotoBarang, C31 Kategori, C32 LokasiCOD, C41 Otorisasi, C45 PenyimpananBerkas | 11 |
+| UC10 | Menghapus Listing | C03 HalamanListingPenjual, C14 BarangController, C25 Penjual, C28 SesiLogin, C29 Barang, C30 FotoBarang, C41 Otorisasi, C45 PenyimpananBerkas | 8 |
+| UC11 | Menandai Listing Terjual | C03 HalamanListingPenjual, C06 KartuProduk, C14 BarangController, C25 Penjual, C28 SesiLogin, C29 Barang, C41 Otorisasi | 7 |
+| UC12 | Membatalkan Penandaan Terjual | C03 HalamanListingPenjual, C06 KartuProduk, C14 BarangController, C25 Penjual, C28 SesiLogin, C29 Barang, C41 Otorisasi | 7 |
+| UC13 | Melihat Katalog Listing | C05 HalamanKatalog, C06 KartuProduk, C15 KatalogController, C23 Akun, C25 Penjual, C29 Barang, C30 FotoBarang | 7 |
+| UC14 | Mencari dan Menyaring Listing | C05 HalamanKatalog, C06 KartuProduk, C15 KatalogController, C16 PencarianController, C17 FilterController, C23 Akun, C25 Penjual, C29 Barang, C30 FotoBarang, C31 Kategori, C32 LokasiCOD | 11 |
+| UC15 | Melihat Detail Listing | C07 HalamanDetailBarang, C14 BarangController, C25 Penjual, C28 SesiLogin, C29 Barang, C30 FotoBarang, C31 Kategori, C32 LokasiCOD, C41 Otorisasi | 9 |
+| UC16 | Menghubungi Penjual | C07 HalamanDetailBarang, C08 HalamanPercakapan, C18 PercakapanController, C23 Akun, C24 Pembeli, C25 Penjual, C28 SesiLogin, C29 Barang, C33 Percakapan, C34 Pesan, C41 Otorisasi, C42 Kriptografi | 12 |
+| UC17 | Mengirim Pesan dalam Percakapan | C08 HalamanPercakapan, C09 PanelNotifikasi, C18 PercakapanController, C19 NotifikasiController, C23 Akun, C28 SesiLogin, C33 Percakapan, C34 Pesan, C35 Notifikasi, C41 Otorisasi, C42 Kriptografi, C44 PushNotifikasiAdapter | 12 |
+| UC18 | Melihat Daftar Percakapan | C08 HalamanPercakapan, C18 PercakapanController, C28 SesiLogin, C33 Percakapan, C34 Pesan, C41 Otorisasi, C42 Kriptografi | 7 |
+| UC19 | Mengirimkan Laporan | C07 HalamanDetailBarang, C10 FormulirLaporan, C20 LaporanController, C23 Akun, C28 SesiLogin, C29 Barang, C33 Percakapan, C36 Laporan, C37 BuktiLaporan, C38 LogAudit, C41 Otorisasi, C45 PenyimpananBerkas | 12 |
+| UC20 | Melihat dan Menyaring Daftar Laporan | C11 DasborAdmin, C21 ModerasiController, C26 Admin, C28 SesiLogin, C36 Laporan, C41 Otorisasi | 6 |
+| UC21 | Mengubah Status Penanganan Laporan | C11 DasborAdmin, C21 ModerasiController, C26 Admin, C28 SesiLogin, C36 Laporan, C38 LogAudit, C41 Otorisasi | 7 |
+| UC22 | Menghapus Listing yang Dilaporkan | C11 DasborAdmin, C19 NotifikasiController, C21 ModerasiController, C23 Akun, C26 Admin, C28 SesiLogin, C29 Barang, C30 FotoBarang, C35 Notifikasi, C38 LogAudit, C39 LogAdmin, C41 Otorisasi, C43 SurelAdapter, C45 PenyimpananBerkas | 14 |
+| UC23 | Memblokir Akun Pengguna | C11 DasborAdmin, C19 NotifikasiController, C21 ModerasiController, C23 Akun, C25 Penjual, C26 Admin, C28 SesiLogin, C29 Barang, C35 Notifikasi, C38 LogAudit, C39 LogAdmin, C41 Otorisasi, C43 SurelAdapter | 13 |
+| UC24 | Membuka Blokir Akun Pengguna | C11 DasborAdmin, C21 ModerasiController, C23 Akun, C25 Penjual, C26 Admin, C28 SesiLogin, C29 Barang, C39 LogAdmin, C41 Otorisasi | 9 |
+
+## 5.3 Penyesuaian terhadap Traceability SKPL
+
+Seluruh pemetaan kelas C01–C40 terhadap use case pada Tabel 6.1 dokumen SKPL tetap berlaku pada Tabel 5.1. Tidak ada kelas yang kehilangan use case. Perbedaannya hanya berupa penambahan keterlibatan kelas pada use case tertentu akibat perancangan yang lebih rinci, serta lima kelas baru C41–C45, sebagaimana dirinci pada Tabel 5.3.
+
+Tabel 5.3. Penyesuaian Matriks Kerunutan terhadap Tabel 6.1 SKPL
+
+| Kelas | Tambahan Use Case | Alasan |
+| :--- | :--- | :--- |
+| C03 - HalamanListingPenjual | UC09 | Pengubahan listing dimulai dari tombol "Ubah" pada daftar listing penjual (`onClickUbah()`). |
+| C06 - KartuProduk | UC11, UC12 | Kartu produk dirender ulang setelah status listing berubah menjadi "Terjual" atau kembali "Tersedia". |
+| C23 - Akun | UC13, UC14, UC16, UC22 | Katalog dan pencarian hanya memuat listing milik akun yang tidak diblokir (KF30, KF54), percakapan hanya dapat dibuka bila akun penjual tidak diblokir (KF31), dan surel pemilik listing diperlukan untuk pemberitahuan penghapusan (KF52). |
+| C25 - Penjual | UC13, UC14, UC23, UC24 | Listing pada katalog dimiliki penjual melalui komposisi, dan seluruh listing milik akun penjual dinonaktifkan atau dipulihkan saat akun diblokir atau dibuka blokirnya (KF54). |
+| C28 - SesiLogin | UC15, UC20, UC21, UC22, UC23, UC24 | Identitas pengguna dan admin diambil dari sesi aktif melalui Otorisasi. Pada UC23, seluruh sesi aktif akun yang diblokir juga dinonaktifkan. |
+| C30 - FotoBarang | UC10, UC13, UC14, UC22 | Foto ikut dihapus bersama listing (UC10, UC22), dan foto utama ditampilkan pada kartu produk di katalog dan hasil pencarian (UC13, UC14). |
+| C41 - Otorisasi | UC04, UC05, UC07–UC12, UC15–UC24 | Kelas baru. Memeriksa token sesi pada setiap permintaan yang memerlukan *login*, serta peran admin pada UC20–UC24. |
+| C42 - Kriptografi | UC01, UC03, UC16, UC17, UC18 | Kelas baru. *Hash* dan pencocokan kata sandi (KF09, KF10), serta enkripsi dan dekripsi isi pesan (KF36). |
+| C43 - SurelAdapter | UC01, UC02, UC22, UC23 | Kelas baru. Mengirim kode verifikasi (KF06) dan pemberitahuan tindakan moderasi (KF52) melalui SMTP. |
+| C44 - PushNotifikasiAdapter | UC17 | Kelas baru. Mengirim notifikasi pesan baru melalui Web Push, termasuk saat aplikasi tidak dibuka (KF34). |
+| C45 - PenyimpananBerkas | UC07, UC09, UC10, UC19, UC22 | Kelas baru. Menyimpan dan menghapus berkas foto listing serta bukti laporan pada Supabase Storage (KF23, KF44). |

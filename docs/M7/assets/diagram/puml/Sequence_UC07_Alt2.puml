@@ -4,32 +4,14 @@ skinparam shadowing false
 skinparam defaultFontName Arial
 skinparam sequenceMessageAlign center
 skinparam backgroundColor #FFFFFF
-
-skinparam participant {
-    BackgroundColor #FFFFFF
-    BorderColor #000000
-}
-skinparam actor {
-    BackgroundColor #FFFFFF
-    BorderColor #000000
-}
-skinparam sequence {
-    LifeLineBackgroundColor #FFFFFF
-    LifeLineBorderColor #000000
-    ArrowColor #000000
-    ActorBorderColor #000000
-    ActorBackgroundColor #FFFFFF
-    GroupBorderColor #000000
-    GroupBackgroundColor #FFFFFF
-}
-
+skinparam responseMessageBelowArrow true
+title UC07 — Alternatif 2: Pelanggaran Syarat Unggahan Foto
 actor "Penjual" as User
 boundary ":FormulirBarang" as UI
 
-User -> UI: unggahFoto(fotoInvalid)
-activate UI
-UI -> UI: validasiFotoSisiKlien()
-note right of UI: Format bukan JPG/PNG, ukuran > 5MB,\natau foto > 5 berkas
-UI --> User: tampilkanPesanGalat("Format harus JPG/PNG, ukuran maksimum 5MB, dan paling banyak 5 foto.")
-deactivate UI
+User -> UI: pilihFoto(fotoBaru)
+UI -> UI: validasiFotoSisiKlien(fotoBaru, [])
+note right of UI: Format bukan JPG/PNG, ukuran > 5 MB,\natau jumlah foto > 5 (KF24)
+UI -> UI: tolakPratinjau()
+UI -> UI: tampilkanNotifikasi("Format harus JPG/PNG, maksimum 5 MB, dan paling banyak 5 foto.")
 @enduml

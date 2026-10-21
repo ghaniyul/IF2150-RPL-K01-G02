@@ -4,40 +4,23 @@ skinparam shadowing false
 skinparam defaultFontName Arial
 skinparam sequenceMessageAlign center
 skinparam backgroundColor #FFFFFF
-
-skinparam participant {
-    BackgroundColor #FFFFFF
-    BorderColor #000000
-}
-skinparam actor {
-    BackgroundColor #FFFFFF
-    BorderColor #000000
-}
-skinparam sequence {
-    LifeLineBackgroundColor #FFFFFF
-    LifeLineBorderColor #000000
-    ArrowColor #000000
-    ActorBorderColor #000000
-    ActorBackgroundColor #FFFFFF
-    GroupBorderColor #000000
-    GroupBackgroundColor #FFFFFF
-}
-
+skinparam responseMessageBelowArrow true
+title UC02 — Alternatif 1: Kode Tidak Valid / Kedaluwarsa
 actor "Pengguna" as User
-boundary ":HalamanOtentikasi" as UI
-control ":AkunController" as Ctrl
-entity ":TokenVerifikasi" as Token
-
-User -> UI: kirimKodeVerifikasi(email, kode)
-activate UI
-UI -> Ctrl: verifikasiAkun(email, kode)
-activate Ctrl
-Ctrl -> Token: cocokkanKode(kode)
-activate Token
-Token --> Ctrl: kodeTidakCocok / kadaluwarsa
-deactivate Token
-Ctrl --> UI: galatKodeInvalidAtauKedaluwarsa
-deactivate Ctrl
-UI --> User: tampilkanPesanGalat("Kode tidak valid atau telah kedaluwarsa. Silakan minta kode baru.")
-deactivate UI
+boundary ":HalamanOtentikasi" as UIo
+control ":AkunController" as AC
+entity ":Akun" as Akun
+entity ":TokenVerifikasi" as Tok
+User -> UIo: kirimKodeVerifikasi(email, kode)
+UIo -> AC: verifikasiAkun(email, kode)
+AC -> Akun: cariByEmail(email)
+Akun --> AC: akun
+AC -> Tok: cariTokenAktif(idAkun)
+Tok --> AC: tokenVerifikasi
+AC -> AC: validasiKodeVerifikasi(kode)
+AC -> Tok: cocokkanKode(kode)
+Tok --> AC: false / kode sudah kedaluwarsa
+note right of AC: Status akun tidak diubah
+AC --> UIo: false
+UIo -> UIo: tampilkanPesanGalat("Kode tidak valid atau telah kedaluwarsa. Silakan minta kode baru.")
 @enduml

@@ -4,58 +4,32 @@ skinparam shadowing false
 skinparam defaultFontName Arial
 skinparam sequenceMessageAlign center
 skinparam backgroundColor #FFFFFF
-
-skinparam participant {
-    BackgroundColor #FFFFFF
-    BorderColor #000000
-}
-skinparam actor {
-    BackgroundColor #FFFFFF
-    BorderColor #000000
-}
-skinparam sequence {
-    LifeLineBackgroundColor #FFFFFF
-    LifeLineBorderColor #000000
-    ArrowColor #000000
-    ActorBorderColor #000000
-    ActorBackgroundColor #FFFFFF
-    GroupBorderColor #000000
-    GroupBackgroundColor #FFFFFF
-}
-
+skinparam responseMessageBelowArrow true
+title UC08 — Normal
 actor "Penjual" as User
 boundary ":HalamanListingPenjual" as UI
 boundary ":KartuProduk" as Kartu
-control ":BarangController" as Ctrl
+control ":BarangController" as BC
+control ":Otorisasi" as Oto
 entity ":SesiLogin" as Sesi
 entity ":Barang" as Barang
-
-User -> UI: tampilkanDaftarListing()
-activate UI
-UI -> Ctrl: getListingSaya(token)
-activate Ctrl
-Ctrl -> Sesi: getIdAkun()
-activate Sesi
-Sesi --> Ctrl: idPenjual
-deactivate Sesi
-
-Ctrl -> Barang: getByPemilik(idPenjual)
-activate Barang
-Barang --> Ctrl: daftarBarangSemua
-deactivate Barang
-
-Ctrl -> Ctrl: kelompokkanBerdasarkanStatus(daftarBarangSemua)
-note right of Ctrl: Pisahkan status "Tersedia"\ndan riwayat "Terjual"
-Ctrl --> UI: dataListing(daftarTersedia, daftarTerjual)
-deactivate Ctrl
-
+User -> UI: muatDaftarListing()
+UI -> BC: getListingSaya(token)
+BC -> BC: getIdPenjualDariSesi(token)
+BC -> Oto: verifikasiToken(token)
+Oto -> Sesi: cariSesiAktif(token)
+Sesi --> Oto: sesiLogin
+Oto --> BC: sesiLogin
+BC -> Sesi: getIdAkun()
+Sesi --> BC: idPenjual
+BC -> Barang: getListingPenjual(idPenjual)
+Barang --> BC: daftarListing
+BC --> UI: daftarListing
+UI -> UI: tampilkanDaftarListing(daftarListing)
+UI -> UI: kelompokkanBerdasarkanStatus(daftarListing)
+note right of UI: Tab "Tersedia" dan riwayat "Terjual" (KF20, KF42)
 UI -> UI: pilihTab("Tersedia")
-loop untuk setiap barang dalam daftarTersedia
+loop setiap barang pada tab aktif
   UI -> Kartu: render(barang)
-  activate Kartu
-  Kartu --> UI: elemenKartu
-  deactivate Kartu
 end
-UI --> User: tampilkanDaftarListingStruktur()
-deactivate UI
 @enduml

@@ -4,81 +4,59 @@ skinparam shadowing false
 skinparam defaultFontName Arial
 skinparam sequenceMessageAlign center
 skinparam backgroundColor #FFFFFF
-
-skinparam participant {
-    BackgroundColor #FFFFFF
-    BorderColor #000000
-}
-skinparam actor {
-    BackgroundColor #FFFFFF
-    BorderColor #000000
-}
-skinparam sequence {
-    LifeLineBackgroundColor #FFFFFF
-    LifeLineBorderColor #000000
-    ArrowColor #000000
-    ActorBorderColor #000000
-    ActorBackgroundColor #FFFFFF
-    GroupBorderColor #000000
-    GroupBackgroundColor #FFFFFF
-}
-
+skinparam responseMessageBelowArrow true
+title UC07 — Normal
 actor "Penjual" as User
 boundary ":FormulirBarang" as UI
-control ":BarangController" as Ctrl
+control ":BarangController" as BC
+control ":Otorisasi" as Oto
 entity ":SesiLogin" as Sesi
 entity ":Kategori" as Kat
+entity ":LokasiCOD" as Lok
 entity ":Barang" as Barang
 entity ":FotoBarang" as Foto
-
-User -> UI: tampilkanFormulir()
-activate UI
-UI --> User: formulirListing
-deactivate UI
-
-User -> UI: isiFormulir(judul, harga, kondisi, idKategori, idLokasi)
-activate UI
-UI -> UI: validasiTipeData()
-deactivate UI
-
-User -> UI: unggahFoto(daftarFoto)
-activate UI
-UI -> UI: validasiFotoSisiKlien()
-deactivate UI
-
-User -> UI: kirimFormulir(dataListing, daftarFoto)
-activate UI
-UI -> Ctrl: buatBarang(token, dataListing, daftarFoto)
-activate Ctrl
-Ctrl -> Sesi: getIdAkun()
-activate Sesi
-Sesi --> Ctrl: idPenjual
-deactivate Sesi
-
-Ctrl -> Ctrl: validasiKelengkapanIsian(dataListing)
-Ctrl -> Kat: validasiKategori(idKategori)
-activate Kat
-Kat --> Ctrl: valid (true)
-deactivate Kat
-
-Ctrl -> Ctrl: validasiFoto(daftarFoto)
-Ctrl -> Ctrl: simpanFoto(idBarang, daftarFoto)
-
-Ctrl -> Barang: simpan(idPenjual, judul, harga, kondisi, idKategori, idLokasi, status="Tersedia")
-activate Barang
-Barang --> Ctrl: idBarang
-deactivate Barang
-
-loop untuk setiap foto dalam daftarFoto
-  Ctrl -> Foto: simpan(idBarang, namaBerkas, format, ukuran, urutan, pathBerkas)
-  activate Foto
-  Foto --> Ctrl: statusSimpanFoto
-  deactivate Foto
+participant ":PenyimpananBerkas" as Store
+User -> UI: bukaFormulir()
+UI -> BC: getDataFormulir()
+BC -> Kat: getDaftarKategori()
+Kat --> BC: daftarKategori
+BC -> Lok: getDaftarLokasi()
+Lok --> BC: daftarLokasi
+BC --> UI: {daftarKategori, daftarLokasi}
+UI -> UI: tampilkanFormulir(null, [], daftarKategori, daftarLokasi)
+User -> UI: suntingIsian(data)
+UI -> UI: validasiTipeData(data)
+User -> UI: pilihFoto(fotoBaru)
+UI -> UI: validasiFotoSisiKlien(fotoBaru, [])
+User -> UI: kirimFormulir(data, fotoBaru)
+UI -> UI: validasiIsianWajib(data, fotoBaru)
+UI -> BC: buatBarang(token, data, fotoBaru)
+BC -> BC: getIdPenjualDariSesi(token)
+BC -> Oto: verifikasiToken(token)
+Oto -> Sesi: cariSesiAktif(token)
+Sesi --> Oto: sesiLogin
+Oto --> BC: sesiLogin
+BC -> Sesi: getIdAkun()
+Sesi --> BC: idPenjual
+BC -> BC: validasiKelengkapanIsian(data, fotoBaru)
+BC -> Kat: validasiKategori(idKategori)
+Kat --> BC: true
+BC -> Lok: validasiLokasi(idLokasi)
+Lok --> BC: true
+BC -> BC: validasiFoto(fotoBaru, [])
+loop setiap foto (maksimum 5)
+  BC -> Foto: validasiFormat(format)
+  BC -> Foto: validasiUkuran(ukuran)
 end
-
-Ctrl -> Ctrl: terbitkanKeKatalog(idBarang)
-Ctrl --> UI: statusListingBerhasil
-deactivate Ctrl
-UI --> User: tampilkanNotifikasi("Listing berhasil dibuat")
-deactivate UI
+BC -> Barang: simpan(data, waktuUnggah)
+Barang --> BC: idBarang (status "Tersedia")
+BC -> BC: simpanFoto(idBarang, fotoBaru)
+BC -> Store: simpan(idBarang, fotoBaru)
+Store --> BC: daftarPathBerkas
+loop setiap foto
+  BC -> Foto: simpan(idBarang, namaBerkas, format, ukuran, urutan, pathBerkas)
+end
+BC -> BC: terbitkanKeKatalog(idBarang)
+BC --> UI: true
+UI -> UI: tampilkanNotifikasi("Listing berhasil dibuat")
 @enduml

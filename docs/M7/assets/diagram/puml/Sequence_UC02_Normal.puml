@@ -4,54 +4,28 @@ skinparam shadowing false
 skinparam defaultFontName Arial
 skinparam sequenceMessageAlign center
 skinparam backgroundColor #FFFFFF
-
-skinparam participant {
-    BackgroundColor #FFFFFF
-    BorderColor #000000
-}
-skinparam actor {
-    BackgroundColor #FFFFFF
-    BorderColor #000000
-}
-skinparam sequence {
-    LifeLineBackgroundColor #FFFFFF
-    LifeLineBorderColor #000000
-    ArrowColor #000000
-    ActorBorderColor #000000
-    ActorBackgroundColor #FFFFFF
-    GroupBorderColor #000000
-    GroupBackgroundColor #FFFFFF
-}
-
+skinparam responseMessageBelowArrow true
+title UC02 — Normal
 actor "Pengguna" as User
-boundary ":HalamanOtentikasi" as UI
-control ":AkunController" as Ctrl
-entity ":TokenVerifikasi" as Token
+boundary ":HalamanOtentikasi" as UIo
+control ":AkunController" as AC
 entity ":Akun" as Akun
-
-User -> UI: kirimKodeVerifikasi(email, kode)
-activate UI
-UI -> Ctrl: verifikasiAkun(email, kode)
-activate Ctrl
-Ctrl -> Ctrl: validasiKodeVerifikasi(kode)
-Ctrl -> Token: cocokkanKode(kode)
-activate Token
-Token --> Ctrl: kodeCocok (true)
-deactivate Token
-Ctrl -> Token: sudahKedaluwarsa()
-activate Token
-Token --> Ctrl: false
-deactivate Token
-Ctrl -> Token: tandaiTerpakai()
-activate Token
-Token --> Ctrl: statusTerpakai
-deactivate Token
-Ctrl -> Akun: perbaruiStatusAkun("Terverifikasi")
-activate Akun
-Akun --> Ctrl: statusBerhasil
-deactivate Akun
-Ctrl --> UI: verifikasiBerhasil
-deactivate Ctrl
-UI --> User: arahkanKeBeranda()
-deactivate UI
+entity ":TokenVerifikasi" as Tok
+User -> UIo: kirimKodeVerifikasi(email, kode)
+UIo -> AC: verifikasiAkun(email, kode)
+AC -> Akun: cariByEmail(email)
+Akun --> AC: akun
+AC -> Tok: cariTokenAktif(idAkun)
+Tok --> AC: tokenVerifikasi
+AC -> AC: validasiKodeVerifikasi(kode)
+AC -> Tok: cocokkanKode(kode)
+Tok --> AC: true
+AC -> AC: cekKedaluwarsaKode(idToken)
+AC -> Tok: sudahKedaluwarsa()
+Tok --> AC: false
+AC -> Tok: tandaiTerpakai()
+AC -> Akun: perbaruiStatusAkun("Terverifikasi")
+Akun --> AC: true
+AC --> UIo: true
+UIo -> UIo: arahkanKeBeranda()
 @enduml

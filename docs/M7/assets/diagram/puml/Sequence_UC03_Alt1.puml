@@ -4,42 +4,22 @@ skinparam shadowing false
 skinparam defaultFontName Arial
 skinparam sequenceMessageAlign center
 skinparam backgroundColor #FFFFFF
-
-skinparam participant {
-    BackgroundColor #FFFFFF
-    BorderColor #000000
-}
-skinparam actor {
-    BackgroundColor #FFFFFF
-    BorderColor #000000
-}
-skinparam sequence {
-    LifeLineBackgroundColor #FFFFFF
-    LifeLineBorderColor #000000
-    ArrowColor #000000
-    ActorBorderColor #000000
-    ActorBackgroundColor #FFFFFF
-    GroupBorderColor #000000
-    GroupBackgroundColor #FFFFFF
-}
-
+skinparam responseMessageBelowArrow true
+title UC03 — Alternatif 1: Kredensial Tidak Sesuai
 actor "Pengguna" as User
-boundary ":HalamanOtentikasi" as UI
-control ":AkunController" as Ctrl
+boundary ":HalamanOtentikasi" as UIo
+control ":AkunController" as AC
+control ":Kriptografi" as Kr
 entity ":Akun" as Akun
-
-User -> UI: kirimFormulirLogin(email, kataSandi)
-activate UI
-UI -> Ctrl: login(email, kataSandi)
-activate Ctrl
-Ctrl -> Akun: cariByEmail(email)
-activate Akun
-Akun --> Ctrl: dataAkun
-deactivate Akun
-Ctrl -> Ctrl: verifikasiKataSandi(kataSandi, kataSandiHash)
-note right of Ctrl: Kredensial tidak cocok
-Ctrl --> UI: galatKredensialSalah
-deactivate Ctrl
-UI --> User: tampilkanPesanGalat("Email atau kata sandi yang Anda masukkan salah.")
-deactivate UI
+User -> UIo: kirimFormulirLogin(email, kataSandi)
+UIo -> AC: login(email, kataSandi)
+AC -> AC: cariAkunByEmail(email)
+AC -> Akun: cariByEmail(email)
+Akun --> AC: akun (idAkun, kataSandiHash, statusAkun, statusBlokir, peran)
+AC -> AC: verifikasiKataSandi(kataSandi, kataSandiHash)
+AC -> Kr: cocokkanHash(kataSandi, kataSandiHash)
+Kr --> AC: false
+note right of AC: Sesi tidak dibuat
+AC --> UIo: galat kredensial
+UIo -> UIo: tampilkanPesanGalat("Email atau kata sandi yang Anda masukkan salah.")
 @enduml

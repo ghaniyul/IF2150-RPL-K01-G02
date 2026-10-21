@@ -4,56 +4,31 @@ skinparam shadowing false
 skinparam defaultFontName Arial
 skinparam sequenceMessageAlign center
 skinparam backgroundColor #FFFFFF
-
-skinparam participant {
-    BackgroundColor #FFFFFF
-    BorderColor #000000
-}
-skinparam actor {
-    BackgroundColor #FFFFFF
-    BorderColor #000000
-}
-skinparam sequence {
-    LifeLineBackgroundColor #FFFFFF
-    LifeLineBorderColor #000000
-    ArrowColor #000000
-    ActorBorderColor #000000
-    ActorBackgroundColor #FFFFFF
-    GroupBorderColor #000000
-    GroupBackgroundColor #FFFFFF
-}
-
+skinparam responseMessageBelowArrow true
+title UC03 — Normal
 actor "Pengguna" as User
-boundary ":HalamanOtentikasi" as UI
-control ":AkunController" as Ctrl
+boundary ":HalamanOtentikasi" as UIo
+control ":AkunController" as AC
+control ":Kriptografi" as Kr
 entity ":Akun" as Akun
 entity ":SesiLogin" as Sesi
-
-User -> UI: kirimFormulirLogin(email, kataSandi)
-activate UI
-UI -> Ctrl: login(email, kataSandi)
-activate Ctrl
-Ctrl -> Ctrl: cariAkunByEmail(email)
-Ctrl -> Akun: cariByEmail(email)
-activate Akun
-Akun --> Ctrl: dataAkun(idAkun, kataSandiHash, statusAkun, statusBlokir, peran)
-deactivate Akun
-
-Ctrl -> Ctrl: verifikasiKataSandi(kataSandi, kataSandiHash)
-Ctrl -> Ctrl: cekStatusAkun(idAkun)
-Ctrl -> Akun: getStatusAkun()
-activate Akun
-Akun --> Ctrl: "Terverifikasi" (tidak diblokir)
-deactivate Akun
-
-Ctrl -> Sesi: buatToken(idAkun)
-activate Sesi
-Sesi -> Sesi: simpan(idSesi, idAkun, token, waktuMulai, waktuKedaluwarsa, statusAktif=true)
-Sesi --> Ctrl: tokenSesi
-deactivate Sesi
-
-Ctrl --> UI: loginBerhasil(tokenSesi, peran)
-deactivate Ctrl
-UI --> User: arahkanKeBeranda()
-deactivate UI
+User -> UIo: kirimFormulirLogin(email, kataSandi)
+UIo -> AC: login(email, kataSandi)
+AC -> AC: cariAkunByEmail(email)
+AC -> Akun: cariByEmail(email)
+Akun --> AC: akun (idAkun, kataSandiHash, statusAkun, statusBlokir, peran)
+AC -> AC: verifikasiKataSandi(kataSandi, kataSandiHash)
+AC -> Kr: cocokkanHash(kataSandi, kataSandiHash)
+Kr --> AC: true
+AC -> AC: cekStatusAkun(idAkun)
+AC -> Akun: getStatusAkun()
+Akun --> AC: "Terverifikasi", tidak diblokir
+AC -> AC: buatSesiLogin(idAkun)
+AC -> Sesi: buatToken(idAkun)
+Sesi --> AC: token
+AC -> Sesi: simpan(idAkun, token, waktuMulai, waktuKedaluwarsa)
+Sesi --> AC: true
+note right of Sesi: Masa berlaku sesi paling lama 24 jam (KF11)
+AC --> UIo: {token, peran}
+UIo -> UIo: arahkanKeBeranda()
 @enduml

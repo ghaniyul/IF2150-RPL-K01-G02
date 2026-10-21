@@ -78,10 +78,6 @@
 <path d="M1239 695 L354 695 L354 750" fill="none" stroke="#000" stroke-width="1.2"/>
 <path d="M150 420 L262 750" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
 <path d="M150 420 L262 750" fill="none" stroke="#000" stroke-width="1.2"/>
-<path d="M300 420 L286 750" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
-<path d="M300 420 L286 750" fill="none" stroke="#000" stroke-width="1.2"/>
-<path d="M420 420 L310 750" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
-<path d="M420 420 L310 750" fill="none" stroke="#000" stroke-width="1.2"/>
 <path d="M470 420 L490 750" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
 <path d="M470 420 L490 750" fill="none" stroke="#000" stroke-width="1.2"/>
 <path d="M585 420 L334 750" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
@@ -127,22 +123,16 @@
 <path d="M1300 140 L1300 114" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
 <path d="M1300 140 L1300 114" fill="none" stroke="#000" stroke-width="1.2"/>
 <path d="M1300 114 L1306 104 L1300 94 L1294 104 Z" fill="#000" stroke="#000" stroke-width="1"/>
-<path d="M286 214 L286 380" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
-<path d="M286 214 L286 380" fill="none" stroke="#000" stroke-width="1.2" stroke-dasharray="6 4" marker-end="url(#open)"/>
-<path d="M286 295 L122 295 L122 380" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
-<path d="M286 295 L122 295 L122 380" fill="none" stroke="#000" stroke-width="1.2" stroke-dasharray="6 4" marker-end="url(#open)"/>
-<path d="M286 295 L430 295 L430 380" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
-<path d="M286 295 L430 295 L430 380" fill="none" stroke="#000" stroke-width="1.2" stroke-dasharray="6 4" marker-end="url(#open)"/>
+<path d="M286 214 L286 295 L122 295 L122 380" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+<path d="M286 214 L286 295 L122 295 L122 380" fill="none" stroke="#000" stroke-width="1.2" stroke-dasharray="6 4" marker-end="url(#open)"/>
 <path d="M470 214 L470 310 L590 310 L590 380" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
 <path d="M470 214 L470 310 L590 310 L590 380" fill="none" stroke="#000" stroke-width="1.2" stroke-dasharray="6 4" marker-end="url(#open)"/>
 <path d="M614 214 L614 380" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
 <path d="M614 214 L614 380" fill="none" stroke="#000" stroke-width="1.2" stroke-dasharray="6 4" marker-end="url(#open)"/>
 <path d="M696 94 L696 325 L640 325 L640 380" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
 <path d="M696 94 L696 325 L640 325 L640 380" fill="none" stroke="#000" stroke-width="1.2" stroke-dasharray="6 4" marker-end="url(#open)"/>
-<path d="M696 325 L920 325 L920 380" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
-<path d="M696 325 L920 325 L920 380" fill="none" stroke="#000" stroke-width="1.2" stroke-dasharray="6 4" marker-end="url(#open)"/>
-<path d="M760 325 L760 380" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
-<path d="M760 325 L760 380" fill="none" stroke="#000" stroke-width="1.2" stroke-dasharray="6 4" marker-end="url(#open)"/>
+<path d="M696 325 L760 325 L760 380" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+<path d="M696 325 L760 325 L760 380" fill="none" stroke="#000" stroke-width="1.2" stroke-dasharray="6 4" marker-end="url(#open)"/>
 <path d="M795 214 L795 380" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
 <path d="M795 214 L795 380" fill="none" stroke="#000" stroke-width="1.2" stroke-dasharray="6 4" marker-end="url(#open)"/>
 <path d="M960 214 L960 380" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
@@ -162,6 +152,38 @@
 <path d="M860 1034 L910 1034" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
 <path d="M860 1034 L910 1034" fill="none" stroke="#000" stroke-width="1.2"/>
 <path d="M885 1062 L891 1052 L885 1042 L879 1052 Z" fill="#000" stroke="#000" stroke-width="1"/>
+<path d="M190 420 L190 440 L300 440 L300 422" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+<path d="M190 420 L190 440 L300 440 L300 422" fill="none" stroke="#000" stroke-width="1.2" stroke-dasharray="6 4" marker-end="url(#open)"/>
+<path d="M175 420 L175 470 L440 470 L440 422" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+<path d="M175 420 L175 470 L440 470 L440 422" fill="none" stroke="#000" stroke-width="1.2" stroke-dasharray="6 4" marker-end="url(#open)"/>
+<path d="M768 70 L960 70 L960 178" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+<path d="M768 70 L960 70 L960 178" fill="none" stroke="#000" stroke-width="1.2" stroke-dasharray="6 4" marker-end="url(#open)"/>
+<path d="M768 84 L830 84 L830 178" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+<path d="M768 84 L830 84 L830 178" fill="none" stroke="#000" stroke-width="1.2" stroke-dasharray="6 4" marker-end="url(#open)"/>
+<path d="M580 180 L580 160 L500 160 L500 178" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+<path d="M580 180 L580 160 L500 160 L500 178" fill="none" stroke="#000" stroke-width="1.2" stroke-dasharray="6 4" marker-end="url(#open)"/>
+<path d="M775 420 L775 695" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+<path d="M775 420 L775 695" fill="none" stroke="#000" stroke-width="1.2"/>
+<path d="M935 420 L935 695" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+<path d="M935 420 L935 695" fill="none" stroke="#000" stroke-width="1.2"/>
+<path d="M610 420 L610 675 L1195 675 L1195 750" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+<path d="M610 420 L610 675 L1195 675 L1195 750" fill="none" stroke="#000" stroke-width="1.2"/>
+<path d="M760 420 L760 675" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+<path d="M760 420 L760 675" fill="none" stroke="#000" stroke-width="1.2"/>
+<path d="M630 420 L630 655 L1660 655 L1660 750" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+<path d="M630 420 L630 655 L1660 655 L1660 750" fill="none" stroke="#000" stroke-width="1.2"/>
+<path d="M820 420 L820 655" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+<path d="M820 420 L820 655" fill="none" stroke="#000" stroke-width="1.2"/>
+<path d="M965 420 L965 655" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+<path d="M965 420 L965 655" fill="none" stroke="#000" stroke-width="1.2"/>
+<path d="M1120 420 L1120 655" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+<path d="M1120 420 L1120 655" fill="none" stroke="#000" stroke-width="1.2"/>
+<path d="M950 420 L815 750" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+<path d="M950 420 L815 750" fill="none" stroke="#000" stroke-width="1.2"/>
+<path d="M1135 420 L1135 630 L715 630 L715 990" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+<path d="M1135 420 L1135 630 L715 630 L715 990" fill="none" stroke="#000" stroke-width="1.2" stroke-dasharray="6 4" marker-end="url(#open)"/>
+<path d="M1800 528 L1785 528 L1785 735 L1340 735 L1340 750" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+<path d="M1800 528 L1785 528 L1785 735 L1340 735 L1340 750" fill="none" stroke="#000" stroke-width="1.2" stroke-dasharray="6 4" marker-end="url(#open)"/>
 <rect x="214" y="180" width="144" height="34" rx="4" fill="#fff" stroke="#000" stroke-width="1.2"/>
 <text x="286" y="201.5" font-size="13" text-anchor="middle">KatalogView</text>
 <rect x="378" y="180" width="144" height="34" rx="4" fill="#fff" stroke="#000" stroke-width="1.2"/>
@@ -297,18 +319,14 @@
 <text x="1881" y="312" font-size="11.5" font-weight="normal" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">SMTP + TLS</text>
 <text x="2046" y="312" font-size="11.5" font-weight="normal" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">Web Push</text>
 <text x="2104" y="700" font-size="11.5" font-weight="normal" text-anchor="end" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">membaca data sesi</text>
-<text x="870" y="690" font-size="11.5" font-weight="normal" text-anchor="middle" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">akses (Moderasi, Akun → Barang)</text>
+<text x="880" y="691" font-size="11.5" font-weight="normal" text-anchor="middle" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">akses ke Barang</text>
 <text x="207.60000000000002" y="601.5" font-size="11.5" font-weight="normal" text-anchor="end" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">akses</text>
-<text x="295.32" y="624.6" font-size="11.5" font-weight="normal" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">akses</text>
-<text x="355.5" y="601.5" font-size="11.5" font-weight="normal" text-anchor="end" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">akses</text>
 <text x="487.4" y="624.6" font-size="11.5" font-weight="normal" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">akses</text>
 <text x="475.58" y="558.6" font-size="11.5" font-weight="normal" text-anchor="end" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">akses</text>
 <text x="589.9" y="624.6" font-size="11.5" font-weight="normal" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">akses</text>
 <text x="786.4" y="624.6" font-size="11.5" font-weight="normal" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">akses</text>
 <text x="919.1" y="624.6" font-size="11.5" font-weight="normal" text-anchor="end" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">akses</text>
 <text x="1041.5" y="624.6" font-size="11.5" font-weight="normal" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">akses</text>
-<text x="985.2" y="677.4000000000001" font-size="11.5" font-weight="normal" text-anchor="end" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">akses</text>
-<text x="1106.1" y="677.4000000000001" font-size="11.5" font-weight="normal" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">akses</text>
 <text x="1197" y="618" font-size="11.5" font-weight="normal" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">akses</text>
 <text x="1270" y="624.6" font-size="11.5" font-weight="normal" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">akses</text>
 <text x="1376.3" y="624.6" font-size="11.5" font-weight="normal" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">akses</text>
@@ -316,7 +334,7 @@
 <text x="1454.3" y="624.6" font-size="11.5" font-weight="normal" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">akses</text>
 <text x="1602.6" y="624.6" font-size="11.5" font-weight="normal" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">akses</text>
 <text x="669" y="960" font-size="11.5" font-weight="normal" text-anchor="end" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">menyimpan foto</text>
-<text x="706" y="960" font-size="11.5" font-weight="normal" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">menyimpan bukti laporan</text>
+<text x="722" y="944" font-size="11.5" font-weight="normal" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">menyimpan bukti laporan</text>
 <text x="1000" y="134" font-size="11.5" font-weight="normal" text-anchor="middle" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">komposisi: memuat KartuProdukView</text>
 <text x="456" y="110" font-size="10.5" font-weight="normal" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">0..*</text>
 <text x="292" y="262" font-size="11.5" font-weight="normal" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">memanggil</text>
@@ -336,4 +354,16 @@
 <text x="920" y="1060" font-size="11.5" font-weight="normal" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">komposisi (bagian tidak dapat berdiri tanpa pemiliknya)</text>
 <text x="2120" y="1016" font-size="11.5" font-weight="normal" text-anchor="end" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">Kotak putus-putus berisi tulisan</text>
 <text x="2120" y="1032" font-size="11.5" font-weight="normal" text-anchor="end" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">"sistem eksternal" berada di luar P/L.</text>
+<text x="245" y="453" font-size="11.5" font-weight="normal" text-anchor="middle" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">menyusun kriteria kata kunci</text>
+<text x="320" y="483" font-size="11.5" font-weight="normal" text-anchor="middle" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">menyusun kriteria filter</text>
+<text x="966" y="112" font-size="11.5" font-weight="normal" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">membuka</text>
+<text x="836" y="112" font-size="11.5" font-weight="normal" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">membuka</text>
+<text x="540" y="156" font-size="11.5" font-weight="normal" text-anchor="middle" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">membuka</text>
+<text x="1150" y="670" font-size="11.5" font-weight="normal" text-anchor="middle" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">akses ke Akun</text>
+<text x="1500" y="650" font-size="11.5" font-weight="normal" text-anchor="middle" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">akses ke Otentikasi (sesi aktif)</text>
+<text x="907" y="540" font-size="11.5" font-weight="normal" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">akses</text>
+<text x="722" y="962" font-size="11.5" font-weight="normal" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">menghapus foto (Moderasi)</text>
+<text x="1560" y="730" font-size="11.5" font-weight="normal" text-anchor="middle" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">memeriksa peran admin</text>
+<text x="1107" y="600" font-size="11.5" font-weight="normal" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">akses</text>
+<text x="1010" y="600" font-size="11.5" font-weight="normal" text-anchor="end" paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round">akses</text>
 </svg>
