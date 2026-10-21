@@ -756,8 +756,6 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 
 ### 3.9.1 Identifikasi Kelas
 
-Tabel 3.9. Identifikasi Kelas Use Case UC09
-
 | No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
 | :--- | :--- | :--- | :--- |
 | 1 | HalamanListingPenjual | C03 HalamanListingPenjual | Titik masuk tombol Ubah Listing pada daftar listing sendiri (UC08). |
@@ -784,7 +782,7 @@ Tabel 3.9. Identifikasi Kelas Use Case UC09
 - **Skenario Alternatif 1:  Kolom Wajib Dikosongkan saat Pengubahan**
 
 <p align="center">
-<img alt="Gambar 3.27. Sequence Diagram UC09 - Skenario Alternatif 1" src="./assets/diagram/./assets/diagram/Sequence_UC09_Alt1.png" width="75%">
+<img alt="Gambar 3.27. Sequence Diagram UC09 - Skenario Alternatif 1" src="./assets/diagram/Sequence_UC09_Alt1.png" width="75%">
 </p>
 <p align="center">
 <i>Gambar 3.27. Sequence Diagram UC09 — Skenario Alternatif 1</i>
@@ -974,6 +972,114 @@ Tabel 3.9. Identifikasi Kelas Use Case UC09
 </p>
 <p align="center">
 <i>Gambar 3.42. Diagram Kelas UC12</i>
+</p>
+
+---
+
+## 3.13 Use Case Melihat Katalog Listing
+
+**ID Use Case:** UC13  
+**Nama Use Case:** Melihat Katalog Listing
+
+### 3.13.1 Identifikasi Kelas
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanKatalog | C05 HalamanKatalog | Menyajikan katalog, kolom cari, filter, urutan, pagination dan empty state. |
+| 2 | KartuProduk | C06 KartuProduk | Merender kartu listing beserta foto utama, harga dan status. |
+| 3 | KatalogController | C15 KatalogController | Mengorkestrasi kueri daftar, pengurutan, serta paginasi 20 listing per halaman. |
+| 4 | Akun | C23 Akun | Status akun pemilik digunakan oleh kueri listing; akun terblokir dikecualikan. |
+| 5 | Penjual | C25 Penjual | Penjual pemilik listing; status blokirnya menentukan kelayakan tampil di katalog. |
+| 6 | Barang | C29 Barang | Menyimpan dan menyediakan data listing, status, idPenjual serta waktu perubahan. |
+| 7 | FotoBarang | C30 FotoBarang | Menyimpan metadata galeri/berkas foto barang dan urutannya. |
+
+### 3.13.2 Sequence Diagram
+
+- **Skenario Normal**
+<p align="center">
+<img alt="Gambar 3.43. Sequence Diagram UC13 - Skenario Normal" src="./assets/diagram/Sequence_UC13_Normal.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.43. Sequence Diagram UC13 - Skenario Normal</i>
+</p>
+
+- **Skenario Alternatif 1: Katalog Masih Kosong**
+<p align="center">
+<img alt="Gambar 3.44. Sequence Diagram UC13 - Skenario Alternatif 1" src="./assets/diagram/Sequence_UC13_Alt1.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.44. Sequence Diagram UC13 - Skenario Alternatif 1</i>
+</p>
+
+- **Skenario Alternatif 2: Listing Menjadi Tidak Tersedia saat Katalog Dibuka**
+<p align="center">
+<img alt="Gambar 3.45. Sequence Diagram UC13 — Skenario Alternatif 2" src="./assets/diagram/Sequence_UC13_Alt2.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.45. Sequence Diagram UC13 — Skenario Alternatif 2</i>
+</p>
+
+### 3.13.3 Diagram Kelas
+<p align="center">
+<img alt="Gambar 3.46. Diagram Kelas UC13" src="./assets/diagram/Diagram_Kelas_UC13.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.46. Diagram Kelas UC13</i>
+</p>
+
+---
+
+## 3.14 Use Case Mencari dan Menyaring Listing
+
+**ID Use Case:** UC14  
+**Nama Use Case:** Mencari dan Menyaring Listing
+
+### 3.14.1 Identifikasi Kelas
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanKatalog | C05 HalamanKatalog | Menyajikan katalog, kolom cari, filter, urutan, pagination dan empty state. |
+| 2 | KartuProduk | C06 KartuProduk | Merender kartu listing beserta foto utama, harga dan status. |
+| 3 | KatalogController | C15 KatalogController | Mengorkestrasi kueri daftar, pengurutan, serta paginasi 20 listing per halaman. |
+| 4 | PencarianController | C16 PencarianController | Menormalisasi dan menerapkan pencocokan sebagian kata kunci pada judul/deskripsi. |
+| 5 | FilterController | C17 FilterController | Memeriksa keabsahan filter kategori, rentang harga, dan lokasi COD. |
+| 6 | Akun | C23 Akun | Status akun pemilik tetap menjadi syarat wajib walau pencarian/filter aktif. |
+| 7 | Penjual | C25 Penjual | Penjual pemilik listing yang disaring oleh ketentuan katalog. |
+| 8 | Barang | C29 Barang | Menyimpan dan menyediakan data listing, status, idPenjual serta waktu perubahan. |
+| 9 | Kategori | C31 Kategori | Menyediakan kategori baku untuk validasi, filter dan detail. |
+| 10 | LokasiCOD | C32 LokasiCOD | Menyediakan titik temu COD baku untuk pilihan/filter dan detail. |
+
+### 3.14.2 Sequence Diagram
+
+- **Skenario Normal**
+<p align="center">
+<img alt="Gambar 3.47. Sequence Diagram UC14 - Skenario Normal" src="./assets/diagram/Sequence_UC14_Normal.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.47. Sequence Diagram UC14 - Skenario Normal</i>
+</p>
+
+- **Skenario Alternatif 1: Tidak Ada Barang yang Cocok**
+<p align="center">
+<img alt="Gambar 3.48. Sequence Diagram UC14 - Skenario Alternatif 1" src="./assets/diagram/Sequence_UC14_Alt1.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.48. Sequence Diagram UC14 - Skenario Alternatif 1</i>
+</p>
+
+- **Skenario Alternatif 2: Rentang Harga Tidak Masuk Akal**
+<p align="center">
+<img alt="Gambar 3.49. Sequence Diagram UC14 - Skenario Alternatif 2" src="./assets/diagram/Sequence_UC14_Alt2.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.49. Sequence Diagram UC14 - Skenario Alternatif 2</i>
+</p>
+
+### 3.14.3 Diagram Kelas
+<p align="center">
+<img alt="Gambar 3.50. Diagram Kelas UC14" src="./assets/diagram/Diagram_Kelas_UC14.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.50. Diagram Kelas UC14</i>
 </p>
 
 ---
