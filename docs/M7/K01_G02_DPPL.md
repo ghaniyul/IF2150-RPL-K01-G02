@@ -1084,6 +1084,135 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 
 ---
 
+## 3.15 Use Case Melihat Detail Listing
+
+**ID Use Case:** UC15  
+**Nama Use Case:** Melihat Detail Listing
+
+### 3.15.1 Identifikasi Kelas
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanDetailBarang | C07 HalamanDetailBarang | Menampilkan detail barang, galeri, profil penjual dan tombol tindakan. |
+| 2 | BarangController | C14 BarangController | Menerapkan validasi server, hak kepemilikan, penyimpanan, penghapusan dan status listing. |
+| 3 | Penjual | C25 Penjual | Pemilik listing yang identitas dan tautan profilnya ditampilkan. |
+| 4 | SesiLogin | C28 SesiLogin | Memberikan identitas sesi bila ada untuk mendeteksi apakah pengunjung pemilik listing. |
+| 5 | Barang | C29 Barang | Menyimpan dan menyediakan data listing, status, idPenjual serta waktu perubahan. |
+| 6 | FotoBarang | C30 FotoBarang | Menyimpan metadata galeri/berkas foto barang dan urutannya. |
+| 7 | Kategori | C31 Kategori | Menyediakan kategori baku untuk validasi, filter dan detail. |
+| 8 | LokasiCOD | C32 LokasiCOD | Menyediakan titik temu COD baku untuk pilihan/filter dan detail. |
+| 9 | Otorisasi | C41 Otorisasi (Pendukung) | Mengidentifikasi pengguna dari token sesi bila tersedia; bukan prasyarat untuk memuat detail. |
+
+### 3.15.2 Sequence Diagram
+
+- **Skenario Normal**
+<p align="center">
+<img alt="Gambar 3.51. Sequence Diagram UC15 - Skenario Normal" src="./assets/diagram/Sequence_UC15_Normal.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.51. Sequence Diagram UC15 - Skenario Normal</i>
+</p>
+
+- **Skenario Alternatif 1: Pengguna adalah Pemilik Listing**
+<p align="center">
+<img alt="ambar 3.52. Sequence Diagram UC15 - Skenario Alternatif 1" src="./assets/diagram/Sequence_UC15_Alt1.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.52. Sequence Diagram UC15 - Skenario Alternatif 1</i>
+</p>
+
+- **Skenario Alternatif 2: Listing Sudah Dihapus atau Tidak Ditemukan**
+<p align="center">
+<img alt="Gambar 3.53. Sequence Diagram UC15 — Skenario Alternatif 2" src="./assets/diagram/Sequence_UC15_Alt2.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.53. Sequence Diagram UC15 — Skenario Alternatif 2</i>
+</p>
+ 
+- **Skenario Alternatif 3: Listing Sudah Berstatus Terjual**
+<p align="center">
+<img alt="Gambar 3.54. Sequence Diagram UC15 - Skenario Alternatif 3" src="./assets/diagram/Sequence_UC15_Alt3.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.54. Sequence Diagram UC15 - Skenario Alternatif 3</i>
+</p>
+
+### 3.15.3 Diagram Kelas
+<p align="center">
+<img alt="Gambar 3.55. Diagram Kelas UC15" src="./assets/diagram/Diagram_Kelas_UC15.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.55. Diagram Kelas UC15</i>
+</p>
+
+---
+
+## 3.16 Use Case Menghubungi Penjual
+
+**ID Use Case:** UC16  
+**Nama Use Case:** Menghubungi Penjual
+
+### 3.16.1 Identifikasi Kelas
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanDetailBarang | C07 HalamanDetailBarang | Menampilkan detail barang, galeri, profil penjual dan tombol tindakan. |
+| 2 | HalamanPercakapan | C08 HalamanPercakapan | Menyajikan ruang percakapan, riwayat pesan dan tautan Kebijakan Privasi. |
+| 3 | PercakapanController | C18 PercakapanController | Membuat atau memakai percakapan lama, memeriksa peserta, dan mengambil pesan. |
+| 4 | Akun | C23 Akun | Memastikan akun penjual masih aktif/tidak diblokir sebelum chat dibuka. |
+| 5 | Pembeli | C24 Pembeli | Pihak pembeli sebagai peserta sah percakapan. |
+| 6 | Penjual | C25 Penjual | Penjual aktif sebagai peserta kedua yang sah dalam percakapan. |
+| 7 | SesiLogin | C28 SesiLogin | Menyediakan idAkun dari token sesi aktif untuk otorisasi. |
+| 8 | Barang | C29 Barang | Menyimpan dan menyediakan data listing, status, idPenjual serta waktu perubahan. |
+| 9 | Percakapan | C33 Percakapan | Mencari/membuat tepat satu ruang percakapan per pasangan pembeli, penjual dan listing; memvalidasi dua peserta sah. |
+| 10 | Pesan | C34 Pesan | Mengambil riwayat pesan terenkripsi hanya setelah verifikasi peserta berhasil. |
+| 11 | Otorisasi | C41 Otorisasi (Pendukung) | Mengesahkan token sesi dan mengenali idAkun pemohon di server. |
+| 12 | Kriptografi | C42 Kriptografi (Pendukung) | Mendekripsi pesan yang sudah diizinkan untuk dibaca peserta sah. |
+
+### 3.16.2 Sequence Diagram
+
+- **Skenario Normal**
+<p align="center">
+<img alt="Gambar 3.56. Sequence Diagram UC16 - Skenario Normal" src="./assets/diagram/Sequence_UC16_Normal.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.56. Sequence Diagram UC16 - Skenario Normal</i>
+</p>
+
+- **Skenario Alternatif 1: Akun Penjual Sedang Diblokir**
+<p align="center">
+<img alt="Gambar 3.57. Sequence Diagram UC16 — Skenario Alternatif 1" src="./assets/diagram/Sequence_UC16_Alt1.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.57. Sequence Diagram UC16 — Skenario Alternatif 1</i>
+</p>
+
+- **Skenario Alternatif 2: Ruang Percakapan untuk Listing Tersebut Sudah Ada**
+<p align="center">
+<img alt="Gambar 3.58. Sequence Diagram UC16 - Skenario Alternatif 2" src="./assets/diagram/Sequence_UC16_Alt2.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.58. Sequence Diagram UC16 - Skenario Alternatif 2</i>
+</p>
+
+- **Skenario Alternatif 3: Percobaan Akses Ruang Percakapan oleh Pihak Ketiga**
+<p align="center">
+<img alt="Gambar 3.59. Sequence Diagram UC16 - Skenario Alternatif 3" src="./assets/diagram/Sequence_UC16_Alt3.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.59. Sequence Diagram UC16 - Skenario Alternatif 3</i>
+</p>
+
+### 3.16.3 Diagram Kelas
+<p align="center">
+<img alt="Gambar 3.60. Diagram Kelas UC16" src="./assets/diagram/Diagram_Kelas_UC16.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.60. Diagram Kelas UC16</i>
+</p>
+
+---
+
 # BAB 4: Diagram Kelas Keseluruhan
 
 ## 4.1 Diagram Kelas
