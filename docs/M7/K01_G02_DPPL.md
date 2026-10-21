@@ -747,6 +747,8 @@ Diagram kelas perancangan UC08 memodelkan relasi HalamanListingPenjual yang meng
 
 <br>
 
+---
+
 ## 3.9 Use Case Mengubah Listing
 
 **ID Use Case:** UC09  
@@ -772,8 +774,6 @@ Tabel 3.9. Identifikasi Kelas Use Case UC09
 
 - **Skenario Normal**
 
-Penjual membuka formulir yang telah berisi data lama, menyunting isian dan/atau galeri, lalu menyimpan. Controller memeriksa kembali pemilik, isian, kategori serta batas 1–5 foto JPG/PNG maksimal 5 MB per foto; data dan waktu pengubahan diperbarui, lalu penjual diarahkan ke detail listing.
-
 <p align="center">
 <img alt="Gambar 3.26. Sequence Diagram UC09 — Skenario Normal" src="./assets/diagram/Sequence_UC09_Normal.png" width="75%">
 </p>
@@ -782,8 +782,6 @@ Penjual membuka formulir yang telah berisi data lama, menyunting isian dan/atau 
 </p>
 
 - **Skenario Alternatif 1:  Kolom Wajib Dikosongkan saat Pengubahan**
-
-Kolom wajib dikosongkan. FormulirBarang menghentikan pengiriman, menandai isian yang salah, dan mempertahankan data lama. Setelah diperbaiki, permintaan dikirim dan divalidasi ulang di server.
 
 <p align="center">
 <img alt="Gambar 3.27. Sequence Diagram UC09 — Skenario Alternatif 1" src="./assets/diagram/./assets/diagram/Sequence_UC09_Alt1.png" width="75%">
@@ -794,8 +792,6 @@ Kolom wajib dikosongkan. FormulirBarang menghentikan pengiriman, menandai isian 
 
 - **Skenario Alternatif 2: Pelanggaran Syarat Unggahan Foto saat Pengubahan**
 
-Berkas baru bukan JPG/PNG, lebih dari 5 MB, atau membuat total foto melebihi lima. FormulirBarang menolaknya beserta pratinjau; penjual tidak dapat menyimpan sampai pelanggaran diperbaiki.
-
 <p align="center">
 <img alt="Gambar 3.28. Sequence Diagram UC09 — Alternatif 2" src="./assets/diagram/Sequence_UC09_Alt2.png" width="75%">
 </p>
@@ -804,8 +800,6 @@ Berkas baru bukan JPG/PNG, lebih dari 5 MB, atau membuat total foto melebihi lim
 </p>
 
 - **Skenario Alternatif 3: Percobaan Pengubahan oleh Akun Bukan Pemilik**
-
-Pemohon bukan pemilik mencoba membuka URL pengubahan atau mengirim pembaruan secara langsung. Controller membandingkan idAkun pada sesi dengan idPenjual dan menolak keduanya tanpa mengubah data.
 
 <p align="center">
 <img alt="Gambar 3.29. Sequence Diagram UC09 — Skenario Alternatif 3" src="./assets/diagram/Sequence_UC09_Alt3.png" width="75%">
@@ -822,14 +816,14 @@ Pemohon bukan pemilik mencoba membuka URL pengubahan atau mengirim pembaruan sec
 <i>Gambar 3.30. Diagram Kelas UC09</i>
 </p>
 
+---
+
 ## 3.10 Use Case Menghapus Listing
 
 **ID Use Case:** UC10  
 **Nama Use Case:** Menghapus Listing
 
 ### 3.10.1 Identifikasi Kelas
-
-Tabel 3.10. Identifikasi Kelas Use Case UC10
 
 | No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
 | :--- | :--- | :--- | :--- |
@@ -845,9 +839,6 @@ Tabel 3.10. Identifikasi Kelas Use Case UC10
 ### 3.10.2 Sequence Diagram
 
 - **Skenario Normal**
-
-Penjual memilih Hapus Listing, melihat peringatan permanen dan mengonfirmasi. Controller menguji ulang kepemilikan, menghapus data listing beserta metadata fotonya, lalu memuat ulang daftar. Listing tak lagi muncul dalam katalog maupun pencarian.
-
 <p align="center">
 <img alt="Gambar 3.31. Sequence Diagram UC10 — Skenario Normal" src="./assets/diagram/Sequence_UC10_Normal.png" width="75%">
 </p>
@@ -856,9 +847,6 @@ Penjual memilih Hapus Listing, melihat peringatan permanen dan mengonfirmasi. Co
 </p>
 
 - **Skenario Alternatif 1: Penjual Membatalkan Konfirmasi Penghapusan**
-
-Penjual menekan Batal atau menutup dialog. Tidak ada permintaan penghapusan maupun perubahan pada Model; listing tetap pada daftar dengan status semula.
-
 <p align="center">
 <img alt="Gambar 3.32. Sequence Diagram UC10 — Skenario Alternatif 1" src="./assets/diagram/Sequence_UC10_Alt1.png" width="75%">
 </p>
@@ -867,9 +855,6 @@ Penjual menekan Batal atau menutup dialog. Tidak ada permintaan penghapusan maup
 </p>
 
 - **Skenario Alternatif 2: Percobaan Penghapusan oleh Akun Bukan Pemilik**
-
-Akun bukan pemilik mengirim permintaan hapus langsung. Controller memeriksa token dan idPenjual, mengembalikan penolakan akses, dan menjaga data listing tetap utuh.
-
 <p align="center">
 <img alt="Gambar 3.33. Sequence Diagram UC10 — Skenario Alternatif 2" src="./assets/diagram/Sequence_UC10_Alt2.png" width="75%">
 </p>
@@ -884,6 +869,59 @@ Akun bukan pemilik mengirim permintaan hapus langsung. Controller memeriksa toke
 </p>
 <p align="center">
 <i>Gambar 3.34. Diagram Kelas UC10</i>
+</p>
+
+---
+
+## 3.11 Use Case Menandai Listing Terjual
+
+**ID Use Case:** UC11  
+**Nama Use Case:** Menandai Listing Terjual
+
+### 3.11.1 Identifikasi Kelas
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
+| :--- | :--- | :--- | :--- |
+| 1 | HalamanListingPenjual | C03 HalamanListingPenjual | Menampilkan Listing Saya, dialog konfirmasi, dan aksi kelola listing. |
+| 2 | KartuProduk | C06 KartuProduk | Merender kartu listing beserta foto utama, harga dan status. |
+| 3 | BarangController | C14 BarangController | Memeriksa kepemilikan dan hanya menerima perubahan status Tersedia menjadi Terjual. |
+| 4 | Penjual | C25 Penjual | Penjual pemilik barang yang mengonfirmasi penandaan Terjual. |
+| 5 | SesiLogin | C28 SesiLogin | Menyediakan idAkun dari token sesi aktif untuk otorisasi. |
+| 6 | Barang | C29 Barang | Menyimpan dan menyediakan data listing, status, idPenjual serta waktu perubahan. |
+| 7 | Otorisasi | C41 Otorisasi (Pendukung) | Mengesahkan token sesi dan mengenali idAkun pemohon di server. |
+
+### 3.11.2 Sequence Diagram
+
+- **Skenario Normal**
+<p align="center">
+<img alt="Gambar 3.35. Sequence Diagram UC11 — Skenario Normal" src="./assets/diagram/Sequence_UC11_Normal.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.35. Sequence Diagram UC11 - Skenario Normal</i>
+</p>
+
+- **Skenario Alternatif 1: Penjual Membatalkan Dialog Konfirmasi**
+<p align="center">
+<img alt="Gambar 3.36. Sequence Diagram UC11 - Skenario Alternatif 1" src="./assets/diagram/Sequence_UC11_Alt1.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.36. Sequence Diagram UC11 - Skenario Alternatif 1</i>
+</p>
+
+- **Skenario Alternatif 2: Listing Sudah Berstatus Terjual**
+<p align="center">
+<img alt="Gambar 3.37. Sequence Diagram UC11 - Skenario Alternatif 2" src="./assets/diagram/Sequence_UC11_Alt2.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.37. Sequence Diagram UC11 - Skenario Alternatif 2</i>
+</p>
+
+### 3.11.3 Diagram Kelas
+<p align="center">
+<img alt="Gambar 3.38. Diagram Kelas UC11" src="./assets/diagram/Diagram_Kelas_UC11.png" width="75%">
+</p>
+<p align="center">
+<i>Gambar 3.38. Diagram Kelas UC11</i>
 </p>
 
 ---
