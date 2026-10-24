@@ -759,19 +759,19 @@ Realisasi use case pengubahan listing melibatkan antarmuka daftar listing penjua
 
 Tabel 3.9. Identifikasi Kelas Use Case UC09
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
-| :--- | :--- | :--- | :--- |
-| 1 | HalamanListingPenjual | C03 HalamanListingPenjual | Menyediakan tombol "Ubah Listing" pada kartu listing milik penjual sebagai titik masuk pengubahan. |
-| 2 | FormulirBarang | C04 FormulirBarang | Menampilkan formulir berisi nilai lama dan galeri foto, memvalidasi tipe data, isian wajib, serta ketentuan foto di sisi klien, lalu mengirim perubahan. |
-| 3 | BarangController | C14 BarangController | Memverifikasi kepemilikan, mengulang validasi isian dan foto di sisi server, mengunggah foto baru, menghapus foto yang dibuang, dan menyimpan perubahan. |
-| 4 | Penjual | C25 Penjual | Peran pemilik listing yang berwenang mengubah listing. |
-| 5 | SesiLogin | C28 SesiLogin | Menyediakan idAkun penjual dari sesi aktif untuk verifikasi kepemilikan. |
-| 6 | Barang | C29 Barang | Menyimpan perubahan atribut listing beserta waktu pengubahan. |
-| 7 | FotoBarang | C30 FotoBarang | Menyediakan galeri foto lama dan memperbarui susunan foto (1 sampai 5 berkas). |
-| 8 | Kategori | C31 Kategori | Menyediakan daftar kategori tetap dan memvalidasi kategori yang dipilih. |
-| 9 | LokasiCOD | C32 LokasiCOD | Menyediakan daftar titik temu COD dan memvalidasi lokasi yang dipilih. |
-| 10 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token sesi penjual. |
-| 11 | PenyimpananBerkas | C45 PenyimpananBerkas (Penyimpanan Data) | Menyimpan foto baru dan menghapus berkas foto yang dibuang pada Supabase Storage. |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | 
+| :--- | :--- | :--- | 
+| 1 | HalamanListingPenjual | C03 HalamanListingPenjual | 
+| 2 | FormulirBarang | C04 FormulirBarang | 
+| 3 | BarangController | C14 BarangController |
+| 4 | Penjual | C25 Penjual | 
+| 5 | SesiLogin | C28 SesiLogin | 
+| 6 | Barang | C29 Barang | 
+| 7 | FotoBarang | C30 FotoBarang |
+| 8 | Kategori | C31 Kategori |
+| 9 | LokasiCOD | C32 LokasiCOD |
+| 10 | Otorisasi | C41 Otorisasi (Pendukung) | 
+| 11 | PenyimpananBerkas | C45 PenyimpananBerkas (Penyimpanan Data) | 
 
 ### 3.9.2 Sequence Diagram
 
@@ -843,16 +843,16 @@ Realisasi use case penghapusan listing melibatkan antarmuka daftar listing penju
 
 Tabel 3.10. Identifikasi Kelas Use Case UC10
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
-| :--- | :--- | :--- | :--- |
-| 1 | HalamanListingPenjual | C03 HalamanListingPenjual | Menyediakan aksi "Hapus Listing" dan dialog konfirmasi, lalu memuat ulang daftar listing setelah penghapusan. |
-| 2 | BarangController | C14 BarangController | Memverifikasi kepemilikan sebelum konfirmasi dan sebelum penghapusan, lalu menghapus listing beserta fotonya. |
-| 3 | Penjual | C25 Penjual | Pemilik listing yang berwenang menghapus listing. |
-| 4 | SesiLogin | C28 SesiLogin | Menyediakan idAkun penjual dari sesi aktif. |
-| 5 | Barang | C29 Barang | Entitas listing yang dihapus dari sistem. |
-| 6 | FotoBarang | C30 FotoBarang | Menyediakan daftar foto listing dan menghapus metadata fotonya. |
-| 7 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token sesi penjual. |
-| 8 | PenyimpananBerkas | C45 PenyimpananBerkas (Penyimpanan Data) | Menghapus berkas foto listing dari Supabase Storage. |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | 
+| :--- | :--- | :--- | 
+| 1 | HalamanListingPenjual | C03 HalamanListingPenjual | 
+| 2 | BarangController | C14 BarangController | 
+| 3 | Penjual | C25 Penjual |
+| 4 | SesiLogin | C28 SesiLogin | 
+| 5 | Barang | C29 Barang |  
+| 6 | FotoBarang | C30 FotoBarang |  
+| 7 | Otorisasi | C41 Otorisasi (Pendukung) |  
+| 8 | PenyimpananBerkas | C45 PenyimpananBerkas (Penyimpanan Data) | 
 
 ### 3.10.2 Sequence Diagram
 
@@ -913,15 +913,15 @@ Realisasi use case penandaan terjual melibatkan antarmuka daftar listing penjual
 
 Tabel 3.11. Identifikasi Kelas Use Case UC11
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
-| :--- | :--- | :--- | :--- |
-| 1 | HalamanListingPenjual | C03 HalamanListingPenjual | Menyediakan tombol "Tandai Terjual" dan dialog konfirmasi, lalu memindahkan kartu listing ke tab "Terjual". |
-| 2 | KartuProduk | C06 KartuProduk | Merender ulang kartu listing dengan label status terbaru. |
-| 3 | BarangController | C14 BarangController | Memverifikasi kepemilikan dan status asal "Tersedia", lalu mengubah status listing menjadi "Terjual". |
-| 4 | Penjual | C25 Penjual | Pemilik listing yang berwenang menandai listing terjual. |
-| 5 | SesiLogin | C28 SesiLogin | Menyediakan idAkun penjual dari sesi aktif. |
-| 6 | Barang | C29 Barang | Menyimpan status "Terjual" beserta waktu perubahan sehingga listing tidak lagi tampil pada katalog dan pencarian. |
-| 7 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token sesi penjual. |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |  
+| :--- | :--- | :--- |  
+| 1 | HalamanListingPenjual | C03 HalamanListingPenjual |  
+| 2 | KartuProduk | C06 KartuProduk | 
+| 3 | BarangController | C14 BarangController |  
+| 4 | Penjual | C25 Penjual | 
+| 5 | SesiLogin | C28 SesiLogin | 
+| 6 | Barang | C29 Barang | 
+| 7 | Otorisasi | C41 Otorisasi (Pendukung) | 
 
 ### 3.11.2 Sequence Diagram
 
@@ -981,15 +981,15 @@ Realisasi use case pembatalan penandaan terjual melibatkan antarmuka daftar list
 
 Tabel 3.12. Identifikasi Kelas Use Case UC12
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
-| :--- | :--- | :--- | :--- |
-| 1 | HalamanListingPenjual | C03 HalamanListingPenjual | Menyediakan tombol "Batalkan Penandaan Terjual" pada tab "Terjual" beserta dialog konfirmasi, lalu memindahkan kartu kembali ke tab "Tersedia". |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |  
+| :--- | :--- | :--- |  
+| 1 | HalamanListingPenjual | C03 HalamanListingPenjual | 
 | 2 | KartuProduk | C06 KartuProduk | Merender ulang kartu listing tanpa label "Terjual". |
-| 3 | BarangController | C14 BarangController | Memverifikasi kepemilikan dan status asal "Terjual", lalu mengembalikan status listing menjadi "Tersedia". |
-| 4 | Penjual | C25 Penjual | Pemilik listing yang berwenang membatalkan penandaan terjual. |
-| 5 | SesiLogin | C28 SesiLogin | Menyediakan idAkun penjual dari sesi aktif. |
-| 6 | Barang | C29 Barang | Menyimpan status "Tersedia" beserta waktu perubahan sehingga listing tampil kembali pada katalog dan pencarian. |
-| 7 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token sesi penjual. |
+| 3 | BarangController | C14 BarangController | 
+| 4 | Penjual | C25 Penjual | 
+| 5 | SesiLogin | C28 SesiLogin | 
+| 6 | Barang | C29 Barang |  
+| 7 | Otorisasi | C41 Otorisasi (Pendukung) | 
 
 ### 3.12.2 Sequence Diagram
 
@@ -1051,15 +1051,15 @@ Realisasi use case melihat katalog melibatkan antarmuka katalog dan kartu produk
 
 Tabel 3.13. Identifikasi Kelas Use Case UC13
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
-| :--- | :--- | :--- | :--- |
-| 1 | HalamanKatalog | C05 HalamanKatalog | Menampilkan katalog berhalaman (maksimum 20 listing per halaman), navigasi antarhalaman, dan pesan saat katalog kosong. |
-| 2 | KartuProduk | C06 KartuProduk | Merender ringkasan setiap listing (foto utama, judul, harga, kategori, dan lokasi) dan mengarahkan ke halaman detail. |
-| 3 | KatalogController | C15 KatalogController | Menyusun permintaan katalog dan menghitung paginasi 20 listing per halaman dengan urutan baku terbaru. |
-| 4 | Akun | C23 Akun | Menyediakan syarat bahwa akun pemilik listing tidak diblokir (KF30, KF54). |
-| 5 | Penjual | C25 Penjual | Pemilik listing yang tampil pada katalog. |
-| 6 | Barang | C29 Barang | Menjalankan kueri listing berstatus "Tersedia" beserta jumlah totalnya. |
-| 7 | FotoBarang | C30 FotoBarang | Menyediakan foto utama setiap listing. |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |  
+| :--- | :--- | :--- |  
+| 1 | HalamanKatalog | C05 HalamanKatalog |  
+| 2 | KartuProduk | C06 KartuProduk | 
+| 3 | KatalogController | C15 KatalogController | 
+| 4 | Akun | C23 Akun | 
+| 5 | Penjual | C25 Penjual | 
+| 6 | Barang | C29 Barang | 
+| 7 | FotoBarang | C30 FotoBarang | 
 
 ### 3.13.2 Sequence Diagram
 
@@ -1120,19 +1120,19 @@ Realisasi use case pencarian dan penyaringan melibatkan antarmuka katalog untuk 
 
 Tabel 3.14. Identifikasi Kelas Use Case UC14
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
-| :--- | :--- | :--- | :--- |
-| 1 | HalamanKatalog | C05 HalamanKatalog | Menangkap kata kunci, filter, dan kriteria urutan, memvalidasi rentang harga, serta menampilkan hasil, filter aktif, dan pesan barang tidak ditemukan. |
-| 2 | KartuProduk | C06 KartuProduk | Merender setiap listing hasil pencarian. |
-| 3 | KatalogController | C15 KatalogController | Mengorkestrasi pencarian: meminta kriteria kata kunci dan filter, mengurutkan hasil, dan membagi hasil per halaman. |
-| 4 | PencarianController | C16 PencarianController | Menormalisasi kata kunci dan menyusun kriteria kecocokan pada judul atau deskripsi listing. |
-| 5 | FilterController | C17 FilterController | Memvalidasi parameter filter dan menyusun kriteria kategori, rentang harga, dan lokasi titik temu. |
-| 6 | Akun | C23 Akun | Menyediakan syarat bahwa akun pemilik listing tidak diblokir. |
-| 7 | Penjual | C25 Penjual | Pemilik listing yang tampil pada hasil pencarian. |
-| 8 | Barang | C29 Barang | Menjalankan kueri dengan seluruh kriteria yang aktif secara bersamaan. |
-| 9 | FotoBarang | C30 FotoBarang | Menyediakan foto utama setiap listing hasil pencarian. |
-| 10 | Kategori | C31 Kategori | Memvalidasi kategori yang dipilih pada filter. |
-| 11 | LokasiCOD | C32 LokasiCOD | Memvalidasi lokasi titik temu yang dipilih pada filter. |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | 
+| :--- | :--- | :--- | 
+| 1 | HalamanKatalog | C05 HalamanKatalog |  
+| 2 | KartuProduk | C06 KartuProduk |  
+| 3 | KatalogController | C15 KatalogController | 
+| 4 | PencarianController | C16 PencarianController |  
+| 5 | FilterController | C17 FilterController |  
+| 6 | Akun | C23 Akun | 
+| 7 | Penjual | C25 Penjual | 
+| 8 | Barang | C29 Barang | 
+| 9 | FotoBarang | C30 FotoBarang | 
+| 10 | Kategori | C31 Kategori |  
+| 11 | LokasiCOD | C32 LokasiCOD |  
 
 ### 3.14.2 Sequence Diagram
 
@@ -1193,17 +1193,17 @@ Realisasi use case melihat detail listing melibatkan antarmuka detail barang, co
 
 Tabel 3.15. Identifikasi Kelas Use Case UC15
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
-| :--- | :--- | :--- | :--- |
-| 1 | HalamanDetailBarang | C07 HalamanDetailBarang | Menampilkan galeri foto beserta tampilan penuh (lightbox), informasi listing, identitas penjual, serta tombol aksi sesuai peran pemohon dan status listing. |
-| 2 | BarangController | C14 BarangController | Mengambil detail listing beserta foto, kategori, lokasi, dan identitas penjual, serta menentukan apakah pemohon adalah pemilik listing. |
-| 3 | Penjual | C25 Penjual | Menyediakan identitas penjual yang ditampilkan pada halaman detail. |
-| 4 | SesiLogin | C28 SesiLogin | Menyediakan idAkun pemohon dari sesi aktif. |
-| 5 | Barang | C29 Barang | Menyediakan data listing beserta status terkininya. |
-| 6 | FotoBarang | C30 FotoBarang | Menyediakan galeri foto listing (hingga 5 foto). |
-| 7 | Kategori | C31 Kategori | Menyediakan nama kategori listing. |
-| 8 | LokasiCOD | C32 LokasiCOD | Menyediakan nama lokasi titik temu COD listing. |
-| 9 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token sesi pemohon. |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | 
+| :--- | :--- | :--- |  
+| 1 | HalamanDetailBarang | C07 HalamanDetailBarang | 
+| 2 | BarangController | C14 BarangController |  
+| 3 | Penjual | C25 Penjual |  
+| 4 | SesiLogin | C28 SesiLogin |  
+| 5 | Barang | C29 Barang | 
+| 6 | FotoBarang | C30 FotoBarang | 
+| 7 | Kategori | C31 Kategori |  
+| 8 | LokasiCOD | C32 LokasiCOD |  
+| 9 | Otorisasi | C41 Otorisasi (Pendukung) |  
 
 ### 3.15.2 Sequence Diagram
 
@@ -1275,20 +1275,20 @@ Realisasi use case menghubungi penjual melibatkan antarmuka detail barang dan ru
 
 Tabel 3.16. Identifikasi Kelas Use Case UC16
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
-| :--- | :--- | :--- | :--- |
-| 1 | HalamanDetailBarang | C07 HalamanDetailBarang | Menyediakan tombol "Hubungi Penjual" dan menampilkan pesan galat apabila percakapan tidak dapat dibuka. |
-| 2 | HalamanPercakapan | C08 HalamanPercakapan | Menampilkan ruang percakapan, riwayat pesan, dan tautan Kebijakan Privasi, serta menampilkan penolakan akses bagi pihak ketiga. |
-| 3 | PercakapanController | C18 PercakapanController | Memverifikasi sesi, memeriksa listing dan status blokir penjual, mencari atau membuat ruang percakapan, memverifikasi peserta, dan mendekripsi riwayat pesan. |
-| 4 | Akun | C23 Akun | Menyediakan status blokir akun penjual. |
-| 5 | Pembeli | C24 Pembeli | Peran pembeli sebagai pemrakarsa percakapan. |
-| 6 | Penjual | C25 Penjual | Peran penjual sebagai lawan bicara beserta identitasnya. |
-| 7 | SesiLogin | C28 SesiLogin | Menyediakan idAkun pemohon dari sesi aktif. |
-| 8 | Barang | C29 Barang | Listing yang menjadi konteks percakapan. |
-| 9 | Percakapan | C33 Percakapan | Menyimpan ruang percakapan beserta daftar pesertanya yang sah. |
-| 10 | Pesan | C34 Pesan | Menyediakan riwayat pesan terenkripsi pada ruang percakapan. |
-| 11 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token sesi pemohon. |
-| 12 | Kriptografi | C42 Kriptografi (Pendukung) | Mendekripsi riwayat pesan sebelum ditampilkan kepada peserta. |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | 
+| :--- | :--- | :--- | 
+| 1 | HalamanDetailBarang | C07 HalamanDetailBarang |  
+| 2 | HalamanPercakapan | C08 HalamanPercakapan |  
+| 3 | PercakapanController | C18 PercakapanController |  
+| 4 | Akun | C23 Akun | 
+| 5 | Pembeli | C24 Pembeli |  
+| 6 | Penjual | C25 Penjual |  
+| 7 | SesiLogin | C28 SesiLogin | 
+| 8 | Barang | C29 Barang | 
+| 9 | Percakapan | C33 Percakapan |  
+| 10 | Pesan | C34 Pesan | 
+| 11 | Otorisasi | C41 Otorisasi (Pendukung) | 
+| 12 | Kriptografi | C42 Kriptografi (Pendukung) | 
 
 ### 3.16.2 Sequence Diagram
 
