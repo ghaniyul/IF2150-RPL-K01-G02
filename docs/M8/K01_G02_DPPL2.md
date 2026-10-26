@@ -3907,16 +3907,14 @@ END IF
 
 ## 6.1 Rancangan Antarmuka [ID Layar 1]
 
-Masukkan versi awal prototipe antarmuka, dimana untuk setiap antarmuka/layar, tuliskan spesifikasi rinci objek yang ditampilkan dan reaksi sistem terhadap interaksi pengguna.
-
-**Antarmuka:** *[ID layar]*  
-**Nama Layar:** *[Nama layar]*
+**Antarmuka:** [ID layar 1]  
+**Nama Layar:** Log in & Sign up page
 
 <p align="center">
-<img alt="Contoh Logical View pada P/L E-Commerce" src="./assets/diagram/contoh-design.png" width="50%">
+<img alt="Log in & Sign up page" src="./assets/layar01.png" width="50%">
 </p>
 <p align="center">
-<i>Gambar 6.1. Rancangan Antarmuka [ID Layar] - [Nama Layar]</i>
+<i>Gambar 6.1. Rancangan Antarmuka [ID Layar 1] - Log in & Sign up page</i>
 </p>
 
 Tabel 6.1. Spesifikasi Objek Antarmuka [ID Layar]
