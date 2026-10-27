@@ -3898,6 +3898,1152 @@ ELSE
     RETURN "/assets/gambar/default_barang.png"            // gambar placeholder bila belum ada foto
 END IF
 ```
+## 5.31 Kelas Kategori
+
+**Nama Kelas:** Kategori  
+**ID Kelas:** C31
+
+Tabel 5.31.1. Operasi Kelas Kategori
+
+| Nama Operasi | Visibility (private, public) | Keterangan |
+| :--- | :--- | :--- |
+| `getDaftarKategori(): List<Kategori>` | public | Mengambil seluruh kategori barang yang telah ditetapkan (jas praktikum, buku dan diktat, elektronik, perlengkapan kos, pakaian dan jaket himpunan, serta lain-lain) dari tabel `kategori` sebagai satu-satunya pilihan kategori pada formulir listing dan filter katalog (KF19, KF26, Algo-036). |
+| `validasiKategori(idKategori: String): Boolean` | public | Memeriksa apakah `idKategori` terdaftar pada tabel `kategori` sehingga kategori di luar daftar tetap ditolak di sisi server (KF19, Algo-037). |
+| `getKategori(idKategori: String): Kategori` | public | Mengambil satu kategori berdasarkan `idKategori` agar nama kategori dapat ditampilkan pada detail listing (KF17). |
+
+Tabel 5.31.2. Atribut Kelas Kategori
+
+| Nama Atribut | Visibility (private, public) | Tipe |
+| :--- | :--- | :--- |
+| idKategori | private | `String` |
+| namaKategori | private | `String` |
+
+### 5.31.1 Algoritma/Query: getDaftarKategori
+
+**Nama Kelas:** Kategori  
+**Nama Operasi:** `getDaftarKategori(): List<Kategori>`  
+**ID Algoritma:** Algo-036
+
+```text
+// Kueri SQL mengambil seluruh kategori barang yang telah ditetapkan (KF19)
+QUERY basis_data:
+    SELECT id_kategori, nama_kategori
+    FROM kategori
+    ORDER BY id_kategori ASC;
+
+RETURN daftar objek Kategori hasil pemetaan setiap baris
+```
+
+### 5.31.2 Algoritma/Query: validasiKategori
+
+**Nama Kelas:** Kategori  
+**Nama Operasi:** `validasiKategori(idKategori: String): Boolean`  
+**ID Algoritma:** Algo-037
+
+```text
+IF idKategori = null OR trim(idKategori) = "" THEN
+    RETURN false                                          // kategori wajib dipilih (KF18)
+END IF
+
+// Kueri SQL memeriksa keberadaan kategori pada daftar yang ditetapkan (KF19)
+QUERY basis_data:
+    SELECT COUNT(*) AS jumlah
+    FROM kategori
+    WHERE id_kategori = :idKategori;
+
+IF hasil.jumlah > 0 THEN
+    RETURN true
+ELSE
+    RETURN false
+END IF
+```
+
+## 5.32 Kelas LokasiCOD
+
+**Nama Kelas:** LokasiCOD  
+**ID Kelas:** C32
+
+Tabel 5.32.1. Operasi Kelas LokasiCOD
+
+| Nama Operasi | Visibility (private, public) | Keterangan |
+| :--- | :--- | :--- |
+| `getDaftarLokasi(): List<LokasiCOD>` | public | Mengambil seluruh titik temu COD pada lingkungan multikampus dari tabel `lokasi_cod` sebagai pilihan pada formulir listing dan filter katalog (KF15, KF26, Algo-038). |
+| `validasiLokasi(idLokasi: String): Boolean` | public | Memeriksa apakah `idLokasi` terdaftar pada tabel `lokasi_cod` sehingga lokasi di luar daftar ditolak di sisi server (KF15, KF26, Algo-039). |
+| `getLokasi(idLokasi: String): LokasiCOD` | public | Mengambil satu titik temu COD berdasarkan `idLokasi` agar nama lokasi dan kampusnya dapat ditampilkan pada detail listing (KF17). |
+
+Tabel 5.32.2. Atribut Kelas LokasiCOD
+
+| Nama Atribut | Visibility (private, public) | Tipe |
+| :--- | :--- | :--- |
+| idLokasi | private | `String` |
+| namaLokasi | private | `String` |
+| kampus | private | `String` |
+
+### 5.32.1 Algoritma/Query: getDaftarLokasi
+
+**Nama Kelas:** LokasiCOD  
+**Nama Operasi:** `getDaftarLokasi(): List<LokasiCOD>`  
+**ID Algoritma:** Algo-038
+
+```text
+// Kueri SQL mengambil seluruh titik temu COD, dikelompokkan per kampus (KF15)
+QUERY basis_data:
+    SELECT id_lokasi, nama_lokasi, kampus
+    FROM lokasi_cod
+    ORDER BY kampus ASC, nama_lokasi ASC;
+
+RETURN daftar objek LokasiCOD hasil pemetaan setiap baris
+```
+
+### 5.32.2 Algoritma/Query: validasiLokasi
+
+**Nama Kelas:** LokasiCOD  
+**Nama Operasi:** `validasiLokasi(idLokasi: String): Boolean`  
+**ID Algoritma:** Algo-039
+
+```text
+IF idLokasi = null OR trim(idLokasi) = "" THEN
+    RETURN false
+END IF
+
+// Kueri SQL memeriksa keberadaan titik temu COD pada daftar yang tersedia (KF15, KF26)
+QUERY basis_data:
+    SELECT COUNT(*) AS jumlah
+    FROM lokasi_cod
+    WHERE id_lokasi = :idLokasi;
+
+IF hasil.jumlah > 0 THEN
+    RETURN true
+ELSE
+    RETURN false
+END IF
+```
+
+## 5.33 Kelas Percakapan
+
+**Nama Kelas:** Percakapan  
+**ID Kelas:** C33
+
+Tabel 5.33.1. Operasi Kelas Percakapan
+
+| Nama Operasi | Visibility (private, public) | Keterangan |
+| :--- | :--- | :--- |
+| `cariById(idPercakapan: String): Percakapan` | public | Mengambil data satu ruang percakapan berdasarkan `idPercakapan` dari tabel `percakapan` (KF32, KF35). |
+| `cariByKombinasi(idBarang: String, idPembeli: String, idPenjual: String): Percakapan` | public | Mencari ruang percakapan yang sudah ada untuk kombinasi listing, pembeli, dan penjual agar tidak dibuat ruang ganda (KF31, Algo-040). |
+| `simpan(idBarang: String, idPembeli: String, idPenjual: String): Percakapan` | public | Membuat dan menyimpan ruang percakapan baru ke tabel `percakapan` ketika kombinasi tersebut belum pernah ada (KF31, Algo-041). |
+| `cekPeserta(idAkun: String): Boolean` | public | Memeriksa apakah `idAkun` sama dengan `idPembeli` atau `idPenjual` pada percakapan ini. Akun lain, termasuk admin, dinyatakan bukan peserta (KF35). |
+| `addPesan(idPengirim: String, isiPesanTerenkripsi: String): Pesan` | public | Menambahkan pesan terenkripsi baru ke ruang percakapan ini dengan meneruskannya ke `Pesan.simpanPesan()` memakai `idPercakapan` milik objek (KF32, KF36, Algo-046). |
+| `perbaruiWaktuTerakhir(waktu: DateTime): void` | public | Memperbarui `waktuPembaruanTerakhir` percakapan saat pesan baru tersimpan agar daftar percakapan terurut dari interaksi terbaru (KF33, Algo-042). |
+| `getDaftarPercakapanByPengguna(idAkun: String): List<Percakapan>` | public | Mengambil seluruh ruang percakapan yang melibatkan `idAkun` sebagai pembeli atau penjual, diurutkan dari yang terbaru (KF33, Algo-043). |
+| `getLawanBicara(idAkun: String): Map<String, String>` | public | Mengembalikan identitas lawan bicara (idAkun dan nama) dari sudut pandang `idAkun` untuk ditampilkan pada ruang dan daftar percakapan (KF33, Algo-044). |
+
+Tabel 5.33.2. Atribut Kelas Percakapan
+
+| Nama Atribut | Visibility (private, public) | Tipe |
+| :--- | :--- | :--- |
+| idPercakapan | private | `String` |
+| idPembeli | private | `String` |
+| idPenjual | private | `String` |
+| idBarang | private | `String` |
+| waktuDibuat | private | `DateTime` |
+| waktuPembaruanTerakhir | private | `DateTime` |
+
+### 5.33.1 Algoritma/Query: cariByKombinasi
+
+**Nama Kelas:** Percakapan  
+**Nama Operasi:** `cariByKombinasi(idBarang: String, idPembeli: String, idPenjual: String): Percakapan`  
+**ID Algoritma:** Algo-040
+
+```text
+// Kueri SQL mencari ruang percakapan untuk kombinasi listing, pembeli, dan penjual (KF31)
+QUERY basis_data:
+    SELECT id_percakapan, id_pembeli, id_penjual, id_barang,
+           waktu_dibuat, waktu_pembaruan_terakhir
+    FROM percakapan
+    WHERE id_barang = :idBarang
+      AND id_pembeli = :idPembeli
+      AND id_penjual = :idPenjual
+    LIMIT 1;
+
+IF baris_ditemukan THEN
+    RETURN objek Percakapan hasil pemetaan baris
+ELSE
+    RETURN null
+END IF
+```
+
+### 5.33.2 Algoritma/Query: simpan
+
+**Nama Kelas:** Percakapan  
+**Nama Operasi:** `simpan(idBarang: String, idPembeli: String, idPenjual: String): Percakapan`  
+**ID Algoritma:** Algo-041
+
+```text
+idBaru ← bangkitkan_uuid()
+waktuSekarang ← waktu_saat_ini()
+
+// Kueri SQL untuk persistensi ruang percakapan baru (KF31)
+QUERY basis_data:
+    INSERT INTO percakapan (
+        id_percakapan, id_pembeli, id_penjual, id_barang,
+        waktu_dibuat, waktu_pembaruan_terakhir
+    ) VALUES (
+        idBaru, :idPembeli, :idPenjual, :idBarang,
+        waktuSekarang, waktuSekarang
+    );
+
+RETURN objek Percakapan dengan idPercakapan = idBaru, waktuDibuat = waktuSekarang,
+       dan waktuPembaruanTerakhir = waktuSekarang
+```
+
+### 5.33.3 Algoritma/Query: perbaruiWaktuTerakhir
+
+**Nama Kelas:** Percakapan  
+**Nama Operasi:** `perbaruiWaktuTerakhir(waktu: DateTime): void`  
+**ID Algoritma:** Algo-042
+
+```text
+// Kueri SQL memperbarui waktu interaksi terakhir percakapan (KF33)
+QUERY basis_data:
+    UPDATE percakapan
+    SET waktu_pembaruan_terakhir = :waktu
+    WHERE id_percakapan = :idPercakapan;
+```
+
+### 5.33.4 Algoritma/Query: getDaftarPercakapanByPengguna
+
+**Nama Kelas:** Percakapan  
+**Nama Operasi:** `getDaftarPercakapanByPengguna(idAkun: String): List<Percakapan>`  
+**ID Algoritma:** Algo-043
+
+```text
+// Kueri SQL mengambil seluruh percakapan milik pengguna sebagai pembeli atau penjual (KF33)
+QUERY basis_data:
+    SELECT id_percakapan, id_pembeli, id_penjual, id_barang,
+           waktu_dibuat, waktu_pembaruan_terakhir
+    FROM percakapan
+    WHERE id_pembeli = :idAkun
+       OR id_penjual = :idAkun
+    ORDER BY waktu_pembaruan_terakhir DESC;
+
+RETURN daftar objek Percakapan hasil pemetaan setiap baris         // daftar kosong bila tidak ada baris
+```
+
+### 5.33.5 Algoritma/Query: getLawanBicara
+
+**Nama Kelas:** Percakapan  
+**Nama Operasi:** `getLawanBicara(idAkun: String): Map<String, String>`  
+**ID Algoritma:** Algo-044
+
+```text
+// Tentukan lawan bicara dari sudut pandang idAkun
+IF idAkun = idPembeli THEN
+    idLawan ← idPenjual
+ELSE
+    idLawan ← idPembeli
+END IF
+
+// Kueri SQL mengambil identitas lawan bicara (KF33)
+QUERY basis_data:
+    SELECT id_akun, nama
+    FROM akun
+    WHERE id_akun = :idLawan;
+
+IF baris_ditemukan THEN
+    RETURN {
+        idAkun: hasil.id_akun,
+        nama: hasil.nama
+    }
+ELSE
+    RETURN null
+END IF
+```
+
+## 5.34 Kelas Pesan
+
+**Nama Kelas:** Pesan  
+**ID Kelas:** C34
+
+Tabel 5.34.1. Operasi Kelas Pesan
+
+| Nama Operasi | Visibility (private, public) | Keterangan |
+| :--- | :--- | :--- |
+| `getDaftarPesan(idPercakapan: String): List<Pesan>` | public | Mengambil seluruh pesan terenkripsi pada sebuah percakapan, diurutkan dari yang paling lama agar ditampilkan secara berurutan (KF32, Algo-045). |
+| `simpanPesan(idPercakapan: String, idPengirim: String, isiPesanTerenkripsi: String): Pesan` | public | Menyimpan pesan baru ke tabel `pesan` dalam bentuk terenkripsi dengan `statusBaca = false` dan mengembalikan objek pesan yang tersimpan (KF32, KF36, Algo-046). |
+| `getCuplikanPesanTerakhir(idPercakapan: String): Pesan` | public | Mengambil pesan terbaru pada sebuah percakapan sebagai bahan cuplikan pada daftar percakapan (KF33, Algo-047). |
+| `hitungPesanBelumDibaca(idPercakapan: String, idAkun: String): Integer` | public | Menghitung jumlah pesan dari lawan bicara yang masih berstatus belum dibaca oleh `idAkun` untuk penanda pesan belum dibaca (KF34, Algo-048). |
+
+Tabel 5.34.2. Atribut Kelas Pesan
+
+| Nama Atribut | Visibility (private, public) | Tipe |
+| :--- | :--- | :--- |
+| idPesan | private | `String` |
+| idPercakapan | private | `String` |
+| idPengirim | private | `String` |
+| isiPesanTerenkripsi | private | `String` |
+| waktuKirim | private | `DateTime` |
+| statusBaca | private | `Boolean` |
+
+### 5.34.1 Algoritma/Query: getDaftarPesan
+
+**Nama Kelas:** Pesan  
+**Nama Operasi:** `getDaftarPesan(idPercakapan: String): List<Pesan>`  
+**ID Algoritma:** Algo-045
+
+```text
+// Kueri SQL mengambil riwayat pesan terenkripsi secara berurutan (KF32)
+QUERY basis_data:
+    SELECT id_pesan, id_percakapan, id_pengirim,
+           isi_pesan_terenkripsi, waktu_kirim, status_baca
+    FROM pesan
+    WHERE id_percakapan = :idPercakapan
+    ORDER BY waktu_kirim ASC;
+
+RETURN daftar objek Pesan hasil pemetaan setiap baris              // isi tetap terenkripsi (KF36)
+```
+
+### 5.34.2 Algoritma/Query: simpanPesan
+
+**Nama Kelas:** Pesan  
+**Nama Operasi:** `simpanPesan(idPercakapan: String, idPengirim: String, isiPesanTerenkripsi: String): Pesan`  
+**ID Algoritma:** Algo-046
+
+```text
+idBaru ← bangkitkan_uuid()
+waktuSekarang ← waktu_saat_ini()
+
+// Isi pesan sudah dienkripsi oleh Kriptografi sebelum sampai ke Model (KF36)
+// Kueri SQL untuk persistensi pesan baru (KF32)
+QUERY basis_data:
+    INSERT INTO pesan (
+        id_pesan, id_percakapan, id_pengirim,
+        isi_pesan_terenkripsi, waktu_kirim, status_baca
+    ) VALUES (
+        idBaru, :idPercakapan, :idPengirim,
+        :isiPesanTerenkripsi, waktuSekarang, false
+    );
+
+RETURN objek Pesan dengan idPesan = idBaru, waktuKirim = waktuSekarang, statusBaca = false
+```
+
+### 5.34.3 Algoritma/Query: getCuplikanPesanTerakhir
+
+**Nama Kelas:** Pesan  
+**Nama Operasi:** `getCuplikanPesanTerakhir(idPercakapan: String): Pesan`  
+**ID Algoritma:** Algo-047
+
+```text
+// Kueri SQL mengambil pesan terbaru pada percakapan (KF33)
+QUERY basis_data:
+    SELECT id_pesan, id_percakapan, id_pengirim,
+           isi_pesan_terenkripsi, waktu_kirim, status_baca
+    FROM pesan
+    WHERE id_percakapan = :idPercakapan
+    ORDER BY waktu_kirim DESC
+    LIMIT 1;
+
+IF baris_ditemukan THEN
+    RETURN objek Pesan hasil pemetaan baris                    // didekripsi oleh PercakapanController
+ELSE
+    RETURN null                                               // percakapan belum memiliki pesan
+END IF
+```
+
+### 5.34.4 Algoritma/Query: hitungPesanBelumDibaca
+
+**Nama Kelas:** Pesan  
+**Nama Operasi:** `hitungPesanBelumDibaca(idPercakapan: String, idAkun: String): Integer`  
+**ID Algoritma:** Algo-048
+
+```text
+// Kueri SQL menghitung pesan dari lawan bicara yang belum dibaca oleh idAkun (KF34)
+QUERY basis_data:
+    SELECT COUNT(*) AS jumlah
+    FROM pesan
+    WHERE id_percakapan = :idPercakapan
+      AND id_pengirim <> :idAkun
+      AND status_baca = false;
+
+RETURN hasil.jumlah
+```
+
+## 5.35 Kelas Notifikasi
+
+**Nama Kelas:** Notifikasi  
+**ID Kelas:** C35
+
+Tabel 5.35.1. Operasi Kelas Notifikasi
+
+| Nama Operasi | Visibility (private, public) | Keterangan |
+| :--- | :--- | :--- |
+| `simpan(idAkun: String, jenis: String, isi: String, waktuKirim: DateTime, statusBaca: Boolean): Boolean` | public | Menyimpan rekaman pemberitahuan baru untuk akun penerima ke tabel `notifikasi` (KF34, Algo-049). |
+| `hitungBelumDibaca(idAkun: String): Integer` | public | Menghitung jumlah notifikasi milik akun yang masih berstatus belum dibaca untuk memperbarui penanda jumlah pada panel notifikasi (KF34, Algo-050). |
+
+Tabel 5.35.2. Atribut Kelas Notifikasi
+
+| Nama Atribut | Visibility (private, public) | Tipe |
+| :--- | :--- | :--- |
+| idNotifikasi | private | `String` |
+| idAkun | private | `String` |
+| jenis | private | `String` |
+| isi | private | `String` |
+| waktuKirim | private | `DateTime` |
+| statusBaca | private | `Boolean` |
+
+### 5.35.1 Algoritma/Query: simpan
+
+**Nama Kelas:** Notifikasi  
+**Nama Operasi:** `simpan(idAkun: String, jenis: String, isi: String, waktuKirim: DateTime, statusBaca: Boolean): Boolean`  
+**ID Algoritma:** Algo-049
+
+```text
+idBaru ← bangkitkan_uuid()
+
+// Kueri SQL untuk persistensi pemberitahuan baru (KF34)
+QUERY basis_data:
+    INSERT INTO notifikasi (
+        id_notifikasi, id_akun, jenis, isi, waktu_kirim, status_baca
+    ) VALUES (
+        idBaru, :idAkun, :jenis, :isi, :waktuKirim, :statusBaca
+    );
+
+IF baris_terpengaruh > 0 THEN
+    RETURN true
+ELSE
+    RETURN false
+END IF
+```
+
+### 5.35.2 Algoritma/Query: hitungBelumDibaca
+
+**Nama Kelas:** Notifikasi  
+**Nama Operasi:** `hitungBelumDibaca(idAkun: String): Integer`  
+**ID Algoritma:** Algo-050
+
+```text
+// Kueri SQL menghitung notifikasi yang belum dibaca oleh akun (KF34)
+QUERY basis_data:
+    SELECT COUNT(*) AS jumlah
+    FROM notifikasi
+    WHERE id_akun = :idAkun
+      AND status_baca = false;
+
+RETURN hasil.jumlah
+```
+
+## 5.36 Kelas Laporan
+
+**Nama Kelas:** Laporan  
+**ID Kelas:** C36
+
+Tabel 5.36.1. Operasi Kelas Laporan
+
+| Nama Operasi | Visibility (private, public) | Keterangan |
+| :--- | :--- | :--- |
+| `simpanLaporanBaru(data: Map<String, Any>): String` | public | Menyimpan laporan pelanggaran baru ke tabel `laporan` dengan status awal "Baru" dan mengembalikan `idLaporan` yang dibangkitkan (KF43, Algo-051). |
+| `getAllLaporan(): List<Laporan>` | public | Mengambil seluruh laporan yang masuk ke sistem, diurutkan dari yang terbaru, untuk ditampilkan pada dasbor admin (KF45, Algo-052). |
+| `filterByStatus(status: String): List<Laporan>` | public | Mengambil laporan yang berstatus penanganan "Baru", "Diproses", atau "Selesai" sesuai pilihan penyaring admin (KF46, Algo-053). |
+| `getDetailLaporan(idLaporan: String): Laporan` | public | Mengambil data lengkap satu laporan berdasarkan `idLaporan` untuk halaman detail laporan (KF45, Algo-054). |
+| `updateStatusPenanganan(idLaporan: String, statusBaru: String, waktuPerubahan: DateTime): Boolean` | public | Memperbarui status penanganan laporan beserta waktu perubahannya (KF47, Algo-055). |
+
+Tabel 5.36.2. Atribut Kelas Laporan
+
+| Nama Atribut | Visibility (private, public) | Tipe |
+| :--- | :--- | :--- |
+| idLaporan | private | `String` |
+| idPelapor | private | `String` |
+| objekDilaporkan | private | `String` |
+| jenisPelanggaran | private | `String` |
+| teksAlasan | private | `String` |
+| waktuLapor | private | `DateTime` |
+| statusPenanganan | private | `String` |
+| waktuPerubahan | private | `DateTime` |
+
+### 5.36.1 Algoritma/Query: simpanLaporanBaru
+
+**Nama Kelas:** Laporan  
+**Nama Operasi:** `simpanLaporanBaru(data: Map<String, Any>): String`  
+**ID Algoritma:** Algo-051
+
+```text
+idBaru ← bangkitkan_uuid()
+
+// Nilai kolom diambil dari data["idPelapor"], data["objekDilaporkan"],
+// data["jenisPelanggaran"], data["teksAlasan"], dan data["waktuLapor"]
+
+// Kueri SQL untuk persistensi laporan baru dengan status awal "Baru" (KF43)
+QUERY basis_data:
+    INSERT INTO laporan (
+        id_laporan, id_pelapor, objek_dilaporkan, jenis_pelanggaran,
+        teks_alasan, waktu_lapor, status_penanganan, waktu_perubahan
+    ) VALUES (
+        idBaru, :idPelapor, :objekDilaporkan, :jenisPelanggaran,
+        :teksAlasan, :waktuLapor, 'Baru', :waktuLapor
+    );
+
+RETURN idBaru
+```
+
+### 5.36.2 Algoritma/Query: getAllLaporan
+
+**Nama Kelas:** Laporan  
+**Nama Operasi:** `getAllLaporan(): List<Laporan>`  
+**ID Algoritma:** Algo-052
+
+```text
+// Kueri SQL mengambil seluruh laporan untuk dasbor admin (KF45)
+QUERY basis_data:
+    SELECT id_laporan, id_pelapor, objek_dilaporkan, jenis_pelanggaran,
+           teks_alasan, waktu_lapor, status_penanganan, waktu_perubahan
+    FROM laporan
+    ORDER BY waktu_lapor DESC;
+
+RETURN daftar objek Laporan hasil pemetaan setiap baris            // daftar kosong bila tidak ada baris
+```
+
+### 5.36.3 Algoritma/Query: filterByStatus
+
+**Nama Kelas:** Laporan  
+**Nama Operasi:** `filterByStatus(status: String): List<Laporan>`  
+**ID Algoritma:** Algo-053
+
+```text
+IF status NOT IN ["Baru", "Diproses", "Selesai"] THEN
+    RETURN []                                             // status penyaring tidak sah
+END IF
+
+// Kueri SQL menyaring laporan berdasarkan status penanganan (KF46)
+QUERY basis_data:
+    SELECT id_laporan, id_pelapor, objek_dilaporkan, jenis_pelanggaran,
+           teks_alasan, waktu_lapor, status_penanganan, waktu_perubahan
+    FROM laporan
+    WHERE status_penanganan = :status
+    ORDER BY waktu_lapor DESC;
+
+RETURN daftar objek Laporan hasil pemetaan setiap baris
+```
+
+### 5.36.4 Algoritma/Query: getDetailLaporan
+
+**Nama Kelas:** Laporan  
+**Nama Operasi:** `getDetailLaporan(idLaporan: String): Laporan`  
+**ID Algoritma:** Algo-054
+
+```text
+// Kueri SQL mengambil data lengkap satu laporan (KF45)
+QUERY basis_data:
+    SELECT id_laporan, id_pelapor, objek_dilaporkan, jenis_pelanggaran,
+           teks_alasan, waktu_lapor, status_penanganan, waktu_perubahan
+    FROM laporan
+    WHERE id_laporan = :idLaporan
+    LIMIT 1;
+
+IF baris_ditemukan THEN
+    RETURN objek Laporan hasil pemetaan baris
+ELSE
+    RETURN null
+END IF
+```
+
+### 5.36.5 Algoritma/Query: updateStatusPenanganan
+
+**Nama Kelas:** Laporan  
+**Nama Operasi:** `updateStatusPenanganan(idLaporan: String, statusBaru: String, waktuPerubahan: DateTime): Boolean`  
+**ID Algoritma:** Algo-055
+
+```text
+IF statusBaru NOT IN ["Baru", "Diproses", "Selesai"] THEN
+    RETURN false                                          // status tujuan tidak sah
+END IF
+
+// Kueri SQL memperbarui status penanganan beserta waktu perubahannya (KF47)
+QUERY basis_data:
+    UPDATE laporan
+    SET status_penanganan = :statusBaru,
+        waktu_perubahan = :waktuPerubahan
+    WHERE id_laporan = :idLaporan;
+
+IF baris_terpengaruh > 0 THEN
+    RETURN true
+ELSE
+    RETURN false                                          // laporan tidak ditemukan
+END IF
+```
+
+## 5.37 Kelas BuktiLaporan
+
+**Nama Kelas:** BuktiLaporan  
+**ID Kelas:** C37
+
+Tabel 5.37.1. Operasi Kelas BuktiLaporan
+
+| Nama Operasi | Visibility (private, public) | Keterangan |
+| :--- | :--- | :--- |
+| `validasiLampiranWajib(berkas: List<File>): Boolean` | public | Memeriksa bahwa sedikitnya satu berkas bukti tangkapan layar terlampir dan tidak ada berkas yang kosong sebelum laporan diteruskan (KF44, Algo-056). |
+| `simpan(idLaporan: String, namaBerkas: String, pathBerkas: String): Boolean` | public | Menyimpan metadata berkas bukti, yaitu nama berkas dan lokasi berkas pada penyimpanan, ke tabel `bukti_laporan` beserta keterkaitannya dengan laporan (KF44, Algo-057). |
+
+Tabel 5.37.2. Atribut Kelas BuktiLaporan
+
+| Nama Atribut | Visibility (private, public) | Tipe |
+| :--- | :--- | :--- |
+| idBukti | private | `String` |
+| idLaporan | private | `String` |
+| namaBerkas | private | `String` |
+| pathBerkas | private | `String` |
+
+### 5.37.1 Algoritma/Query: validasiLampiranWajib
+
+**Nama Kelas:** BuktiLaporan  
+**Nama Operasi:** `validasiLampiranWajib(berkas: List<File>): Boolean`  
+**ID Algoritma:** Algo-056
+
+```text
+IF berkas = null OR length(berkas) = 0 THEN
+    RETURN false                                          // bukti tangkapan layar wajib dilampirkan (KF44)
+END IF
+
+FOR EACH f IN berkas DO
+    IF f = null OR f.ukuran = 0 THEN
+        RETURN false                                      // berkas kosong tidak dapat menjadi bukti
+    END IF
+END FOR
+
+RETURN true
+```
+
+### 5.37.2 Algoritma/Query: simpan
+
+**Nama Kelas:** BuktiLaporan  
+**Nama Operasi:** `simpan(idLaporan: String, namaBerkas: String, pathBerkas: String): Boolean`  
+**ID Algoritma:** Algo-057
+
+```text
+idBaru ← bangkitkan_uuid()
+
+// Kueri SQL untuk persistensi metadata berkas bukti laporan (KF44)
+QUERY basis_data:
+    INSERT INTO bukti_laporan (
+        id_bukti, id_laporan, nama_berkas, path_berkas
+    ) VALUES (
+        idBaru, :idLaporan, :namaBerkas, :pathBerkas
+    );
+
+IF baris_terpengaruh > 0 THEN
+    RETURN true
+ELSE
+    RETURN false
+END IF
+```
+
+## 5.38 Kelas LogAudit
+
+**Nama Kelas:** LogAudit  
+**ID Kelas:** C38
+
+Tabel 5.38.1. Operasi Kelas LogAudit
+
+| Nama Operasi | Visibility (private, public) | Keterangan |
+| :--- | :--- | :--- |
+| `catatPenerimaanLaporan(idLaporan: String, idPelapor: String): void` | public | Menambahkan catatan penerimaan laporan baru dengan pelapor sebagai pelaku ke tabel `log_audit` (KF48, Algo-058). |
+| `catatPerubahanStatusLaporan(idLaporan: String, idAdmin: String, statusBaru: String): void` | public | Menambahkan catatan perubahan status penanganan laporan oleh admin beserta status barunya (KF48, Algo-059). |
+| `catatPenghapusanListing(idLaporan: String, idAdmin: String, idBarang: String): void` | public | Menambahkan catatan penghapusan listing yang dilaporkan oleh admin (KF48, Algo-060). |
+| `catatPemblokiranAkun(idLaporan: String, idAdmin: String, idAkun: String): void` | public | Menambahkan catatan pemblokiran akun pengguna oleh admin terkait laporan (KF48, Algo-061). |
+
+Seluruh operasi pada kelas ini hanya menambah catatan. LogAudit sengaja tidak menyediakan operasi untuk mengubah maupun menghapus catatan, sehingga rekam jejak yang telah tersimpan tidak dapat dimanipulasi (KF49).
+
+Tabel 5.38.2. Atribut Kelas LogAudit
+
+| Nama Atribut | Visibility (private, public) | Tipe |
+| :--- | :--- | :--- |
+| idLog | private | `String` |
+| idLaporan | private | `String` |
+| waktu | private | `DateTime` |
+| identitasAktor | private | `String` |
+| tindakan | private | `String` |
+
+### 5.38.1 Algoritma/Query: catatPenerimaanLaporan
+
+**Nama Kelas:** LogAudit  
+**Nama Operasi:** `catatPenerimaanLaporan(idLaporan: String, idPelapor: String): void`  
+**ID Algoritma:** Algo-058
+
+```text
+idBaru ← bangkitkan_uuid()
+waktuSekarang ← waktu_saat_ini()
+
+// Kueri SQL hanya-tambah (INSERT) untuk mencatat penerimaan laporan (KF48, KF49)
+QUERY basis_data:
+    INSERT INTO log_audit (
+        id_log, id_laporan, waktu, identitas_aktor, tindakan
+    ) VALUES (
+        idBaru, :idLaporan, waktuSekarang, :idPelapor, 'Penerimaan laporan'
+    );
+```
+
+### 5.38.2 Algoritma/Query: catatPerubahanStatusLaporan
+
+**Nama Kelas:** LogAudit  
+**Nama Operasi:** `catatPerubahanStatusLaporan(idLaporan: String, idAdmin: String, statusBaru: String): void`  
+**ID Algoritma:** Algo-059
+
+```text
+idBaru ← bangkitkan_uuid()
+waktuSekarang ← waktu_saat_ini()
+teksTindakan ← "Perubahan status laporan menjadi " + statusBaru
+
+// Kueri SQL hanya-tambah (INSERT) untuk mencatat tindak lanjut laporan (KF48, KF49)
+QUERY basis_data:
+    INSERT INTO log_audit (
+        id_log, id_laporan, waktu, identitas_aktor, tindakan
+    ) VALUES (
+        idBaru, :idLaporan, waktuSekarang, :idAdmin, teksTindakan
+    );
+```
+
+### 5.38.3 Algoritma/Query: catatPenghapusanListing
+
+**Nama Kelas:** LogAudit  
+**Nama Operasi:** `catatPenghapusanListing(idLaporan: String, idAdmin: String, idBarang: String): void`  
+**ID Algoritma:** Algo-060
+
+```text
+idBaru ← bangkitkan_uuid()
+waktuSekarang ← waktu_saat_ini()
+teksTindakan ← "Penghapusan listing: " + idBarang
+
+// Kueri SQL hanya-tambah (INSERT) untuk mencatat penghapusan listing (KF48, KF49)
+QUERY basis_data:
+    INSERT INTO log_audit (
+        id_log, id_laporan, waktu, identitas_aktor, tindakan
+    ) VALUES (
+        idBaru, :idLaporan, waktuSekarang, :idAdmin, teksTindakan
+    );
+```
+
+### 5.38.4 Algoritma/Query: catatPemblokiranAkun
+
+**Nama Kelas:** LogAudit  
+**Nama Operasi:** `catatPemblokiranAkun(idLaporan: String, idAdmin: String, idAkun: String): void`  
+**ID Algoritma:** Algo-061
+
+```text
+idBaru ← bangkitkan_uuid()
+waktuSekarang ← waktu_saat_ini()
+teksTindakan ← "Pemblokiran akun: " + idAkun
+
+// Kueri SQL hanya-tambah (INSERT) untuk mencatat pemblokiran akun (KF48, KF49)
+QUERY basis_data:
+    INSERT INTO log_audit (
+        id_log, id_laporan, waktu, identitas_aktor, tindakan
+    ) VALUES (
+        idBaru, :idLaporan, waktuSekarang, :idAdmin, teksTindakan
+    );
+```
+
+## 5.39 Kelas LogAdmin
+
+**Nama Kelas:** LogAdmin  
+**ID Kelas:** C39
+
+Tabel 5.39.1. Operasi Kelas LogAdmin
+
+| Nama Operasi | Visibility (private, public) | Keterangan |
+| :--- | :--- | :--- |
+| `catatTindakan(idAdmin: String, jenisTindakan: String, objekDitindak: String, alasan: String): void` | public | Menyimpan rekaman tindakan moderasi admin, yaitu pelaku, jenis tindakan, objek yang ditindak, waktu, dan alasan, ke tabel `log_admin` (KF55, Algo-062). |
+
+Tabel 5.39.2. Atribut Kelas LogAdmin
+
+| Nama Atribut | Visibility (private, public) | Tipe |
+| :--- | :--- | :--- |
+| idLogAdmin | private | `String` |
+| idAdmin | private | `String` |
+| jenisTindakan | private | `String` |
+| objekDitindak | private | `String` |
+| waktu | private | `DateTime` |
+| alasan | private | `String` |
+
+### 5.39.1 Algoritma/Query: catatTindakan
+
+**Nama Kelas:** LogAdmin  
+**Nama Operasi:** `catatTindakan(idAdmin: String, jenisTindakan: String, objekDitindak: String, alasan: String): void`  
+**ID Algoritma:** Algo-062
+
+```text
+idBaru ← bangkitkan_uuid()
+waktuSekarang ← waktu_saat_ini()
+
+// Kueri SQL mencatat tindakan moderasi admin (KF55)
+QUERY basis_data:
+    INSERT INTO log_admin (
+        id_log_admin, id_admin, jenis_tindakan, objek_ditindak, waktu, alasan
+    ) VALUES (
+        idBaru, :idAdmin, :jenisTindakan, :objekDitindak, waktuSekarang, :alasan
+    );
+```
+
+## 5.40 Kelas DokumenLegal
+
+**Nama Kelas:** DokumenLegal  
+**ID Kelas:** C40
+
+Tabel 5.40.1. Operasi Kelas DokumenLegal
+
+| Nama Operasi | Visibility (private, public) | Keterangan |
+| :--- | :--- | :--- |
+| `getVersiTerbaru(jenis: String): DokumenLegal` | public | Mengambil dokumen legal (Kebijakan Privasi atau Ketentuan Penggunaan) versi terbaru yang berstatus terpublikasi dan sudah berlaku dari tabel `dokumen_legal` (KF13, KF38, Algo-063). |
+| `getTautan(): String` | public | Mengembalikan atribut `tautan` dokumen untuk ditampilkan pada formulir pendaftaran, menu pengaturan akun, dan ruang percakapan (KF13, KF39). |
+| `getIsi(): String` | public | Mengembalikan atribut `isi` dokumen untuk ditampilkan pada halaman dokumen legal (KF13, KF38). |
+
+Tabel 5.40.2. Atribut Kelas DokumenLegal
+
+| Nama Atribut | Visibility (private, public) | Tipe |
+| :--- | :--- | :--- |
+| idDokumen | private | `String` |
+| jenisDokumen | private | `String` |
+| judul | private | `String` |
+| isi | private | `String` |
+| klausaPrivasiPesan | private | `String` |
+| versi | private | `String` |
+| tanggalBerlaku | private | `Date` |
+| statusPublikasi | private | `Boolean` |
+| tautan | private | `String` |
+
+### 5.40.1 Algoritma/Query: getVersiTerbaru
+
+**Nama Kelas:** DokumenLegal  
+**Nama Operasi:** `getVersiTerbaru(jenis: String): DokumenLegal`  
+**ID Algoritma:** Algo-063
+
+```text
+// Kueri SQL mengambil versi terbaru dokumen legal yang terpublikasi dan sudah berlaku (KF13, KF38)
+QUERY basis_data:
+    SELECT id_dokumen, jenis_dokumen, judul, isi, klausa_privasi_pesan,
+           versi, tanggal_berlaku, status_publikasi, tautan
+    FROM dokumen_legal
+    WHERE jenis_dokumen = :jenis
+      AND status_publikasi = true
+      AND tanggal_berlaku <= tanggal_hari_ini()
+    ORDER BY tanggal_berlaku DESC, versi DESC
+    LIMIT 1;
+
+IF baris_ditemukan THEN
+    RETURN objek DokumenLegal hasil pemetaan baris
+ELSE
+    RETURN null
+END IF
+```
+
+## 5.41 Kelas Otorisasi
+
+**Nama Kelas:** Otorisasi  
+**ID Kelas:** C41
+
+Tabel 5.41.1. Operasi Kelas Otorisasi
+
+| Nama Operasi | Visibility (private, public) | Keterangan |
+| :--- | :--- | :--- |
+| `verifikasiToken(token: String): SesiLogin` | public | Memeriksa token sesi melalui `SesiLogin.cariSesiAktif()` dan mengembalikan sesi aktif yang belum kedaluwarsa, atau `null` bila token tidak sah. Hasilnya dipakai controller untuk mengetahui akun yang sedang masuk (KF11, KF22, KF35, Algo-064). |
+| `verifikasiAdmin(token: String): SesiLogin` | public | Memeriksa token sesi, lalu memastikan pemilik sesi berperan Admin melalui `Admin.verifikasiPeran()`. Mengembalikan `null` bila token tidak sah atau akun bukan admin (KF56, Algo-065). |
+
+Tabel 5.41.2. Atribut Kelas Otorisasi
+
+| Nama Atribut | Visibility (private, public) | Tipe |
+| :--- | :--- | :--- |
+| - | - | - |
+
+Otorisasi tidak memiliki atribut. Seluruh data sesi dan peran dibaca dari kelas Model SesiLogin dan Admin.
+
+### 5.41.1 Algoritma/Query: verifikasiToken
+
+**Nama Kelas:** Otorisasi  
+**Nama Operasi:** `verifikasiToken(token: String): SesiLogin`  
+**ID Algoritma:** Algo-064
+
+```text
+IF token = null OR trim(token) = "" THEN
+    RETURN null                                           // permintaan tanpa token ditolak
+END IF
+
+// Sesi hanya sah bila aktif dan belum melewati batas 24 jam (KF11)
+sesi ← SesiLogin.cariSesiAktif(token)                     // Algo-030
+
+IF sesi = null THEN
+    RETURN null
+END IF
+
+RETURN sesi
+```
+
+### 5.41.2 Algoritma/Query: verifikasiAdmin
+
+**Nama Kelas:** Otorisasi  
+**Nama Operasi:** `verifikasiAdmin(token: String): SesiLogin`  
+**ID Algoritma:** Algo-065
+
+```text
+sesi ← verifikasiToken(token)                             // Algo-064
+IF sesi = null THEN
+    RETURN null
+END IF
+
+// Periksa peran Admin pada akun pemilik sesi (KF56)
+IF NOT Admin.verifikasiPeran(sesi.getIdAkun()) THEN       // Algo-028
+    RETURN null                                           // akun bukan admin, akses ke fungsi moderasi ditolak
+END IF
+
+RETURN sesi
+```
+
+## 5.42 Kelas Kriptografi
+
+**Nama Kelas:** Kriptografi  
+**ID Kelas:** C42
+
+Tabel 5.42.1. Operasi Kelas Kriptografi
+
+| Nama Operasi | Visibility (private, public) | Keterangan |
+| :--- | :--- | :--- |
+| `hash(teks: String): String` | public | Menghasilkan nilai *hash* bcrypt dari teks (kata sandi) memakai `saltRounds`, sehingga kata sandi tidak pernah tersimpan dalam bentuk teks biasa (KF09, Algo-066). |
+| `cocokkanHash(teks: String, hash: String): Boolean` | public | Membandingkan teks masukan dengan *hash* bcrypt yang tersimpan tanpa mengembalikan kata sandi asli (KF10, Algo-067). |
+| `enkripsi(teks: String): String` | public | Mengenkripsi teks pesan dengan `kunciEnkripsi` sebelum disimpan ke basis data (KF36, Algo-068). |
+| `dekripsi(isiPesanTerenkripsi: String): String` | public | Mengembalikan teks pesan asli dari isi pesan terenkripsi agar dapat ditampilkan kepada peserta percakapan yang sah (KF36, Algo-069). |
+
+Tabel 5.42.2. Atribut Kelas Kriptografi
+
+| Nama Atribut | Visibility (private, public) | Tipe |
+| :--- | :--- | :--- |
+| saltRounds | private | `Integer` |
+| kunciEnkripsi | private | `String` |
+
+### 5.42.1 Algoritma/Query: hash
+
+**Nama Kelas:** Kriptografi  
+**Nama Operasi:** `hash(teks: String): String`  
+**ID Algoritma:** Algo-066
+
+```text
+// Pembuatan hash bcrypt satu arah (KF09)
+garam ← bcrypt_bangkitkan_garam(saltRounds)
+hasilHash ← bcrypt_hash(teks, garam)
+
+RETURN hasilHash
+```
+
+### 5.42.2 Algoritma/Query: cocokkanHash
+
+**Nama Kelas:** Kriptografi  
+**Nama Operasi:** `cocokkanHash(teks: String, hash: String): Boolean`  
+**ID Algoritma:** Algo-067
+
+```text
+IF teks = null OR hash = null THEN
+    RETURN false
+END IF
+
+// Perbandingan nilai hash masukan terhadap hash tersimpan (KF10)
+IF bcrypt_bandingkan(teks, hash) THEN
+    RETURN true
+ELSE
+    RETURN false
+END IF
+```
+
+### 5.42.3 Algoritma/Query: enkripsi
+
+**Nama Kelas:** Kriptografi  
+**Nama Operasi:** `enkripsi(teks: String): String`  
+**ID Algoritma:** Algo-068
+
+```text
+// Enkripsi simetris AES-256-GCM dengan kunciEnkripsi dari konfigurasi server (KF36)
+iv ← bangkitkan_byte_acak(12)                             // vektor inisialisasi baru untuk setiap pesan
+hasil ← aes256gcm_enkripsi(teks, kunciEnkripsi, iv)       // menghasilkan teksSandi dan tagAutentikasi
+
+RETURN base64(iv + hasil.tagAutentikasi + hasil.teksSandi)
+```
+
+### 5.42.4 Algoritma/Query: dekripsi
+
+**Nama Kelas:** Kriptografi  
+**Nama Operasi:** `dekripsi(isiPesanTerenkripsi: String): String`  
+**ID Algoritma:** Algo-069
+
+```text
+data ← base64_dekode(isiPesanTerenkripsi)
+iv ← ambil_byte(data, 0, 12)
+tagAutentikasi ← ambil_byte(data, 12, 28)
+teksSandi ← ambil_byte(data, 28, akhir)
+
+// Dekripsi hanya berhasil bila kunci benar dan isi pesan belum diubah (KF36)
+hasil ← aes256gcm_dekripsi(teksSandi, kunciEnkripsi, iv, tagAutentikasi)
+
+IF hasil gagal diautentikasi THEN
+    RETURN null
+END IF
+
+RETURN hasil
+```
+
+## 5.43 Kelas SurelAdapter
+
+**Nama Kelas:** SurelAdapter  
+**ID Kelas:** C43
+
+Tabel 5.43.1. Operasi Kelas SurelAdapter
+
+| Nama Operasi | Visibility (private, public) | Keterangan |
+| :--- | :--- | :--- |
+| `kirimSurel(tujuan: String, subjek: String, isi: String): Boolean` | public | Mengirim surel melalui layanan SMTP dengan koneksi TLS ke alamat `tujuan`, dipakai untuk kode verifikasi akun serta pemberitahuan penghapusan listing dan pemblokiran akun beserta alasannya (KF06, KF52, Algo-070). |
+
+Tabel 5.43.2. Atribut Kelas SurelAdapter
+
+| Nama Atribut | Visibility (private, public) | Tipe |
+| :--- | :--- | :--- |
+| hostSmtp | private | `String` |
+| portSmtp | private | `Integer` |
+| alamatPengirim | private | `String` |
+
+### 5.43.1 Algoritma/Query: kirimSurel
+
+**Nama Kelas:** SurelAdapter  
+**Nama Operasi:** `kirimSurel(tujuan: String, subjek: String, isi: String): Boolean`  
+**ID Algoritma:** Algo-070
+
+```text
+IF tujuan = null OR trim(tujuan) = "" THEN
+    RETURN false
+END IF
+
+TRY
+    // Koneksi SMTP terenkripsi TLS; kredensial SMTP dibaca dari konfigurasi server (KF06)
+    koneksi ← smtp_hubungkan(hostSmtp, portSmtp, TLS)
+    pesan ← {
+        dari: alamatPengirim,
+        ke: tujuan,
+        subjek: subjek,
+        isi: isi
+    }
+    smtp_kirim(koneksi, pesan)
+    smtp_tutup(koneksi)
+    RETURN true
+CATCH galat
+    catat_galat("Pengiriman surel gagal", galat)
+    RETURN false
+END TRY
+```
+
+## 5.44 Kelas PushNotifikasiAdapter
+
+**Nama Kelas:** PushNotifikasiAdapter  
+**ID Kelas:** C44
+
+Tabel 5.44.1. Operasi Kelas PushNotifikasiAdapter
+
+| Nama Operasi | Visibility (private, public) | Keterangan |
+| :--- | :--- | :--- |
+| `kirimPush(idPenerima: String, judul: String, isi: String): Boolean` | public | Mengirim notifikasi Web Push ke perangkat peramban penerima memakai kunci VAPID sehingga notifikasi pesan baru tetap muncul meskipun ITBELI sedang tidak dibuka (KF34, Algo-071). |
+
+Tabel 5.44.2. Atribut Kelas PushNotifikasiAdapter
+
+| Nama Atribut | Visibility (private, public) | Tipe |
+| :--- | :--- | :--- |
+| kunciPublikVapid | private | `String` |
+| kunciPrivatVapid | private | `String` |
+
+### 5.44.1 Algoritma/Query: kirimPush
+
+**Nama Kelas:** PushNotifikasiAdapter  
+**Nama Operasi:** `kirimPush(idPenerima: String, judul: String, isi: String): Boolean`  
+**ID Algoritma:** Algo-071
+
+```text
+// Ambil langganan Web Push dari perangkat peramban milik penerima (KF34)
+daftarLangganan ← ambil_langganan_push(idPenerima)
+
+IF length(daftarLangganan) = 0 THEN
+    RETURN false                                          // penerima belum mengaktifkan notifikasi
+END IF
+
+muatan ← {judul: judul, isi: isi}
+adaTerkirim ← false
+
+FOR EACH langganan IN daftarLangganan DO
+    TRY
+        // Pesan ditandatangani dengan kunci VAPID dan ditampilkan oleh Service Worker ITBELI
+        webpush_kirim(langganan, muatan, kunciPublikVapid, kunciPrivatVapid)
+        adaTerkirim ← true
+    CATCH galat
+        catat_galat("Pengiriman push gagal", galat)       // langganan tidak valid dilewati
+    END TRY
+END FOR
+
+RETURN adaTerkirim
+```
+
+## 5.45 Kelas PenyimpananBerkas
+
+**Nama Kelas:** PenyimpananBerkas  
+**ID Kelas:** C45
+
+Tabel 5.45.1. Operasi Kelas PenyimpananBerkas
+
+| Nama Operasi | Visibility (private, public) | Keterangan |
+| :--- | :--- | :--- |
+| `simpan(idObjek: String, berkas: List<File>): List<String>` | public | Mengunggah berkas foto listing atau bukti laporan ke Supabase Storage pada bucket `namaBucket` dan mengembalikan daftar lokasi (path) berkas yang tersimpan (KF23, KF44, Algo-072). |
+| `hapus(pathBerkas: List<String>): Boolean` | public | Menghapus berkas dari Supabase Storage berdasarkan daftar path, dipakai saat listing diubah atau dihapus (KF21, KF50, Algo-073). |
+
+Tabel 5.45.2. Atribut Kelas PenyimpananBerkas
+
+| Nama Atribut | Visibility (private, public) | Tipe |
+| :--- | :--- | :--- |
+| namaBucket | private | `String` |
+
+### 5.45.1 Algoritma/Query: simpan
+
+**Nama Kelas:** PenyimpananBerkas  
+**Nama Operasi:** `simpan(idObjek: String, berkas: List<File>): List<String>`  
+**ID Algoritma:** Algo-072
+
+```text
+daftarPath ← []
+
+TRY
+    FOR EACH f IN berkas DO
+        // Path unik per berkas dikelompokkan berdasarkan idObjek (KF23, KF44)
+        path ← idObjek + "/" + bangkitkan_uuid() + "." + ambil_ekstensi(f)
+        storage_unggah(namaBucket, path, f)
+        daftarPath.append(path)
+    END FOR
+CATCH galat
+    storage_hapus(namaBucket, daftarPath)                 // batalkan berkas yang sempat terunggah
+    catat_galat("Unggah berkas gagal", galat)
+    RETURN null                                           // menandakan unggahan gagal
+END TRY
+
+RETURN daftarPath
+```
+
+### 5.45.2 Algoritma/Query: hapus
+
+**Nama Kelas:** PenyimpananBerkas  
+**Nama Operasi:** `hapus(pathBerkas: List<String>): Boolean`  
+**ID Algoritma:** Algo-073
+
+```text
+IF pathBerkas = null OR length(pathBerkas) = 0 THEN
+    RETURN true                                           // tidak ada berkas yang perlu dihapus
+END IF
+
+TRY
+    // Hapus berkas fisik pada Supabase Storage (KF21, KF50)
+    storage_hapus(namaBucket, pathBerkas)
+    RETURN true
+CATCH galat
+    catat_galat("Hapus berkas gagal", galat)
+    RETURN false
+END TRY
+```
+
 
 <br>
 
