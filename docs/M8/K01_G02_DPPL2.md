@@ -242,7 +242,7 @@ Tabel 4.1. Daftar Kelas Perancangan Keseluruhan
 
 # BAB 5: Perancangan Rinci Kelas
 
-Bab ini merinci setiap kelas perancangan pada Tabel 4.1, yaitu operasi beserta *visibility* dan tanggung jawabnya, atribut beserta *visibility* dan tipenya, serta algoritma untuk operasi yang dianggap penting. Seluruh kelas perancangan beserta kelas analisis terkaitnya pada dokumen SKPL tercantum pada Tabel 5.1.
+Bagian ini diisi dengan daftar seluruh kelas dalam tabel berikut:
 
 Tabel 5.1. Daftar Kelas Perancangan dan Kelas Analisis Terkait
 
@@ -294,11 +294,7 @@ Tabel 5.1. Daftar Kelas Perancangan dan Kelas Analisis Terkait
 | 44 | C44 PushNotifikasiAdapter | - |
 | 45 | C45 PenyimpananBerkas | - |
 
-Rincian setiap kelas mengikuti ketentuan berikut.
-
-1. **Visibility.** Sesuai aturan pada subbab 4.1, seluruh atribut bersifat *private* dan hanya diakses melalui operasi, sedangkan seluruh operasi bersifat *public* agar dapat dipanggil sesuai alur *sequence diagram* pada BAB 3.
-2. **Tipe data.** Tipe atribut, parameter, dan nilai kembalian memakai notasi yang sama dengan Tabel 4.1. Kelas *View* diimplementasikan dengan JavaScript pada peramban, sedangkan kelas lainnya dengan JavaScript pada Node.js (subbab 2.1).
-3. **Algoritma.** Algoritma ditulis sebagai *pseudocode* dan diberi ID dengan format Algo-XXX. Kelas *View* dan *Controller* tidak mengakses Database secara langsung (subbab 2.2.1), sehingga algoritmanya memanggil operasi kelas *Model* dan query basis data dicantumkan pada kelas *Model* yang bersangkutan.
+Untuk **setiap kelas**, identifikasi operasi berdasarkan tanggung jawab kelas beserta *visibility*-nya, serta atribut beserta *visibility* dan tipenya. Buat subbab tersendiri untuk setiap kelas.
 
 ## 5.1 Kelas HalamanOtentikasi
 
