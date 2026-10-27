@@ -282,17 +282,17 @@ Realisasi use case pendaftaran akun melibatkan kelas *boundary* untuk menyajikan
 
 Tabel 3.1. Identifikasi Kelas Use Case UC01
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
-| :--- | :--- | :--- | :--- |
-| 1 | HalamanOtentikasi | C01 HalamanOtentikasi | Menyajikan formulir pendaftaran, memvalidasi kelengkapan isian di sisi klien, dan menampilkan pesan galat atau mengarahkan ke halaman verifikasi. |
-| 2 | AkunController | C13 AkunController | Mengorkestrasikan pendaftaran: validasi kelengkapan, verifikasi domain @itb.ac.id, pengecekan keunikan surel, pemanggilan fungsi hash kata sandi, serta pembuatan token verifikasi. |
-| 3 | NotifikasiController | C19 NotifikasiController | Mengelola pembuatan notifikasi surel verifikasi dan meneruskannya ke surel adapter. |
-| 4 | Akun | C23 Akun | Menyimpan entitas akun baru dengan status awal "Belum Terverifikasi". |
-| 5 | TokenVerifikasi | C27 TokenVerifikasi | Menyimpan kode verifikasi unik (OTP) dengan masa berlaku 15 menit dan status aktif. |
-| 6 | Notifikasi | C35 Notifikasi | Menyimpan rekaman riwayat pemberitahuan verifikasi yang dikirimkan kepada pengguna. |
-| 7 | DokumenLegal | C40 DokumenLegal | Menyediakan naskah Kebijakan Privasi dan Ketentuan Penggunaan yang disetujui pendaftar. |
-| 8 | Kriptografi | C42 Kriptografi (Pendukung) | Melakukan enkripsi satu arah (*hashing*) kata sandi menggunakan pustaka bcrypt sebelum disimpan. |
-| 9 | SurelAdapter | C43 SurelAdapter (Integrasi) | Mengirimkan kode verifikasi ke alamat surel @itb.ac.id pengguna melalui protokol SMTP berenkripsi TLS. |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
+| :--- | :--- | :--- |
+| 1 | HalamanOtentikasi | C01 HalamanOtentikasi |
+| 2 | AkunController | C13 AkunController |
+| 3 | NotifikasiController | C19 NotifikasiController |
+| 4 | Akun | C23 Akun |
+| 5 | TokenVerifikasi | C27 TokenVerifikasi |
+| 6 | Notifikasi | C35 Notifikasi |
+| 7 | DokumenLegal | C40 DokumenLegal |
+| 8 | Kriptografi | C42 Kriptografi (Pendukung) |
+| 9 | SurelAdapter | C43 SurelAdapter (Integrasi) |
 
 ### 3.1.2 Sequence Diagram
 
@@ -353,15 +353,15 @@ Realisasi use case verifikasi surel melibatkan antarmuka verifikasi untuk meneri
 
 Tabel 3.2. Identifikasi Kelas Use Case UC02
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
-| :--- | :--- | :--- | :--- |
-| 1 | HalamanOtentikasi | C01 HalamanOtentikasi | Menyajikan kolom isian kode verifikasi, indikator hitung mundur 15 menit, opsi tombol kirim ulang, serta notifikasi hasil validasi. |
-| 2 | AkunController | C13 AkunController | Memvalidasi kode verifikasi terhadap basis data token, memeriksa batas waktu kedaluwarsa, memperbarui status akun, serta memproses permintaan kode baru. |
-| 3 | NotifikasiController | C19 NotifikasiController | Menangani pengiriman surel kode verifikasi baru ketika diminta pengiriman ulang. |
-| 4 | Akun | C23 Akun | Menyimpan pembaruan status akun dari "Belum Terverifikasi" menjadi "Terverifikasi". |
-| 5 | TokenVerifikasi | C27 TokenVerifikasi | Melakukan pencocokan kode masukan, pengecekan kedaluwarsa 15 menit, penandaan status terpakai, dan penandaan hangus saat kode baru dibangkitkan. |
-| 6 | Notifikasi | C35 Notifikasi | Menyimpan rekaman riwayat pengiriman ulang kode verifikasi. |
-| 7 | SurelAdapter | C43 SurelAdapter (Integrasi) | Mengirimkan surel berisi kode verifikasi baru ke alamat pengguna melalui SMTP. |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
+| :--- | :--- | :--- |
+| 1 | HalamanOtentikasi | C01 HalamanOtentikasi |
+| 2 | AkunController | C13 AkunController |
+| 3 | NotifikasiController | C19 NotifikasiController |
+| 4 | Akun | C23 Akun |
+| 5 | TokenVerifikasi | C27 TokenVerifikasi |
+| 6 | Notifikasi | C35 Notifikasi |
+| 7 | SurelAdapter | C43 SurelAdapter (Integrasi) |
 
 ### 3.2.2 Sequence Diagram
 
@@ -422,13 +422,13 @@ Realisasi use case login melibatkan antarmuka autentikasi untuk menerima kredens
 
 Tabel 3.3. Identifikasi Kelas Use Case UC03
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
-| :--- | :--- | :--- | :--- |
-| 1 | HalamanOtentikasi | C01 HalamanOtentikasi | Menyajikan formulir login, menangkap surel dan kata sandi, serta menampilkan pesan kegagalan (kredensial salah, belum verifikasi, atau terblokir). |
-| 2 | AkunController | C13 AkunController | Mengorkestrasikan login: pencarian akun, pemanggilan verifikasi hash sandi, pemeriksaan status akun dan blokir, serta penerbitan token sesi. |
-| 3 | Akun | C23 Akun | Menyimpan data kredensial, status verifikasi akun, status pemblokiran, dan peran pengguna (Pembeli/Penjual/Admin). |
-| 4 | SesiLogin | C28 SesiLogin | Membangkitkan token sesi (JWT) bertenggat kedaluwarsa 24 jam dan menyimpannya sebagai catatan sesi aktif. |
-| 5 | Kriptografi | C42 Kriptografi (Pendukung) | Membandingkan kata sandi teks murni dengan nilai hash bcrypt yang tersimpan secara aman. |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
+| :--- | :--- | :--- |
+| 1 | HalamanOtentikasi | C01 HalamanOtentikasi |
+| 2 | AkunController | C13 AkunController |
+| 3 | Akun | C23 Akun |
+| 4 | SesiLogin | C28 SesiLogin |
+| 5 | Kriptografi | C42 Kriptografi (Pendukung) |
 
 ### 3.3.2 Sequence Diagram
 
@@ -500,13 +500,13 @@ Realisasi use case logout melibatkan komponen antarmuka yang menyediakan tombol 
 
 Tabel 3.4. Identifikasi Kelas Use Case UC04
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
-| :--- | :--- | :--- | :--- |
-| 1 | HalamanOtentikasi | C01 HalamanOtentikasi | Menampilkan opsi tombol "Keluar", mengirimkan permintaan logout, menghapus token lokal peramban, dan mengalihkan ke halaman login. |
-| 2 | AkunController | C13 AkunController | Memproses permintaan pencabutan sesi di sisi server web. |
-| 3 | Akun | C23 Akun | Entitas pemilik sesi login yang sedang aktif. |
-| 4 | SesiLogin | C28 SesiLogin | Mengubah status sesi menjadi tidak aktif (*revoked*) atau menghapus rekaman sesi aktif dari basis data. |
-| 5 | Otorisasi | C41 Otorisasi (Pendukung) | Memvalidasi keberlakuan token sesi pengguna sebelum dieksekusi pencabutannya. |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
+| :--- | :--- | :--- |
+| 1 | HalamanOtentikasi | C01 HalamanOtentikasi |
+| 2 | AkunController | C13 AkunController |
+| 3 | Akun | C23 Akun |
+| 4 | SesiLogin | C28 SesiLogin |
+| 5 | Otorisasi | C41 Otorisasi (Pendukung) |
 
 ### 3.4.2 Sequence Diagram
 
@@ -545,18 +545,18 @@ Realisasi use case melihat profil melibatkan antarmuka profil akun dan komponen 
 
 Tabel 3.5. Identifikasi Kelas Use Case UC05
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
-| :--- | :--- | :--- | :--- |
-| 1 | HalamanProfil | C02 HalamanProfil | Menampilkan informasi identitas (nama, NIM, surel), daftar kartu barang dagangan milik sendiri, dan menu pengaturan akun. |
-| 2 | KartuProduk | C06 KartuProduk | Komponen visual penyaji ringkasan tiap listing produk milik akun pada antarmuka profil. |
-| 3 | AkunController | C13 AkunController | Mengambil identitas akun dan deretan listing yang berelasi dengan idAkun sesi pengguna aktif. |
-| 4 | Akun | C23 Akun | Menyediakan data identitas profil (nama, NIM, surel). |
-| 5 | Pembeli | C24 Pembeli | Peran pembeli dari akun yang melihat profil. |
-| 6 | Penjual | C25 Penjual | Peran penjual dari akun yang melihat profil dan mengelola barang dagangannya. |
-| 7 | SesiLogin | C28 SesiLogin | Menyediakan konteks idAkun yang terikat pada token sesi login aktif. |
-| 8 | Barang | C29 Barang | Menyediakan sekumpulan entitas produk yang dimiliki oleh idAkun pengguna. |
-| 9 | DokumenLegal | C40 DokumenLegal | Menyediakan tautan Kebijakan Privasi yang dapat dibuka melalui menu pengaturan akun. |
-| 10 | Otorisasi | C41 Otorisasi (Pendukung) | Mengekstrak dan memverifikasi idAkun dari token sesi otentikasi. |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
+| :--- | :--- | :--- |
+| 1 | HalamanProfil | C02 HalamanProfil |
+| 2 | KartuProduk | C06 KartuProduk |
+| 3 | AkunController | C13 AkunController |
+| 4 | Akun | C23 Akun |
+| 5 | Pembeli | C24 Pembeli |
+| 6 | Penjual | C25 Penjual |
+| 7 | SesiLogin | C28 SesiLogin |
+| 8 | Barang | C29 Barang |
+| 9 | DokumenLegal | C40 DokumenLegal |
+| 10 | Otorisasi | C41 Otorisasi (Pendukung) |
 
 ### 3.5.2 Sequence Diagram
 
@@ -595,11 +595,11 @@ Realisasi use case dokumen legal melibatkan antarmuka pembaca naskah hukum, cont
 
 Tabel 3.6. Identifikasi Kelas Use Case UC06
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
-| :--- | :--- | :--- | :--- |
-| 1 | HalamanDokumenLegal | C12 HalamanDokumenLegal | Merender teks dokumen hukum secara penuh dan memberikan penekanan visual khusus pada klausul privasi percakapan. |
-| 2 | DokumenLegalController | C22 DokumenLegalController | Mengambil naskah dokumen kebijakan versi aktif dan klausul proteksi percakapan. |
-| 3 | DokumenLegal | C40 DokumenLegal | Menyimpan data dokumen hukum (versi, tanggal berlaku, teks isi, dan klausul privasi). |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
+| :--- | :--- | :--- |
+| 1 | HalamanDokumenLegal | C12 HalamanDokumenLegal |
+| 2 | DokumenLegalController | C22 DokumenLegalController |
+| 3 | DokumenLegal | C40 DokumenLegal |
 
 ### 3.6.2 Sequence Diagram
 
@@ -638,18 +638,18 @@ Realisasi use case pembuatan listing melibatkan antarmuka formulir barang (denga
 
 Tabel 3.7. Identifikasi Kelas Use Case UC07
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
-| :--- | :--- | :--- | :--- |
-| 1 | FormulirBarang | C04 FormulirBarang | Menampilkan formulir input barang, memvalidasi tipe data dan spesifikasi foto di browser, menandai isian kosong, serta mengirimkan data ke backend. |
-| 2 | BarangController | C14 BarangController | Menjalankan validasi server (kelengkapan isian dan keabsahan berkas), mengunggah berkas foto ke storage, menyimpan objek Barang dan FotoBarang, serta menerbitkan produk ke katalog. |
-| 3 | Penjual | C25 Penjual | Aktor pengguna yang berwenang menerbitkan produk jualan. |
-| 4 | SesiLogin | C28 SesiLogin | Menyediakan konteks idPenjual dari sesi login aktif. |
-| 5 | Barang | C29 Barang | Menyimpan informasi utama listing dengan status ketersediaan awal "Tersedia". |
-| 6 | FotoBarang | C30 FotoBarang | Menyimpan metadata berkas foto produk (1 sampai 5 foto, JPG/PNG, ukuran ≤ 5 MB). |
-| 7 | Kategori | C31 Kategori | Menyediakan daftar kategori barang tetap dan memvalidasi keabsahan kategori yang dipilih. |
-| 8 | LokasiCOD | C32 LokasiCOD | Menyediakan pilihan titik temu fisik transaksi COD di wilayah kampus ITB. |
-| 9 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token sesi dan memastikan idAkun berstatus aktif. |
-| 10 | PenyimpananBerkas | C45 PenyimpananBerkas (Penyimpanan Data) | Layanan Supabase Storage untuk menyimpan fisik berkas foto produk secara persisten. |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
+| :--- | :--- | :--- |
+| 1 | FormulirBarang | C04 FormulirBarang |
+| 2 | BarangController | C14 BarangController |
+| 3 | Penjual | C25 Penjual |
+| 4 | SesiLogin | C28 SesiLogin |
+| 5 | Barang | C29 Barang |
+| 6 | FotoBarang | C30 FotoBarang |
+| 7 | Kategori | C31 Kategori |
+| 8 | LokasiCOD | C32 LokasiCOD |
+| 9 | Otorisasi | C41 Otorisasi (Pendukung) |
+| 10 | PenyimpananBerkas | C45 PenyimpananBerkas (Penyimpanan Data) |
 
 ### 3.7.2 Sequence Diagram
 
@@ -710,15 +710,15 @@ Realisasi use case ini melibatkan antarmuka dasbor listing penjual dan komponen 
 
 Tabel 3.8. Identifikasi Kelas Use Case UC08
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
-| :--- | :--- | :--- | :--- |
-| 1 | HalamanListingPenjual | C03 HalamanListingPenjual | Menyajikan dasbor kelola jualan dengan pemisahan tab barang "Tersedia" dan tab riwayat "Terjual". |
-| 2 | KartuProduk | C06 KartuProduk | Merender representasi visual ringkas tiap produk pada masing-masing tab. |
-| 3 | BarangController | C14 BarangController | Mengambil seluruh listing milik idPenjual yang sedang masuk dan mengelompokkannya menurut label status. |
-| 4 | Penjual | C25 Penjual | Aktor pemilik listing yang mengakses riwayat jualannya. |
-| 5 | SesiLogin | C28 SesiLogin | Menyediakan konteks idAkun penjual dari token sesi yang aktif. |
-| 6 | Barang | C29 Barang | Entitas data produk jualan beserta status ketersediaannya. |
-| 7 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token sesi dan mengekstrak identitas pengguna. |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
+| :--- | :--- | :--- |
+| 1 | HalamanListingPenjual | C03 HalamanListingPenjual |
+| 2 | KartuProduk | C06 KartuProduk |
+| 3 | BarangController | C14 BarangController |
+| 4 | Penjual | C25 Penjual |
+| 5 | SesiLogin | C28 SesiLogin |
+| 6 | Barang | C29 Barang |
+| 7 | Otorisasi | C41 Otorisasi (Pendukung) |
 
 ### 3.8.2 Sequence Diagram
 
@@ -1360,20 +1360,20 @@ Realisasi use case pengiriman pesan melibatkan antarmuka ruang percakapan untuk 
 
 Tabel 3.17. Identifikasi Kelas Use Case UC17
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
-| :--- | :--- | :--- | :--- |
-| 1 | HalamanPercakapan | C08 HalamanPercakapan | Menampilkan ruang percakapan, menangkap teks pada kolom input, menonaktifkan tombol kirim apabila input kosong, dan merender pesan secara berurutan beserta waktu pengiriman. |
-| 2 | PanelNotifikasi | C09 PanelNotifikasi | Memperbarui penanda jumlah pesan belum dibaca pada antarmuka penerima. |
-| 3 | PercakapanController | C18 PercakapanController | Memverifikasi bahwa pengirim adalah peserta sah, meminta enkripsi isi pesan, menyimpan pesan, memperbarui waktu percakapan, dan meminta notifikasi bagi penerima. |
-| 4 | NotifikasiController | C19 NotifikasiController | Membuat notifikasi pesan baru bagi penerima dan meneruskannya ke adapter push notifikasi. |
-| 5 | Akun | C23 Akun | Menyediakan identitas pengirim dan penerima pesan. |
-| 6 | SesiLogin | C28 SesiLogin | Menyediakan idAkun pengirim dari sesi aktif untuk dicocokkan dengan peserta percakapan. |
-| 7 | Percakapan | C33 Percakapan | Menyimpan ruang percakapan, memeriksa keanggotaan peserta, dan memperbarui waktu pembaruan terakhir. |
-| 8 | Pesan | C34 Pesan | Menyimpan isi pesan terenkripsi, pengirim, waktu kirim, dan status baca. |
-| 9 | Notifikasi | C35 Notifikasi | Menyimpan pemberitahuan pesan baru untuk penerima beserta status bacanya. |
-| 10 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token sesi dan mengidentifikasi akun pengirim. |
-| 11 | Kriptografi | C42 Kriptografi (Pendukung) | Mengenkripsi isi pesan sebelum disimpan ke basis data. |
-| 12 | PushNotifikasiAdapter | C44 PushNotifikasiAdapter (Integrasi) | Mengirim notifikasi Web Push ke perangkat penerima, termasuk saat aplikasi tidak dibuka. |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
+| :--- | :--- | :--- |
+| 1 | HalamanPercakapan | C08 HalamanPercakapan |
+| 2 | PanelNotifikasi | C09 PanelNotifikasi |
+| 3 | PercakapanController | C18 PercakapanController |
+| 4 | NotifikasiController | C19 NotifikasiController |
+| 5 | Akun | C23 Akun |
+| 6 | SesiLogin | C28 SesiLogin |
+| 7 | Percakapan | C33 Percakapan |
+| 8 | Pesan | C34 Pesan |
+| 9 | Notifikasi | C35 Notifikasi |
+| 10 | Otorisasi | C41 Otorisasi (Pendukung) |
+| 11 | Kriptografi | C42 Kriptografi (Pendukung) |
+| 12 | PushNotifikasiAdapter | C44 PushNotifikasiAdapter (Integrasi) |
 
 ### 3.17.2 Sequence Diagram
 
@@ -1423,15 +1423,15 @@ Realisasi use case ini melibatkan antarmuka percakapan untuk menyajikan daftar, 
 
 Tabel 3.18. Identifikasi Kelas Use Case UC18
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
-| :--- | :--- | :--- | :--- |
-| 1 | HalamanPercakapan | C08 HalamanPercakapan | Menampilkan daftar percakapan beserta identitas lawan bicara, cuplikan pesan terakhir, dan penanda jumlah pesan belum dibaca. |
-| 2 | PercakapanController | C18 PercakapanController | Mengambil percakapan milik pengguna, mengurutkannya berdasarkan pesan terbaru, mengambil dan mendekripsi cuplikan pesan terakhir, serta menghitung pesan belum dibaca. |
-| 3 | SesiLogin | C28 SesiLogin | Menyediakan idAkun pengguna dari token sesi aktif. |
-| 4 | Percakapan | C33 Percakapan | Menyediakan data percakapan milik pengguna, lawan bicara, dan waktu aktivitas terakhir. |
-| 5 | Pesan | C34 Pesan | Menyediakan pesan terakhir dan jumlah pesan belum dibaca pada tiap percakapan. |
-| 6 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token sesi dan mengekstrak identitas pengguna. |
-| 7 | Kriptografi | C42 Kriptografi (Pendukung) | Mendekripsi isi pesan terakhir agar dapat ditampilkan sebagai cuplikan. |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
+| :--- | :--- | :--- |
+| 1 | HalamanPercakapan | C08 HalamanPercakapan |
+| 2 | PercakapanController | C18 PercakapanController |
+| 3 | SesiLogin | C28 SesiLogin |
+| 4 | Percakapan | C33 Percakapan |
+| 5 | Pesan | C34 Pesan |
+| 6 | Otorisasi | C41 Otorisasi (Pendukung) |
+| 7 | Kriptografi | C42 Kriptografi (Pendukung) |
 
 ### 3.18.2 Sequence Diagram
 
@@ -1470,20 +1470,20 @@ Realisasi use case pelaporan melibatkan antarmuka detail barang sebagai salah sa
 
 Tabel 3.19. Identifikasi Kelas Use Case UC19
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
-| :--- | :--- | :--- | :--- |
-| 1 | HalamanDetailBarang | C07 HalamanDetailBarang | Menyediakan tombol "Laporkan" pada detail listing sebagai salah satu titik masuk pelaporan. |
-| 2 | FormulirLaporan | C10 FormulirLaporan | Menampilkan formulir sesuai konteks asal, menangkap kategori, alasan, dan bukti, memvalidasi kelengkapan di sisi klien, serta menandai kolom yang kosong. |
-| 3 | LaporanController | C20 LaporanController | Memvalidasi data dan bukti di sisi server, menyusun metadata percakapan tanpa isi pesan, mengunggah bukti, menyimpan laporan berstatus "Baru", dan mencatat penerimaan ke log audit. |
-| 4 | Akun | C23 Akun | Akun pelapor yang identitasnya dicatat pada laporan. |
-| 5 | SesiLogin | C28 SesiLogin | Menyediakan idAkun pelapor dari sesi aktif. |
-| 6 | Barang | C29 Barang | Listing yang dapat menjadi objek laporan. |
-| 7 | Percakapan | C33 Percakapan | Percakapan yang dapat menjadi objek laporan. Hanya ID percakapan yang dicatat, tanpa isi pesan. |
-| 8 | Laporan | C36 Laporan | Menyimpan rincian aduan, objek yang dilaporkan, kategori, alasan, waktu, dan status penanganan "Baru". |
-| 9 | BuktiLaporan | C37 BuktiLaporan | Menyimpan metadata berkas bukti tangkapan layar. |
-| 10 | LogAudit | C38 LogAudit | Mencatat penerimaan laporan sebagai rekam jejak permanen yang tidak dapat diubah atau dihapus. |
-| 11 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token sesi pelapor. |
-| 12 | PenyimpananBerkas | C45 PenyimpananBerkas (Penyimpanan Data) | Menyimpan fisik berkas bukti tangkapan layar pada Supabase Storage. |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
+| :--- | :--- | :--- |
+| 1 | HalamanDetailBarang | C07 HalamanDetailBarang |
+| 2 | FormulirLaporan | C10 FormulirLaporan |
+| 3 | LaporanController | C20 LaporanController |
+| 4 | Akun | C23 Akun |
+| 5 | SesiLogin | C28 SesiLogin |
+| 6 | Barang | C29 Barang |
+| 7 | Percakapan | C33 Percakapan |
+| 8 | Laporan | C36 Laporan |
+| 9 | BuktiLaporan | C37 BuktiLaporan |
+| 10 | LogAudit | C38 LogAudit |
+| 11 | Otorisasi | C41 Otorisasi (Pendukung) |
+| 12 | PenyimpananBerkas | C45 PenyimpananBerkas (Penyimpanan Data) |
 
 ### 3.19.2 Sequence Diagram
 
@@ -1533,14 +1533,14 @@ Realisasi use case ini melibatkan antarmuka dasbor admin untuk menampilkan tabel
 
 Tabel 3.20. Identifikasi Kelas Use Case UC20
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
-| :--- | :--- | :--- | :--- |
-| 1 | DasborAdmin | C11 DasborAdmin | Menampilkan tabel laporan (pelapor, objek, kategori, waktu, status), menyediakan filter status, dan menampilkan peringatan "Akses Ditolak" apabila akses ditolak. |
-| 2 | ModerasiController | C21 ModerasiController | Memeriksa peran admin, mengambil seluruh laporan, dan menyaring laporan berdasarkan status. |
-| 3 | Admin | C26 Admin | Aktor pemilik hak akses moderasi yang perannya diverifikasi. |
-| 4 | SesiLogin | C28 SesiLogin | Menyediakan idAkun dan peran dari token sesi aktif. |
-| 5 | Laporan | C36 Laporan | Menyediakan data laporan untuk ditampilkan dan disaring menurut status penanganan. |
-| 6 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token dan menolak akses fungsi moderasi oleh akun yang tidak berperan admin. |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
+| :--- | :--- | :--- |
+| 1 | DasborAdmin | C11 DasborAdmin |
+| 2 | ModerasiController | C21 ModerasiController |
+| 3 | Admin | C26 Admin |
+| 4 | SesiLogin | C28 SesiLogin |
+| 5 | Laporan | C36 Laporan |
+| 6 | Otorisasi | C41 Otorisasi (Pendukung) |
 
 ### 3.20.2 Sequence Diagram
 
@@ -1590,15 +1590,15 @@ Realisasi use case ini melibatkan antarmuka dasbor admin untuk meninjau detail d
 
 Tabel 3.21. Identifikasi Kelas Use Case UC21
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
-| :--- | :--- | :--- | :--- |
-| 1 | DasborAdmin | C11 DasborAdmin | Menampilkan detail laporan dan kendali dropdown status (Baru, Diproses, Selesai), lalu meneruskan perubahan ke controller. |
-| 2 | ModerasiController | C21 ModerasiController | Memverifikasi peran admin, memvalidasi status baru, memperbarui Laporan, dan meminta pencatatan ke log audit. |
-| 3 | Admin | C26 Admin | Aktor admin yang meninjau laporan dan mengubah statusnya. |
-| 4 | SesiLogin | C28 SesiLogin | Menyediakan identitas admin dari token sesi aktif. |
-| 5 | Laporan | C36 Laporan | Menyimpan status penanganan beserta stempel waktu perubahan. |
-| 6 | LogAudit | C38 LogAudit | Mencatat secara permanen bahwa admin tertentu mengubah status laporan tertentu. Catatan tidak dapat diubah atau dihapus. |
-| 7 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token dan peran admin sebelum perubahan dilakukan. |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
+| :--- | :--- | :--- |
+| 1 | DasborAdmin | C11 DasborAdmin |
+| 2 | ModerasiController | C21 ModerasiController |
+| 3 | Admin | C26 Admin |
+| 4 | SesiLogin | C28 SesiLogin |
+| 5 | Laporan | C36 Laporan |
+| 6 | LogAudit | C38 LogAudit |
+| 7 | Otorisasi | C41 Otorisasi (Pendukung) |
 
 ### 3.21.2 Sequence Diagram
 
@@ -1637,22 +1637,22 @@ Realisasi use case ini melibatkan antarmuka dasbor admin untuk menangkap alasan 
 
 Tabel 3.22. Identifikasi Kelas Use Case UC22
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
-| :--- | :--- | :--- | :--- |
-| 1 | DasborAdmin | C11 DasborAdmin | Menyediakan tombol "Hapus Listing", dialog alasan, dan konfirmasi penghapusan. |
-| 2 | ModerasiController | C21 ModerasiController | Memverifikasi admin, menghapus listing, meminta notifikasi kepada pemilik, serta mencatat ke log admin dan log audit. |
-| 3 | NotifikasiController | C19 NotifikasiController | Membuat dan mengirim pemberitahuan penghapusan beserta alasan kepada pemilik listing. |
-| 4 | Admin | C26 Admin | Aktor pelaku penghapusan yang tercatat pada log admin. |
-| 5 | SesiLogin | C28 SesiLogin | Menyediakan identitas admin dari token sesi aktif. |
-| 6 | Barang | C29 Barang | Entitas listing yang dihapus dari katalog (beserta foto dan detail terkait). |
-| 7 | Notifikasi | C35 Notifikasi | Menyimpan pemberitahuan penghapusan listing dan alasannya bagi pemilik. |
-| 8 | LogAudit | C38 LogAudit | Mencatat tindak lanjut penghapusan pada catatan audit yang tidak dapat diubah. |
-| 9 | LogAdmin | C39 LogAdmin | Mencatat tindakan "Hapus Listing" beserta pelaku, objek, waktu, dan alasan. |
-| 10 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token dan peran admin. |
-| 11 | SurelAdapter | C43 SurelAdapter (Integrasi) | Mengirim surel pemberitahuan penghapusan kepada pemilik listing. |
-| 12 | PenyimpananBerkas | C45 PenyimpananBerkas (Penyimpanan Data) | Menghapus berkas foto listing dari Supabase Storage. |
-| 13 | Akun | C23 Akun | Menyediakan alamat surel pemilik listing untuk pemberitahuan penghapusan. |
-| 14 | FotoBarang | C30 FotoBarang | Menyediakan daftar foto listing agar ikut dihapus bersama listing. |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
+| :--- | :--- | :--- |
+| 1 | DasborAdmin | C11 DasborAdmin |
+| 2 | ModerasiController | C21 ModerasiController |
+| 3 | NotifikasiController | C19 NotifikasiController |
+| 4 | Admin | C26 Admin |
+| 5 | SesiLogin | C28 SesiLogin |
+| 6 | Barang | C29 Barang |
+| 7 | Notifikasi | C35 Notifikasi |
+| 8 | LogAudit | C38 LogAudit |
+| 9 | LogAdmin | C39 LogAdmin |
+| 10 | Otorisasi | C41 Otorisasi (Pendukung) |
+| 11 | SurelAdapter | C43 SurelAdapter (Integrasi) |
+| 12 | PenyimpananBerkas | C45 PenyimpananBerkas (Penyimpanan Data) |
+| 13 | Akun | C23 Akun |
+| 14 | FotoBarang | C30 FotoBarang |
 
 ### 3.22.2 Sequence Diagram
 
@@ -1691,21 +1691,21 @@ Realisasi use case ini melibatkan antarmuka dasbor admin untuk menangkap alasan 
 
 Tabel 3.23. Identifikasi Kelas Use Case UC23
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
-| :--- | :--- | :--- | :--- |
-| 1 | DasborAdmin | C11 DasborAdmin | Menyediakan tombol "Blokir Akun", dialog alasan, konfirmasi, dan status akun terkini. |
-| 2 | ModerasiController | C21 ModerasiController | Mengubah status akun menjadi "Diblokir", menonaktifkan seluruh listing milik akun, memutus sesi aktif, meminta notifikasi, dan mencatat log. |
-| 3 | NotifikasiController | C19 NotifikasiController | Membuat dan mengirim pemberitahuan penangguhan beserta alasannya kepada pengguna. |
-| 4 | Akun | C23 Akun | Entitas yang statusnya berubah dari "Aktif" menjadi "Diblokir". |
-| 5 | Admin | C26 Admin | Aktor pelaku pemblokiran yang tercatat pada log admin. |
-| 6 | SesiLogin | C28 SesiLogin | Sesi aktif milik akun yang diblokir dinonaktifkan. Menyediakan pula identitas admin pelaku. |
-| 7 | Barang | C29 Barang | Seluruh listing milik akun dinonaktifkan sehingga hilang dari katalog dan hasil pencarian. |
-| 8 | Notifikasi | C35 Notifikasi | Menyimpan pemberitahuan penangguhan akun. |
-| 9 | LogAudit | C38 LogAudit | Mencatat tindakan pemblokiran pada catatan audit permanen. |
-| 10 | LogAdmin | C39 LogAdmin | Mencatat tindakan "Blokir Akun" beserta pelaku, objek, waktu, dan alasan. |
-| 11 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token dan peran admin. |
-| 12 | SurelAdapter | C43 SurelAdapter (Integrasi) | Mengirim surel pemberitahuan penangguhan beserta alasan. |
-| 13 | Penjual | C25 Penjual | Peran penjual dari akun yang diblokir; seluruh listing miliknya dinonaktifkan. |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
+| :--- | :--- | :--- |
+| 1 | DasborAdmin | C11 DasborAdmin |
+| 2 | ModerasiController | C21 ModerasiController |
+| 3 | NotifikasiController | C19 NotifikasiController |
+| 4 | Akun | C23 Akun |
+| 5 | Admin | C26 Admin |
+| 6 | SesiLogin | C28 SesiLogin |
+| 7 | Barang | C29 Barang |
+| 8 | Notifikasi | C35 Notifikasi |
+| 9 | LogAudit | C38 LogAudit |
+| 10 | LogAdmin | C39 LogAdmin |
+| 11 | Otorisasi | C41 Otorisasi (Pendukung) |
+| 12 | SurelAdapter | C43 SurelAdapter (Integrasi) |
+| 13 | Penjual | C25 Penjual |
 
 ### 3.23.2 Sequence Diagram
 
@@ -1744,17 +1744,17 @@ Realisasi use case ini melibatkan antarmuka dasbor admin untuk memicu pembukaan 
 
 Tabel 3.24. Identifikasi Kelas Use Case UC24
 
-| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait | Peran / Tanggung Jawab dalam Use Case |
-| :--- | :--- | :--- | :--- |
-| 1 | DasborAdmin | C11 DasborAdmin | Menyediakan tombol "Buka Blokir" pada profil pengguna atau detail laporan beserta dialog konfirmasi. |
-| 2 | ModerasiController | C21 ModerasiController | Memverifikasi admin, memulihkan status akun, memulihkan listing ke katalog, dan mencatat ke log admin. |
-| 3 | Akun | C23 Akun | Entitas yang status blokirnya dikembalikan menjadi aktif sehingga pengguna dapat login kembali. |
-| 4 | Admin | C26 Admin | Aktor pelaku pembukaan blokir yang tercatat pada log admin. |
-| 5 | Barang | C29 Barang | Listing milik akun dikembalikan ke status publik sehingga tampil kembali pada katalog dan pencarian. |
-| 6 | LogAdmin | C39 LogAdmin | Mencatat tindakan "Buka Blokir" beserta pelaku, objek, dan waktu. |
-| 7 | Otorisasi | C41 Otorisasi (Pendukung) | Memverifikasi token dan peran admin. |
-| 8 | SesiLogin | C28 SesiLogin | Menyediakan identitas admin dari token sesi aktif. |
-| 9 | Penjual | C25 Penjual | Peran penjual dari akun yang dibuka blokirnya; listing miliknya dipulihkan ke katalog. |
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
+| :--- | :--- | :--- |
+| 1 | DasborAdmin | C11 DasborAdmin |
+| 2 | ModerasiController | C21 ModerasiController |
+| 3 | Akun | C23 Akun |
+| 4 | Admin | C26 Admin |
+| 5 | Barang | C29 Barang |
+| 6 | LogAdmin | C39 LogAdmin |
+| 7 | Otorisasi | C41 Otorisasi (Pendukung) |
+| 8 | SesiLogin | C28 SesiLogin |
+| 9 | Penjual | C25 Penjual |
 
 ### 3.24.2 Sequence Diagram
 
