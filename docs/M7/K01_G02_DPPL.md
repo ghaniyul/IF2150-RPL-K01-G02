@@ -984,7 +984,7 @@ Tabel 3.12. Identifikasi Kelas Use Case UC12
 | No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |  
 | :--- | :--- | :--- |  
 | 1 | HalamanListingPenjual | C03 HalamanListingPenjual | 
-| 2 | KartuProduk | C06 KartuProduk | Merender ulang kartu listing tanpa label "Terjual". |
+| 2 | KartuProduk | C06 KartuProduk |
 | 3 | BarangController | C14 BarangController | 
 | 4 | Penjual | C25 Penjual | 
 | 5 | SesiLogin | C28 SesiLogin | 

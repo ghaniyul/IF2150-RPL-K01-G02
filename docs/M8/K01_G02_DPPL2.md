@@ -1,18 +1,18 @@
 <h1>
 IF2150 REKAYASA PERANGKAT LUNAK
 <br>
-TUGAS 5
+TUGAS 8
 <br>
 DESKRIPSI PERANCANGAN PERANGKAT LUNAK (DPPL)
 </h1>
 <br>
 
 ## *ITBELI*
-### *[Logo Perangkat Lunak]*
 
-### Untuk: *Mikhael Andrian Yonatan*
+### Untuk:  *Mikhael Andrian Yonatan*
 
 Dipersiapkan oleh:
+
 | Informasi | Keterangan |
 | --- | --- |
 | Kelas | *K01* |
@@ -26,29 +26,25 @@ Dipersiapkan oleh:
 | *13525115* | *Nazhif Hilmi Kistijantoro* |
 | *13525121* | *I Made Adi Kusuma Ardana* |
 | *13525106* | *Ghaniyul Amri Caulava* |
+
 ---
+
 
 ## Daftar Perubahan
 
 | Revisi | Deskripsi |
 | :--- | :--- |
-| *A* | *Deskripsikan perubahan yang dilakukan dari dokumen sebelumnya pada dokumen ini. Jika tidak terdapat perubahan, harap kosongkan tabel.* |
-| *B* |  |
-| *C* |  |
-| ... |  |
+| *A* | *Penyusunan awal DPPL: BAB 1 dan BAB 2 diturunkan dari dokumen SKPL dan APL, serta realisasi use case UC01–UC24 pada BAB 3.* |
+| *B* | *Diagram kelas per use case (UC01–UC24) dibangkitkan ulang dari satu model kelas sehingga nama, atribut, dan metode setiap kelas seragam di seluruh use case. Diagram kelas UC17–UC24 dilengkapi visibilitas, tipe data atribut, parameter, dan tipe kembalian operasi. Kelas Otorisasi, Kriptografi, SurelAdapter, PushNotifikasiAdapter, dan PenyimpananBerkas (C41–C45) digambarkan pada setiap use case yang memakainya, dan tabel identifikasi kelas disamakan dengan diagramnya.* |
+| *C* | *Sequence diagram UC01–UC08 dan UC17–UC24 diselaraskan sehingga setiap pesan merupakan operasi pada kelas tujuan, termasuk pemanggilan Otorisasi, Kriptografi, SurelAdapter, PushNotifikasiAdapter, dan PenyimpananBerkas.* |
+| *D* | *Penyusunan BAB 4 (diagram kelas perancangan keseluruhan dan Tabel 4.1) serta BAB 5 (matriks kerunutan kelas terhadap use case).* |
+
+| *E* | *Tabel identifikasi kelas pada BAB 3 disederhanakan menjadi dua kolom (nama kelas perancangan dan kelas analisis terkait) sesuai templat.* |
+| *F* | *Penyusunan BAB 5 (perancangan rinci setiap kelas beserta algoritma/kueri operasi penting) dan BAB 6 (rancangan antarmuka). Matriks kerunutan yang sebelumnya berada pada BAB 5 dipindahkan menjadi BAB 7 dan disesuaikan dengan BAB 3–BAB 5.* |
 
 ---
 
 <br>
-
-> **Petunjuk pengerjaan:** *[Silahkan hapus bagian ini setelah selesai mengerjakan]*
->
-> Dokumen ini melanjutkan **Deskripsi Perancangan Perangkat Lunak**. Gunakan nama, ID, kebutuhan, dan use case yang konsisten dengan kedua dokumen tersebut. Contoh pola ID baru di bawah dapat disesuaikan dengan kesepakatan kelompok, ID yang sudah ada tetap dipertahankan.
-
-<br>
-
----
-
 
 # BAB 1: Pendahuluan
 
@@ -105,8 +101,8 @@ Tabel 1.4. Aturan Penomoran
 | *Kebutuhan Fungsional* | *KFXX* | *KF = Kebutuhan Fungsional. Mengacu pada Tabel 3.1 dokumen SKPL (KF01–KF56) dan dirujuk pada BAB 2 dan BAB 3 dokumen ini.* |
 | *Kebutuhan Non-Fungsional* | *KNFXX* | *KNF = Kebutuhan Non-Fungsional. Mengacu pada Tabel 3.2 dokumen SKPL (KNF01–KNF04) dan dirujuk pada BAB 2 dokumen ini.* |
 | *Aktor* | *AXX* | *A = Aktor. Mengacu pada subbab 4.1 dokumen SKPL (A01–A03) dan muncul sebagai aktor pada sequence diagram di BAB 3.* |
-| *Use Case* | *UCXX* | *UC = Use Case. Mengacu pada subbab 4.2 dokumen SKPL (UC01–UC24). Digunakan pada BAB 3 (satu subbab per use case, yaitu UC01 pada subbab 3.1 hingga UC24 pada subbab 3.24) dan BAB 5.* |
-| *Kelas* | *CXX* | *C = Class. Digunakan pada BAB 3 hingga BAB 5. Kelas perancangan yang mewadahi kelas analisis SKPL memakai ID kelas analisis tersebut (C01–C12 untuk kelas pada komponen View, C13–C22 untuk kelas pada komponen Controller, dan C23–C40 untuk kelas pada komponen Model). Kelas yang baru muncul pada tahap perancangan, misalnya kelas pada komponen Pendukung dan Integrasi Eksternal, diberi ID lanjutan mulai dari C41.* |
+| *Use Case* | *UCXX* | *UC = Use Case. Mengacu pada subbab 4.2 dokumen SKPL (UC01–UC24). Digunakan pada BAB 3 (satu subbab per use case, yaitu UC01 pada subbab 3.1 hingga UC24 pada subbab 3.24) dan BAB 7.* |
+| *Kelas* | *CXX* | *C = Class. Digunakan pada BAB 3 hingga BAB 7. Kelas perancangan yang mewadahi kelas analisis SKPL memakai ID kelas analisis tersebut (C01–C12 untuk kelas pada komponen View, C13–C22 untuk kelas pada komponen Controller, dan C23–C40 untuk kelas pada komponen Model). Kelas yang baru muncul pada tahap perancangan, misalnya kelas pada komponen Pendukung dan Integrasi Eksternal, diberi ID lanjutan mulai dari C41.* |
 
 ## 1.5 Referensi
 Berikut adalah referensi yang dirujuk dalam penyusunan dokumen ini.
@@ -5090,12 +5086,109 @@ Tabel 6.Y. Rancangan Antarmuka Keseluruhan
 
 # BAB 7: Matriks Kerunutan
 
-Petakan kelas perancangan dengan use case yang terkait. Gunakan **BAB 6 Traceability pada dokumen SKPL** sebagai acuan keterkaitan kelas analisis dan use case, lalu sesuaikan dengan realisasi use case dan kelas perancangan pada BAB 3–BAB 5 DPPL.
+Matriks kerunutan memetakan setiap kelas perancangan terhadap use case yang direalisasikannya. Pemetaan disusun dengan BAB 6 *Traceability* pada dokumen SKPL sebagai acuan, lalu disesuaikan dengan realisasi use case pada BAB 3 dan perancangan rinci kelas pada BAB 5. Sebuah kelas dipetakan ke suatu use case jika kelas tersebut tercantum pada tabel identifikasi kelas dan digambarkan pada diagram kelas use case itu di BAB 3. Karena tabel dan diagram tersebut disusun dari model yang sama, keduanya selalu identik.
+
+## 7.1 Matriks Kerunutan Kelas terhadap Use Case
 
 Tabel 7.1. Matriks Kerunutan Kelas terhadap Use Case
 
 | Kelas | Use Case Terkait |
 | :--- | :--- |
-| *[ID kelas - Nama kelas]* | *[ID UC - Nama use case; tuliskan seluruh use case terkait]* |
-| *[ID kelas - Nama kelas]* | *[ID UC - Nama use case]* |
-| *...* | *...* |
+| C01 - HalamanOtentikasi | UC01 - Mendaftar Akun<br>UC02 - Memverifikasi Surel<br>UC03 - Masuk ke Sistem (Login)<br>UC04 - Keluar dari Sistem (Logout) |
+| C02 - HalamanProfil | UC05 - Melihat Profil Akun |
+| C03 - HalamanListingPenjual | UC08 - Melihat Daftar Listing Milik Sendiri<br>UC09 - Mengubah Listing<br>UC10 - Menghapus Listing<br>UC11 - Menandai Listing Terjual<br>UC12 - Membatalkan Penandaan Terjual |
+| C04 - FormulirBarang | UC07 - Membuat Listing<br>UC09 - Mengubah Listing |
+| C05 - HalamanKatalog | UC13 - Melihat Katalog Listing<br>UC14 - Mencari dan Menyaring Listing |
+| C06 - KartuProduk | UC05 - Melihat Profil Akun<br>UC08 - Melihat Daftar Listing Milik Sendiri<br>UC11 - Menandai Listing Terjual<br>UC12 - Membatalkan Penandaan Terjual<br>UC13 - Melihat Katalog Listing<br>UC14 - Mencari dan Menyaring Listing |
+| C07 - HalamanDetailBarang | UC15 - Melihat Detail Listing<br>UC16 - Menghubungi Penjual<br>UC19 - Mengirimkan Laporan |
+| C08 - HalamanPercakapan | UC16 - Menghubungi Penjual<br>UC17 - Mengirim Pesan dalam Percakapan<br>UC18 - Melihat Daftar Percakapan |
+| C09 - PanelNotifikasi | UC17 - Mengirim Pesan dalam Percakapan |
+| C10 - FormulirLaporan | UC19 - Mengirimkan Laporan |
+| C11 - DasborAdmin | UC20 - Melihat dan Menyaring Daftar Laporan<br>UC21 - Mengubah Status Penanganan Laporan<br>UC22 - Menghapus Listing yang Dilaporkan<br>UC23 - Memblokir Akun Pengguna<br>UC24 - Membuka Blokir Akun Pengguna |
+| C12 - HalamanDokumenLegal | UC06 - Melihat Kebijakan Privasi dan Ketentuan Penggunaan |
+| C13 - AkunController | UC01 - Mendaftar Akun<br>UC02 - Memverifikasi Surel<br>UC03 - Masuk ke Sistem (Login)<br>UC04 - Keluar dari Sistem (Logout)<br>UC05 - Melihat Profil Akun |
+| C14 - BarangController | UC07 - Membuat Listing<br>UC08 - Melihat Daftar Listing Milik Sendiri<br>UC09 - Mengubah Listing<br>UC10 - Menghapus Listing<br>UC11 - Menandai Listing Terjual<br>UC12 - Membatalkan Penandaan Terjual<br>UC15 - Melihat Detail Listing |
+| C15 - KatalogController | UC13 - Melihat Katalog Listing<br>UC14 - Mencari dan Menyaring Listing |
+| C16 - PencarianController | UC14 - Mencari dan Menyaring Listing |
+| C17 - FilterController | UC14 - Mencari dan Menyaring Listing |
+| C18 - PercakapanController | UC16 - Menghubungi Penjual<br>UC17 - Mengirim Pesan dalam Percakapan<br>UC18 - Melihat Daftar Percakapan |
+| C19 - NotifikasiController | UC01 - Mendaftar Akun<br>UC02 - Memverifikasi Surel<br>UC17 - Mengirim Pesan dalam Percakapan<br>UC22 - Menghapus Listing yang Dilaporkan<br>UC23 - Memblokir Akun Pengguna |
+| C20 - LaporanController | UC19 - Mengirimkan Laporan |
+| C21 - ModerasiController | UC20 - Melihat dan Menyaring Daftar Laporan<br>UC21 - Mengubah Status Penanganan Laporan<br>UC22 - Menghapus Listing yang Dilaporkan<br>UC23 - Memblokir Akun Pengguna<br>UC24 - Membuka Blokir Akun Pengguna |
+| C22 - DokumenLegalController | UC06 - Melihat Kebijakan Privasi dan Ketentuan Penggunaan |
+| C23 - Akun | UC01 - Mendaftar Akun<br>UC02 - Memverifikasi Surel<br>UC03 - Masuk ke Sistem (Login)<br>UC04 - Keluar dari Sistem (Logout)<br>UC05 - Melihat Profil Akun<br>UC13 - Melihat Katalog Listing<br>UC14 - Mencari dan Menyaring Listing<br>UC16 - Menghubungi Penjual<br>UC17 - Mengirim Pesan dalam Percakapan<br>UC19 - Mengirimkan Laporan<br>UC22 - Menghapus Listing yang Dilaporkan<br>UC23 - Memblokir Akun Pengguna<br>UC24 - Membuka Blokir Akun Pengguna |
+| C24 - Pembeli | UC05 - Melihat Profil Akun<br>UC16 - Menghubungi Penjual |
+| C25 - Penjual | UC05 - Melihat Profil Akun<br>UC07 - Membuat Listing<br>UC08 - Melihat Daftar Listing Milik Sendiri<br>UC09 - Mengubah Listing<br>UC10 - Menghapus Listing<br>UC11 - Menandai Listing Terjual<br>UC12 - Membatalkan Penandaan Terjual<br>UC13 - Melihat Katalog Listing<br>UC14 - Mencari dan Menyaring Listing<br>UC15 - Melihat Detail Listing<br>UC16 - Menghubungi Penjual<br>UC23 - Memblokir Akun Pengguna<br>UC24 - Membuka Blokir Akun Pengguna |
+| C26 - Admin | UC20 - Melihat dan Menyaring Daftar Laporan<br>UC21 - Mengubah Status Penanganan Laporan<br>UC22 - Menghapus Listing yang Dilaporkan<br>UC23 - Memblokir Akun Pengguna<br>UC24 - Membuka Blokir Akun Pengguna |
+| C27 - TokenVerifikasi | UC01 - Mendaftar Akun<br>UC02 - Memverifikasi Surel |
+| C28 - SesiLogin | UC03 - Masuk ke Sistem (Login)<br>UC04 - Keluar dari Sistem (Logout)<br>UC05 - Melihat Profil Akun<br>UC07 - Membuat Listing<br>UC08 - Melihat Daftar Listing Milik Sendiri<br>UC09 - Mengubah Listing<br>UC10 - Menghapus Listing<br>UC11 - Menandai Listing Terjual<br>UC12 - Membatalkan Penandaan Terjual<br>UC15 - Melihat Detail Listing<br>UC16 - Menghubungi Penjual<br>UC17 - Mengirim Pesan dalam Percakapan<br>UC18 - Melihat Daftar Percakapan<br>UC19 - Mengirimkan Laporan<br>UC20 - Melihat dan Menyaring Daftar Laporan<br>UC21 - Mengubah Status Penanganan Laporan<br>UC22 - Menghapus Listing yang Dilaporkan<br>UC23 - Memblokir Akun Pengguna<br>UC24 - Membuka Blokir Akun Pengguna |
+| C29 - Barang | UC05 - Melihat Profil Akun<br>UC07 - Membuat Listing<br>UC08 - Melihat Daftar Listing Milik Sendiri<br>UC09 - Mengubah Listing<br>UC10 - Menghapus Listing<br>UC11 - Menandai Listing Terjual<br>UC12 - Membatalkan Penandaan Terjual<br>UC13 - Melihat Katalog Listing<br>UC14 - Mencari dan Menyaring Listing<br>UC15 - Melihat Detail Listing<br>UC16 - Menghubungi Penjual<br>UC19 - Mengirimkan Laporan<br>UC22 - Menghapus Listing yang Dilaporkan<br>UC23 - Memblokir Akun Pengguna<br>UC24 - Membuka Blokir Akun Pengguna |
+| C30 - FotoBarang | UC07 - Membuat Listing<br>UC09 - Mengubah Listing<br>UC10 - Menghapus Listing<br>UC13 - Melihat Katalog Listing<br>UC14 - Mencari dan Menyaring Listing<br>UC15 - Melihat Detail Listing<br>UC22 - Menghapus Listing yang Dilaporkan |
+| C31 - Kategori | UC07 - Membuat Listing<br>UC09 - Mengubah Listing<br>UC14 - Mencari dan Menyaring Listing<br>UC15 - Melihat Detail Listing |
+| C32 - LokasiCOD | UC07 - Membuat Listing<br>UC09 - Mengubah Listing<br>UC14 - Mencari dan Menyaring Listing<br>UC15 - Melihat Detail Listing |
+| C33 - Percakapan | UC16 - Menghubungi Penjual<br>UC17 - Mengirim Pesan dalam Percakapan<br>UC18 - Melihat Daftar Percakapan<br>UC19 - Mengirimkan Laporan |
+| C34 - Pesan | UC16 - Menghubungi Penjual<br>UC17 - Mengirim Pesan dalam Percakapan<br>UC18 - Melihat Daftar Percakapan |
+| C35 - Notifikasi | UC01 - Mendaftar Akun<br>UC02 - Memverifikasi Surel<br>UC17 - Mengirim Pesan dalam Percakapan<br>UC22 - Menghapus Listing yang Dilaporkan<br>UC23 - Memblokir Akun Pengguna |
+| C36 - Laporan | UC19 - Mengirimkan Laporan<br>UC20 - Melihat dan Menyaring Daftar Laporan<br>UC21 - Mengubah Status Penanganan Laporan |
+| C37 - BuktiLaporan | UC19 - Mengirimkan Laporan |
+| C38 - LogAudit | UC19 - Mengirimkan Laporan<br>UC21 - Mengubah Status Penanganan Laporan<br>UC22 - Menghapus Listing yang Dilaporkan<br>UC23 - Memblokir Akun Pengguna |
+| C39 - LogAdmin | UC22 - Menghapus Listing yang Dilaporkan<br>UC23 - Memblokir Akun Pengguna<br>UC24 - Membuka Blokir Akun Pengguna |
+| C40 - DokumenLegal | UC01 - Mendaftar Akun<br>UC05 - Melihat Profil Akun<br>UC06 - Melihat Kebijakan Privasi dan Ketentuan Penggunaan |
+| C41 - Otorisasi | UC04 - Keluar dari Sistem (Logout)<br>UC05 - Melihat Profil Akun<br>UC07 - Membuat Listing<br>UC08 - Melihat Daftar Listing Milik Sendiri<br>UC09 - Mengubah Listing<br>UC10 - Menghapus Listing<br>UC11 - Menandai Listing Terjual<br>UC12 - Membatalkan Penandaan Terjual<br>UC15 - Melihat Detail Listing<br>UC16 - Menghubungi Penjual<br>UC17 - Mengirim Pesan dalam Percakapan<br>UC18 - Melihat Daftar Percakapan<br>UC19 - Mengirimkan Laporan<br>UC20 - Melihat dan Menyaring Daftar Laporan<br>UC21 - Mengubah Status Penanganan Laporan<br>UC22 - Menghapus Listing yang Dilaporkan<br>UC23 - Memblokir Akun Pengguna<br>UC24 - Membuka Blokir Akun Pengguna |
+| C42 - Kriptografi | UC01 - Mendaftar Akun<br>UC03 - Masuk ke Sistem (Login)<br>UC16 - Menghubungi Penjual<br>UC17 - Mengirim Pesan dalam Percakapan<br>UC18 - Melihat Daftar Percakapan |
+| C43 - SurelAdapter | UC01 - Mendaftar Akun<br>UC02 - Memverifikasi Surel<br>UC22 - Menghapus Listing yang Dilaporkan<br>UC23 - Memblokir Akun Pengguna |
+| C44 - PushNotifikasiAdapter | UC17 - Mengirim Pesan dalam Percakapan |
+| C45 - PenyimpananBerkas | UC07 - Membuat Listing<br>UC09 - Mengubah Listing<br>UC10 - Menghapus Listing<br>UC19 - Mengirimkan Laporan<br>UC22 - Menghapus Listing yang Dilaporkan |
+
+## 7.2 Pemeriksaan Balik per Use Case
+
+Tabel 7.2 memeriksa arah sebaliknya, yaitu kelas perancangan yang merealisasikan setiap use case. Setiap use case UC01–UC24 direalisasikan oleh sekurang-kurangnya satu kelas *View*, satu kelas *Controller*, dan satu kelas *Model*, sehingga tidak ada use case yang belum dirancang.
+
+Tabel 7.2. Kelas Perancangan per Use Case
+
+| ID Use Case | Nama Use Case | Kelas Perancangan yang Merealisasikan | Jumlah |
+| :--- | :--- | :--- | :---: |
+| UC01 | Mendaftar Akun | C01 HalamanOtentikasi, C13 AkunController, C19 NotifikasiController, C23 Akun, C27 TokenVerifikasi, C35 Notifikasi, C40 DokumenLegal, C42 Kriptografi, C43 SurelAdapter | 9 |
+| UC02 | Memverifikasi Surel | C01 HalamanOtentikasi, C13 AkunController, C19 NotifikasiController, C23 Akun, C27 TokenVerifikasi, C35 Notifikasi, C43 SurelAdapter | 7 |
+| UC03 | Masuk ke Sistem (Login) | C01 HalamanOtentikasi, C13 AkunController, C23 Akun, C28 SesiLogin, C42 Kriptografi | 5 |
+| UC04 | Keluar dari Sistem (Logout) | C01 HalamanOtentikasi, C13 AkunController, C23 Akun, C28 SesiLogin, C41 Otorisasi | 5 |
+| UC05 | Melihat Profil Akun | C02 HalamanProfil, C06 KartuProduk, C13 AkunController, C23 Akun, C24 Pembeli, C25 Penjual, C28 SesiLogin, C29 Barang, C40 DokumenLegal, C41 Otorisasi | 10 |
+| UC06 | Melihat Kebijakan Privasi dan Ketentuan Penggunaan | C12 HalamanDokumenLegal, C22 DokumenLegalController, C40 DokumenLegal | 3 |
+| UC07 | Membuat Listing | C04 FormulirBarang, C14 BarangController, C25 Penjual, C28 SesiLogin, C29 Barang, C30 FotoBarang, C31 Kategori, C32 LokasiCOD, C41 Otorisasi, C45 PenyimpananBerkas | 10 |
+| UC08 | Melihat Daftar Listing Milik Sendiri | C03 HalamanListingPenjual, C06 KartuProduk, C14 BarangController, C25 Penjual, C28 SesiLogin, C29 Barang, C41 Otorisasi | 7 |
+| UC09 | Mengubah Listing | C03 HalamanListingPenjual, C04 FormulirBarang, C14 BarangController, C25 Penjual, C28 SesiLogin, C29 Barang, C30 FotoBarang, C31 Kategori, C32 LokasiCOD, C41 Otorisasi, C45 PenyimpananBerkas | 11 |
+| UC10 | Menghapus Listing | C03 HalamanListingPenjual, C14 BarangController, C25 Penjual, C28 SesiLogin, C29 Barang, C30 FotoBarang, C41 Otorisasi, C45 PenyimpananBerkas | 8 |
+| UC11 | Menandai Listing Terjual | C03 HalamanListingPenjual, C06 KartuProduk, C14 BarangController, C25 Penjual, C28 SesiLogin, C29 Barang, C41 Otorisasi | 7 |
+| UC12 | Membatalkan Penandaan Terjual | C03 HalamanListingPenjual, C06 KartuProduk, C14 BarangController, C25 Penjual, C28 SesiLogin, C29 Barang, C41 Otorisasi | 7 |
+| UC13 | Melihat Katalog Listing | C05 HalamanKatalog, C06 KartuProduk, C15 KatalogController, C23 Akun, C25 Penjual, C29 Barang, C30 FotoBarang | 7 |
+| UC14 | Mencari dan Menyaring Listing | C05 HalamanKatalog, C06 KartuProduk, C15 KatalogController, C16 PencarianController, C17 FilterController, C23 Akun, C25 Penjual, C29 Barang, C30 FotoBarang, C31 Kategori, C32 LokasiCOD | 11 |
+| UC15 | Melihat Detail Listing | C07 HalamanDetailBarang, C14 BarangController, C25 Penjual, C28 SesiLogin, C29 Barang, C30 FotoBarang, C31 Kategori, C32 LokasiCOD, C41 Otorisasi | 9 |
+| UC16 | Menghubungi Penjual | C07 HalamanDetailBarang, C08 HalamanPercakapan, C18 PercakapanController, C23 Akun, C24 Pembeli, C25 Penjual, C28 SesiLogin, C29 Barang, C33 Percakapan, C34 Pesan, C41 Otorisasi, C42 Kriptografi | 12 |
+| UC17 | Mengirim Pesan dalam Percakapan | C08 HalamanPercakapan, C09 PanelNotifikasi, C18 PercakapanController, C19 NotifikasiController, C23 Akun, C28 SesiLogin, C33 Percakapan, C34 Pesan, C35 Notifikasi, C41 Otorisasi, C42 Kriptografi, C44 PushNotifikasiAdapter | 12 |
+| UC18 | Melihat Daftar Percakapan | C08 HalamanPercakapan, C18 PercakapanController, C28 SesiLogin, C33 Percakapan, C34 Pesan, C41 Otorisasi, C42 Kriptografi | 7 |
+| UC19 | Mengirimkan Laporan | C07 HalamanDetailBarang, C10 FormulirLaporan, C20 LaporanController, C23 Akun, C28 SesiLogin, C29 Barang, C33 Percakapan, C36 Laporan, C37 BuktiLaporan, C38 LogAudit, C41 Otorisasi, C45 PenyimpananBerkas | 12 |
+| UC20 | Melihat dan Menyaring Daftar Laporan | C11 DasborAdmin, C21 ModerasiController, C26 Admin, C28 SesiLogin, C36 Laporan, C41 Otorisasi | 6 |
+| UC21 | Mengubah Status Penanganan Laporan | C11 DasborAdmin, C21 ModerasiController, C26 Admin, C28 SesiLogin, C36 Laporan, C38 LogAudit, C41 Otorisasi | 7 |
+| UC22 | Menghapus Listing yang Dilaporkan | C11 DasborAdmin, C19 NotifikasiController, C21 ModerasiController, C23 Akun, C26 Admin, C28 SesiLogin, C29 Barang, C30 FotoBarang, C35 Notifikasi, C38 LogAudit, C39 LogAdmin, C41 Otorisasi, C43 SurelAdapter, C45 PenyimpananBerkas | 14 |
+| UC23 | Memblokir Akun Pengguna | C11 DasborAdmin, C19 NotifikasiController, C21 ModerasiController, C23 Akun, C25 Penjual, C26 Admin, C28 SesiLogin, C29 Barang, C35 Notifikasi, C38 LogAudit, C39 LogAdmin, C41 Otorisasi, C43 SurelAdapter | 13 |
+| UC24 | Membuka Blokir Akun Pengguna | C11 DasborAdmin, C21 ModerasiController, C23 Akun, C25 Penjual, C26 Admin, C28 SesiLogin, C29 Barang, C39 LogAdmin, C41 Otorisasi | 9 |
+
+## 7.3 Penyesuaian terhadap Traceability SKPL
+
+Seluruh pemetaan kelas C01–C40 terhadap use case pada Tabel 6.1 dokumen SKPL tetap berlaku pada Tabel 7.1. Tidak ada kelas yang kehilangan use case. Perbedaannya hanya berupa penambahan keterlibatan kelas pada use case tertentu akibat perancangan yang lebih rinci, serta lima kelas baru C41–C45, sebagaimana dirinci pada Tabel 7.3.
+
+Tabel 7.3. Penyesuaian Matriks Kerunutan terhadap Tabel 6.1 SKPL
+
+| Kelas | Tambahan Use Case | Alasan |
+| :--- | :--- | :--- |
+| C03 - HalamanListingPenjual | UC09 | Pengubahan listing dimulai dari tombol "Ubah" pada daftar listing penjual (`onClickUbah()`). |
+| C06 - KartuProduk | UC11, UC12 | Kartu produk dirender ulang setelah status listing berubah menjadi "Terjual" atau kembali "Tersedia". |
+| C23 - Akun | UC13, UC14, UC16, UC22 | Katalog dan pencarian hanya memuat listing milik akun yang tidak diblokir (KF30, KF54), percakapan hanya dapat dibuka bila akun penjual tidak diblokir (KF31), dan surel pemilik listing diperlukan untuk pemberitahuan penghapusan (KF52). |
+| C25 - Penjual | UC13, UC14, UC23, UC24 | Listing pada katalog dimiliki penjual melalui komposisi, dan seluruh listing milik akun penjual dinonaktifkan atau dipulihkan saat akun diblokir atau dibuka blokirnya (KF54). |
+| C28 - SesiLogin | UC15, UC20, UC21, UC22, UC23, UC24 | Identitas pengguna dan admin diambil dari sesi aktif melalui Otorisasi. Pada UC23, seluruh sesi aktif akun yang diblokir juga dinonaktifkan. |
+| C30 - FotoBarang | UC10, UC13, UC14, UC22 | Foto ikut dihapus bersama listing (UC10, UC22), dan foto utama ditampilkan pada kartu produk di katalog dan hasil pencarian (UC13, UC14). |
+| C41 - Otorisasi | UC04, UC05, UC07–UC12, UC15–UC24 | Kelas baru. Memeriksa token sesi pada setiap permintaan yang memerlukan *login*, serta peran admin pada UC20–UC24. |
+| C42 - Kriptografi | UC01, UC03, UC16, UC17, UC18 | Kelas baru. *Hash* dan pencocokan kata sandi (KF09, KF10), serta enkripsi dan dekripsi isi pesan (KF36). |
+| C43 - SurelAdapter | UC01, UC02, UC22, UC23 | Kelas baru. Mengirim kode verifikasi (KF06) dan pemberitahuan tindakan moderasi (KF52) melalui SMTP. |
+| C44 - PushNotifikasiAdapter | UC17 | Kelas baru. Mengirim notifikasi pesan baru melalui Web Push, termasuk saat aplikasi tidak dibuka (KF34). |
+| C45 - PenyimpananBerkas | UC07, UC09, UC10, UC19, UC22 | Kelas baru. Menyimpan dan menghapus berkas foto listing serta bukti laporan pada Supabase Storage (KF23, KF44). |
