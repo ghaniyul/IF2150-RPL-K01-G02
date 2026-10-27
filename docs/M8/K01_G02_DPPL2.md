@@ -5043,16 +5043,16 @@ END TRY
 
 # BAB 6: Perancangan Antarmuka
 
-## 6.1 Rancangan Antarmuka [ID Layar 1]
+## 6.1 Rancangan Antarmuka L1
 
-**Antarmuka:** [ID layar 1]  
+**Antarmuka:** L1  
 **Nama Layar:** Log in & Sign up page
 
 <p align="center">
-<img alt="Log in & Sign up page" src="./assets/layar01.png" width="50%">
+<img alt="Log in & Sign up page" src="./assets/L01.png" width="50%">
 </p>
 <p align="center">
-<i>Gambar 6.1. Rancangan Antarmuka [ID Layar 1] - Log in & Sign up page</i>
+<i>Gambar 6.1. Rancangan Antarmuka L2 - Log in & Sign up page</i>
 </p>
 
 Tabel 6.1. Spesifikasi Objek Antarmuka [ID Layar]
@@ -5064,9 +5064,45 @@ Tabel 6.1. Spesifikasi Objek Antarmuka [ID Layar]
 | *...* | *...* | *...* | *...* |
 
 
-## 6.X Rancangan Antarmuka [ID Layar X]
+## 6.2 Rancangan Antarmuka L2
 
-*[Ulangi pola 6.1 untuk layar berikutnya sampai semua layar teridentifikasi]*
+**Antarmuka:** L2  
+**Nama Layar:** Home Page
+
+<p align="center">
+<img alt="Home Page" src="./assets/L02.png" width="50%">
+</p>
+<p align="center">
+<i>Gambar 6.1. Rancangan Antarmuka L2 - Home Page</i>
+</p>
+
+Tabel 6.2. Spesifikasi Objek Antarmuka [ID Layar]
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| *[ID objek]* | *[Jenis objek, misalnya Button, RTF Box, dll]* | *[String yang tampil pada layar]* | *[Reaksi sistem, layar tujuan, tautan, atau ID algoritma yang dijalankan]* |
+| *[ID objek]* | *[Jenis objek]* | *[Konten yang ditampilkan]* | *[Reaksi sistem atau nama file terkait beserta deskripsi ringkasnya]* |
+| *...* | *...* | *...* | *...* |
+
+## 6.2 Rancangan Antarmuka L3
+
+**Antarmuka:** L3  
+**Nama Layar:** Profile Page
+
+<p align="center">
+<img alt="Profile Page" src="./assets/L03.png" width="50%">
+</p>
+<p align="center">
+<i>Gambar 6.1. Rancangan Antarmuka L3 - Profile Page</i>
+</p>
+
+Tabel 6.2. Spesifikasi Objek Antarmuka [ID Layar]
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| *[ID objek]* | *[Jenis objek, misalnya Button, RTF Box, dll]* | *[String yang tampil pada layar]* | *[Reaksi sistem, layar tujuan, tautan, atau ID algoritma yang dijalankan]* |
+| *[ID objek]* | *[Jenis objek]* | *[Konten yang ditampilkan]* | *[Reaksi sistem atau nama file terkait beserta deskripsi ringkasnya]* |
+| *...* | *...* | *...* | *...* |
 
 ## 6.Y Rancangan Antarmuka Keseluruhan
 
