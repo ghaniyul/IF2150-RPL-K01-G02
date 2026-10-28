@@ -4,41 +4,37 @@
 
 | Informasi | Keterangan |
 | --- | --- |
-| **Hari** | *\[Hari\]* |
-| **Tanggal** | *\[DD/MM/YYYY\]* |
-| **Kelas** | *\[Kelas\]* |
-| **Nomor Kelompok** | *\[Nomor Kelompok\]*  |
-| **Nama Kelompok** | *\[Nama Kelompok\]*  |
-| **Nama Perangkat Lunak** | *\[Nama P/L\]*  |
-| **Dokumen** | *\[Nama Dokumen yang diasistensikan\]*  |
+| **Hari** | *Selasa* |
+| **Tanggal** | *27/10/2026* |
+| **Kelas** | *K01* |
+| **Nomor Kelompok** | *G02*  |
+| **Nama Kelompok** | *Indeks A*  |
+| **Nama Perangkat Lunak** | *ITBELI*  |
+| **Dokumen** | *K01_G02_DPPL2*  |
 
 ### Anggota Kelompok
 
 | NIM | Nama |
-| --- | --- |
-| *\[NIM 1\]* | *\[Nama Anggota 1\]* |
-| *\[NIM 2\]* | *\[Nama Anggota 2\]* |
-| *\[NIM 3\]* | *\[Nama Anggota 3\]* |
-| *\[NIM 4\]* | *\[Nama Anggota 4\]* |
-| *\[NIM 5\]* | *\[Nama Anggota 5\]* |
+|---|---|
+| *13525124* | *Sulthan Dhiyazka Suwandi* |
+| *13525034* | *Dhanesworo Muhammad Datiputro* |
+| *13525115* | *Nazhif Hilmi Kistijantoro* |
+| *13525121* | *I Made Adi Kusuma Ardana* |
+| *13525106* | *Ghaniyul Amri Caulava* |
 
 ### Catatan
 
 | Catatan |
 | --- |
-| 1. *\[Berikan catatan hasil asistensi\]*  |
-| 2. ... |
-| 3. ... |
-| 4. ... |
-
-**Notes for this section:**  
-*Catatan dapat dituliskan dalam bentuk paragraf atau poin-poin, disesuaikan saja.* 
+| 1. Bagian 6 ID layar cukup ditulis LX |
+| 2. Untuk ID objek pada bagian 6 ditulis OX dan relatif terhadap layar |
+| 3. Penulisan objek pada bagian 6 hanya yang memiliki reaksi ketika berinteraksi |
 
 ## Dokumentasi
 
 <!-- ![](./assets/foto-asistensi.jpg) -->
 <p align="center">
-  <img src="./assets/foto-asistensi.jpg" width="100%">
+  <img src="./assets/foto-asistensi-m8.jpg" width="100%">
 </p>
 
 <p align="center">
