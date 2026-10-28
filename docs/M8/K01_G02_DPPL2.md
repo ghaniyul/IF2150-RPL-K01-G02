@@ -5055,7 +5055,7 @@ END TRY
 <i>Gambar 6.1. Rancangan Antarmuka L2 - Log in & Sign up page</i>
 </p>
 
-Tabel 6.1. Spesifikasi Objek Antarmuka [ID Layar]
+Tabel 6.1. Spesifikasi Objek Antarmuka L1
 
 | Id_Objek | Jenis | Konten | Keterangan |
 | :--- | :--- | :--- | :--- |
@@ -5073,10 +5073,10 @@ Tabel 6.1. Spesifikasi Objek Antarmuka [ID Layar]
 <img alt="Home Page" src="./assets/L02.png" width="50%">
 </p>
 <p align="center">
-<i>Gambar 6.1. Rancangan Antarmuka L2 - Home Page</i>
+<i>Gambar 6.2. Rancangan Antarmuka L2 - Home Page</i>
 </p>
 
-Tabel 6.2. Spesifikasi Objek Antarmuka [ID Layar]
+Tabel 6.2. Spesifikasi Objek Antarmuka L2
 
 | Id_Objek | Jenis | Konten | Keterangan |
 | :--- | :--- | :--- | :--- |
@@ -5084,7 +5084,7 @@ Tabel 6.2. Spesifikasi Objek Antarmuka [ID Layar]
 | *[ID objek]* | *[Jenis objek]* | *[Konten yang ditampilkan]* | *[Reaksi sistem atau nama file terkait beserta deskripsi ringkasnya]* |
 | *...* | *...* | *...* | *...* |
 
-## 6.2 Rancangan Antarmuka L3
+## 6.3 Rancangan Antarmuka L3
 
 **Antarmuka:** L3  
 **Nama Layar:** Profile Page
@@ -5093,10 +5093,30 @@ Tabel 6.2. Spesifikasi Objek Antarmuka [ID Layar]
 <img alt="Profile Page" src="./assets/L03.png" width="50%">
 </p>
 <p align="center">
-<i>Gambar 6.1. Rancangan Antarmuka L3 - Profile Page</i>
+<i>Gambar 6.3. Rancangan Antarmuka L3 - Profile Page</i>
 </p>
 
-Tabel 6.2. Spesifikasi Objek Antarmuka [ID Layar]
+Tabel 6.3. Spesifikasi Objek Antarmuka L3
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| *[ID objek]* | *[Jenis objek, misalnya Button, RTF Box, dll]* | *[String yang tampil pada layar]* | *[Reaksi sistem, layar tujuan, tautan, atau ID algoritma yang dijalankan]* |
+| *[ID objek]* | *[Jenis objek]* | *[Konten yang ditampilkan]* | *[Reaksi sistem atau nama file terkait beserta deskripsi ringkasnya]* |
+| *...* | *...* | *...* | *...* |
+
+## 6.4 Rancangan Antarmuka L4
+
+**Antarmuka:** L4  
+**Nama Layar:** Profile Page
+
+<p align="center">
+<img alt="My Listing Page" src="./assets/L04.png" width="50%">
+</p>
+<p align="center">
+<i>Gambar 6.4. Rancangan Antarmuka L4 - My Listing Page</i>
+</p>
+
+Tabel 6.4. Spesifikasi Objek Antarmuka L4
 
 | Id_Objek | Jenis | Konten | Keterangan |
 | :--- | :--- | :--- | :--- |
