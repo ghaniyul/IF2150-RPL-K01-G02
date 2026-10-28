@@ -5059,10 +5059,10 @@ Tabel 6.1. Spesifikasi Objek Antarmuka L1
 
 | Id_Objek | Jenis | Konten | Keterangan |
 | :--- | :--- | :--- | :--- |
-| *[ID objek]* | *[Jenis objek, misalnya Button, RTF Box, dll]* | *[String yang tampil pada layar]* | *[Reaksi sistem, layar tujuan, tautan, atau ID algoritma yang dijalankan]* |
-| *[ID objek]* | *[Jenis objek]* | *[Konten yang ditampilkan]* | *[Reaksi sistem atau nama file terkait beserta deskripsi ringkasnya]* |
-| *...* | *...* | *...* | *...* |
-
+| *O01* | *Input Fields* | *mykingghaniyul@itb.ac.id dan password* | *Tempat mengisi email dan password akun* |
+| *O02* | *Button* | *Masuk* | *Tombol untuk submit form input* |
+| *O03* | *Button | *Daftar* | *Tombol untuk mendaftar akun baru jika belum punya akun sebelumnya.* |
+| *O03* | *Button | *Daftar* | *Tombol untuk mendaftar akun baru jika belum punya akun sebelumnya.* |
 
 ## 6.2 Rancangan Antarmuka L2
 
@@ -5080,9 +5080,11 @@ Tabel 6.2. Spesifikasi Objek Antarmuka L2
 
 | Id_Objek | Jenis | Konten | Keterangan |
 | :--- | :--- | :--- | :--- |
-| *[ID objek]* | *[Jenis objek, misalnya Button, RTF Box, dll]* | *[String yang tampil pada layar]* | *[Reaksi sistem, layar tujuan, tautan, atau ID algoritma yang dijalankan]* |
-| *[ID objek]* | *[Jenis objek]* | *[Konten yang ditampilkan]* | *[Reaksi sistem atau nama file terkait beserta deskripsi ringkasnya]* |
-| *...* | *...* | *...* | *...* |
+| *O01* | *Button* | *Jual Barang* | *Berpindah ke page Buat Listing* |
+| *O02* | *Button* | *Profil* | *Berpindah ke page L3 - Profile Page* |
+| *O03* | *Button* | *Listing Saya* | *Berpindah ke page L4 - Listing Saya Page* |
+| *O04* | *Card* | *Gambar, Judul Barang, dan deksripsi singkat barang* | *Menampilkan detail barang ketika ditekan* |
+| *O05* | *Dropdown Button* | *Kategori, Harga, Lokasi COD, Status* | *Filter barang yang terlihat pada katalog* |
 
 ## 6.3 Rancangan Antarmuka L3
 
@@ -5107,13 +5109,13 @@ Tabel 6.3. Spesifikasi Objek Antarmuka L3
 ## 6.4 Rancangan Antarmuka L4
 
 **Antarmuka:** L4  
-**Nama Layar:** Profile Page
+**Nama Layar:** Listing Saya Page 
 
 <p align="center">
-<img alt="My Listing Page" src="./assets/L04.png" width="50%">
+<img alt="Listing Saya Page" src="./assets/L04.png" width="50%">
 </p>
 <p align="center">
-<i>Gambar 6.4. Rancangan Antarmuka L4 - My Listing Page</i>
+<i>Gambar 6.4. Rancangan Antarmuka L4 - Listing Saya Page</i>
 </p>
 
 Tabel 6.4. Spesifikasi Objek Antarmuka L4
