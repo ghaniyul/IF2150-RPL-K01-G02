@@ -38,9 +38,10 @@ Dipersiapkan oleh:
 | *B* | *Diagram kelas per use case (UC01–UC24) dibangkitkan ulang dari satu model kelas sehingga nama, atribut, dan metode setiap kelas seragam di seluruh use case. Diagram kelas UC17–UC24 dilengkapi visibilitas, tipe data atribut, parameter, dan tipe kembalian operasi. Kelas Otorisasi, Kriptografi, SurelAdapter, PushNotifikasiAdapter, dan PenyimpananBerkas (C41–C45) digambarkan pada setiap use case yang memakainya, dan tabel identifikasi kelas disamakan dengan diagramnya.* |
 | *C* | *Sequence diagram UC01–UC08 dan UC17–UC24 diselaraskan sehingga setiap pesan merupakan operasi pada kelas tujuan, termasuk pemanggilan Otorisasi, Kriptografi, SurelAdapter, PushNotifikasiAdapter, dan PenyimpananBerkas.* |
 | *D* | *Penyusunan BAB 4 (diagram kelas perancangan keseluruhan dan Tabel 4.1) serta BAB 5 (matriks kerunutan kelas terhadap use case).* |
-
 | *E* | *Tabel identifikasi kelas pada BAB 3 disederhanakan menjadi dua kolom (nama kelas perancangan dan kelas analisis terkait) sesuai templat.* |
 | *F* | *Penyusunan BAB 5 (perancangan rinci setiap kelas beserta algoritma/kueri operasi penting) dan BAB 6 (rancangan antarmuka). Matriks kerunutan yang sebelumnya berada pada BAB 5 dipindahkan menjadi BAB 7 dan disesuaikan dengan BAB 3–BAB 5.* |
+| *G* | *BAB 6 dilengkapi menjadi 15 rancangan antarmuka (I-01–I-15) yang menutup seluruh kelas boundary C01–C12, masing-masing beserta tabel spesifikasi objek dan reaksi sistemnya, serta ditambah Tabel 6.0 (pemetaan layar terhadap kelas dan use case) dan Tabel 6.16 (rekapitulasi seluruh antarmuka).* |
+| *H* | *Gambar rancangan antarmuka I-01 hingga I-15 dibangkitkan dari mockup HTML pada direktori src/mockup/ dengan resolusi acuan 1440 x 1043 piksel, ditambah tiga gambar keadaan khusus, yaitu "Barang tidak ditemukan" pada I-05 (KF29), listing terjual pada I-06 (KF26), dan dialog konfirmasi tindakan moderasi pada I-14.* |
 
 ---
 
@@ -103,6 +104,8 @@ Tabel 1.4. Aturan Penomoran
 | *Aktor* | *AXX* | *A = Aktor. Mengacu pada subbab 4.1 dokumen SKPL (A01–A03) dan muncul sebagai aktor pada sequence diagram di BAB 3.* |
 | *Use Case* | *UCXX* | *UC = Use Case. Mengacu pada subbab 4.2 dokumen SKPL (UC01–UC24). Digunakan pada BAB 3 (satu subbab per use case, yaitu UC01 pada subbab 3.1 hingga UC24 pada subbab 3.24) dan BAB 7.* |
 | *Kelas* | *CXX* | *C = Class. Digunakan pada BAB 3 hingga BAB 7. Kelas perancangan yang mewadahi kelas analisis SKPL memakai ID kelas analisis tersebut (C01–C12 untuk kelas pada komponen View, C13–C22 untuk kelas pada komponen Controller, dan C23–C40 untuk kelas pada komponen Model). Kelas yang baru muncul pada tahap perancangan, misalnya kelas pada komponen Pendukung dan Integrasi Eksternal, diberi ID lanjutan mulai dari C41.* |
+| *Layar Antarmuka* | *IXX* | *I = Interface. Digunakan pada BAB 6 (I-01–I-15). Setiap layar memetakan sekurang-kurangnya satu kelas boundary C01–C12, sebagaimana dirangkum pada Tabel 6.0.* |
+| *Objek Antarmuka* | *IXX-Onn* | *O = Objek. Menandai objek antarmuka pada suatu layar, misalnya I04-O08 adalah objek kedelapan pada layar I-04. Digunakan pada tabel spesifikasi objek di BAB 6.* |
 
 ## 1.5 Referensi
 Berikut adalah referensi yang dirujuk dalam penyusunan dokumen ini.
@@ -5043,42 +5046,458 @@ END TRY
 
 # BAB 6: Perancangan Antarmuka
 
-## 6.1 Rancangan Antarmuka [ID Layar 1]
+Bab ini menyajikan rancangan antarmuka pengguna ITBELI. Setiap layar diberi ID dengan pola **IXX** sesuai aturan penomoran pada subbab 1.4, dan setiap objek pada layar diberi ID dengan pola **IXX-Onn**, dengan `IXX` adalah ID layar tempat objek berada dan `nn` adalah nomor urut objek pada layar tersebut.
 
-**Antarmuka:** [ID layar 1]  
-**Nama Layar:** Log in & Sign up page
+Seluruh layar diturunkan dari 12 kelas *boundary* C01–C12 yang dirinci pada BAB 5, sehingga setiap kelas *boundary* terwujud pada sekurang-kurangnya satu layar. Kolom "Keterangan" pada setiap tabel spesifikasi objek menyebutkan reaksi sistem berupa operasi kelas yang dipanggil atau layar tujuan yang dibuka, sehingga rancangan antarmuka ini terhubung langsung dengan perancangan rinci kelas pada BAB 5 dan dengan kebutuhan fungsional (KF) pada dokumen SKPL.
+
+Tabel 6.0 merangkum pemetaan layar terhadap kelas *boundary* dan use case yang direalisasikannya.
+
+Tabel 6.0. Pemetaan Layar terhadap Kelas *Boundary* dan Use Case
+
+| ID Layar | Nama Layar | Kelas *Boundary* | Use Case |
+| :--- | :--- | :--- | :--- |
+| I-01 | Masuk (*Login*) | C01 HalamanOtentikasi | UC03, UC04 |
+| I-02 | Daftar Akun | C01 HalamanOtentikasi | UC01 |
+| I-03 | Verifikasi Surel | C01 HalamanOtentikasi | UC02 |
+| I-04 | Katalog | C05 HalamanKatalog, C06 KartuProduk | UC13 |
+| I-05 | Hasil Pencarian dan Filter | C05 HalamanKatalog, C06 KartuProduk | UC14 |
+| I-06 | Detail Barang | C07 HalamanDetailBarang | UC15 |
+| I-07 | Formulir Listing | C04 FormulirBarang | UC07, UC09 |
+| I-08 | Listing Saya | C03 HalamanListingPenjual, C06 KartuProduk | UC08, UC10, UC11, UC12 |
+| I-09 | Profil Akun | C02 HalamanProfil, C06 KartuProduk | UC05 |
+| I-10 | Percakapan | C08 HalamanPercakapan | UC16, UC17, UC18 |
+| I-11 | Panel Notifikasi | C09 PanelNotifikasi | UC17 |
+| I-12 | Formulir Laporan | C10 FormulirLaporan | UC19 |
+| I-13 | Dasbor Admin: Daftar Laporan | C11 DasborAdmin | UC20, UC21 |
+| I-14 | Dasbor Admin: Detail Laporan | C11 DasborAdmin | UC21, UC22, UC23, UC24 |
+| I-15 | Dokumen Legal | C12 HalamanDokumenLegal | UC06 |
+
+Seluruh layar dirancang untuk peramban pada resolusi acuan 1440 × 1043 piksel sesuai lingkungan implementasi pada subbab 2.1, dan bersifat responsif terhadap lebar layar yang lebih kecil.
+
+## 6.1 Rancangan Antarmuka I-01
+
+**Antarmuka:** I-01
+**Nama Layar:** Masuk (*Login*)
 
 <p align="center">
-<img alt="Log in & Sign up page" src="./assets/layar01.png" width="50%">
+<img alt="Masuk (Login)" src="./assets/layar01.png" width="80%">
 </p>
 <p align="center">
-<i>Gambar 6.1. Rancangan Antarmuka [ID Layar 1] - Log in & Sign up page</i>
+<i>Gambar 6.1. Rancangan Antarmuka I-01 - Masuk (Login)</i>
 </p>
 
-Tabel 6.1. Spesifikasi Objek Antarmuka [ID Layar]
+Tabel 6.1. Spesifikasi Objek Antarmuka I-01
 
 | Id_Objek | Jenis | Konten | Keterangan |
 | :--- | :--- | :--- | :--- |
-| *[ID objek]* | *[Jenis objek, misalnya Button, RTF Box, dll]* | *[String yang tampil pada layar]* | *[Reaksi sistem, layar tujuan, tautan, atau ID algoritma yang dijalankan]* |
-| *[ID objek]* | *[Jenis objek]* | *[Konten yang ditampilkan]* | *[Reaksi sistem atau nama file terkait beserta deskripsi ringkasnya]* |
-| *...* | *...* | *...* | *...* |
+| I01-O01 | *Text Field* | "Email institusi" | Menyimpan atribut `email`. Validasi awal di sisi klien memeriksa domain @itb.ac.id. |
+| I01-O02 | *Password Field* | "Kata sandi" | Menyimpan atribut `kataSandi` dengan teks tertutup. |
+| I01-O03 | *Button* (primer) | "Masuk" | Menjalankan `HalamanOtentikasi.kirimFormulirLogin(email, kataSandi)` yang diteruskan ke `AkunController.login()`. Berhasil menuju I-04. |
+| I01-O04 | *Button* (sekunder) | "Daftar" | Membuka layar I-02. |
+| I01-O05 | *Label* galat | Pesan kegagalan | Menjalankan `tampilkanPesanGalat()` untuk kredensial salah, akun belum terverifikasi, atau akun diblokir (KF53). |
+| I01-O06 | *Info Box* | "Khusus sivitas ITB. Akun harus terverifikasi sebelum masuk." | Peringatan agar kata sandi dan kode verifikasi tidak dibagikan kepada siapa pun. |
+| I01-O07 | *Link* | "Kebijakan Privasi", "Ketentuan Penggunaan" | Membuka layar I-15 melalui `DokumenLegalController.getDokumen()`. |
+| I01-O08 | *Button* | "Keluar" | Ditampilkan oleh `tampilkanTombolKeluar()` bagi pengguna yang sedang masuk. Menjalankan `kirimPermintaanLogout(token)` lalu `hapusTokenLokal()` (UC04). |
 
+## 6.2 Rancangan Antarmuka I-02
 
-## 6.X Rancangan Antarmuka [ID Layar X]
+**Antarmuka:** I-02
+**Nama Layar:** Daftar Akun
 
-*[Ulangi pola 6.1 untuk layar berikutnya sampai semua layar teridentifikasi]*
+<p align="center">
+<img alt="Daftar Akun" src="./assets/layar02.png" width="80%">
+</p>
+<p align="center">
+<i>Gambar 6.2. Rancangan Antarmuka I-02 - Daftar Akun</i>
+</p>
 
-## 6.Y Rancangan Antarmuka Keseluruhan
+Tabel 6.2. Spesifikasi Objek Antarmuka I-02
 
-Tuliskan daftar gambar seluruh antarmuka. Berikan ID unik untuk setiap tampilan dan gunakan ID yang sama pada subbab perancangan antarmuka masing-masing.
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| I02-O01 | *Text Field* | "Nama lengkap" | Menyimpan atribut `nama`. Isian wajib. |
+| I02-O02 | *Text Field* | "NIM" | Menyimpan atribut `nim`. Hanya menerima angka. |
+| I02-O03 | *Text Field* | "Email institusi" | Menyimpan atribut `email`. Menampilkan galat bila domain bukan @itb.ac.id (KF05) atau surel sudah terdaftar. |
+| I02-O04 | *Password Field* | "Kata sandi" | Menyimpan atribut `kataSandi` beserta indikator kekuatan kata sandi. |
+| I02-O05 | *Checkbox* | "Saya menyetujui Kebijakan Privasi dan Ketentuan Penggunaan" | Menyimpan atribut `setujuKebijakan`. Objek I02-O07 nonaktif selama belum dicentang (KF13). |
+| I02-O06 | *Link* | "Kebijakan Privasi" | Menampilkan tautan hasil `tampilkanKebijakanPrivasi(tautan)` yang diperoleh dari `AkunController.getTautanDokumenLegal()`. Membuka I-15. |
+| I02-O07 | *Button* (primer) | "Buat Akun" | Menjalankan `kirimFormulirPendaftaran()` yang diteruskan ke `AkunController.daftarAkun()`. Berhasil menjalankan `arahkanKeHalamanVerifikasi()` menuju I-03. |
+| I02-O08 | *Link* | "Sudah punya akun? Masuk" | Membuka layar I-01. |
 
-Tabel 6.Y. Rancangan Antarmuka Keseluruhan
+## 6.3 Rancangan Antarmuka I-03
 
-| No | Tampilan Antarmuka |
-| :--- | :--- |
-| *[I-01]* | <img src="./assets/diagram/contoh-design.png" alt="Contoh Desain" width="400"> |
-| *[I-02]* | *[Sisipkan gambar antarmuka I-02]* |
-| *[I-XX]* | *[Sisipkan gambar antarmuka berikutnya]* |
+**Antarmuka:** I-03
+**Nama Layar:** Verifikasi Surel
+
+<p align="center">
+<img alt="Verifikasi Surel" src="./assets/layar03.png" width="80%">
+</p>
+<p align="center">
+<i>Gambar 6.3. Rancangan Antarmuka I-03 - Verifikasi Surel</i>
+</p>
+
+Tabel 6.3. Spesifikasi Objek Antarmuka I-03
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| I03-O01 | *Label* | "Kode verifikasi telah dikirim ke nama@itb.ac.id" | Surel diambil dari data pendaftaran pada langkah sebelumnya (KF06). |
+| I03-O02 | *OTP Input* | Enam kotak isian angka | Menyimpan atribut `kodeVerifikasi`. Fokus berpindah otomatis antarkotak. |
+| I03-O03 | *Countdown* | "Kode berlaku 14:59" | Menampilkan atribut `sisaWaktu` berupa hitung mundur 15 menit. Dikembalikan oleh `resetHitungMundur()` setelah kode baru dikirim. |
+| I03-O04 | *Button* (primer) | "Verifikasi" | Menjalankan `kirimKodeVerifikasi(email, kode)` yang diteruskan ke `AkunController.verifikasiAkun()`. Berhasil menjalankan `arahkanKeBeranda()` menuju I-04. |
+| I03-O05 | *Button* (teks) | "Kirim ulang kode" | Nonaktif sampai hitung mundur habis. Menjalankan `mintaKirimUlang(email)` yang diteruskan ke `AkunController.kirimUlangKode()`. |
+| I03-O06 | *Label* galat | "Kode salah atau sudah kedaluwarsa" | Menjalankan `tampilkanPesanGalat()`. |
+| I03-O07 | *Toast* | "Kode verifikasi baru telah dikirim." | Menjalankan `tampilkanPesanSukses(pesan)`. |
+
+## 6.4 Rancangan Antarmuka I-04
+
+**Antarmuka:** I-04
+**Nama Layar:** Katalog
+
+<p align="center">
+<img alt="Katalog" src="./assets/layar04.png" width="80%">
+</p>
+<p align="center">
+<i>Gambar 6.4. Rancangan Antarmuka I-04 - Katalog</i>
+</p>
+
+Tabel 6.4. Spesifikasi Objek Antarmuka I-04
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| I04-O01 | *Search Field* | "Cari jas praktikum, buku, kalkulator…" | Menjalankan `inputPencarian(kataKunci)` yang menyimpan kata kunci, menjalankan `resetHalaman()`, lalu meminta hasil ke `KatalogController.getProduk()`. Membuka I-05. |
+| I04-O02 | *Button* (primer) | "+ Jual Barang" | Membuka layar I-07 dalam mode pembuatan listing. Bagi pengguna yang belum masuk, mengarahkan ke I-01. |
+| I04-O03 | *List* kategori | Jas praktikum, Buku kuliah, Alat laboratorium, Kalkulator, Jaket himpunan, Perlengkapan kos | Menjalankan `pilihFilter(filterAktif)`. Daftar diperoleh dari `Kategori.getDaftarKategori()`. |
+| I04-O04 | *Range Input* | "Harga" dengan isian minimum dan maksimum | Menjalankan `validasiRentangHarga(hargaMin, hargaMax)`. Bila tidak sah, `tandaiRentangHarga()` menandai kedua kolom. |
+| I04-O05 | *Dropdown* | "Lokasi titik temu COD" | Pilihan diperoleh dari `LokasiCOD.getDaftarLokasi()`, lalu diteruskan ke `pilihFilter()`. |
+| I04-O06 | *Dropdown* | "Urutkan: Terbaru / Harga terendah / Harga tertinggi" | Menjalankan `pilihUrutan(kriteriaUrutan)` lalu meminta hasil baru dari halaman pertama. |
+| I04-O07 | *Grid* | Maksimum 20 kartu produk per halaman | Menjalankan `tampilkanHasil(hasil)` yang memanggil `KartuProduk.render()` untuk setiap barang (KF28). |
+| I04-O08 | *Card* | Foto utama, harga, judul, status, kategori, dan lokasi COD | Objek C06 KartuProduk. Menjalankan `onClickDetail(idBarang)` yang membuka I-06 melalui `HalamanDetailBarang.showBarang()`. |
+| I04-O09 | *Pagination* | Navigasi antarhalaman | Menjalankan `tampilkanPagination(total, halaman)`. Klik menjalankan `pindahHalaman(halaman)` lalu `gulirKeAtas()`. |
+| I04-O10 | *Empty State* | "Belum ada barang yang tersedia" | Menjalankan `tampilkanPesanKosong(kodePesan)` dan `sembunyikanPagination()` (KF29). |
+| I04-O11 | *Icon Button* | Ikon lonceng beserta penanda jumlah belum dibaca | Membuka layar I-11 melalui `PanelNotifikasi.tampilkanDaftarNotifikasi()`. |
+| I04-O12 | *Icon Button* | Ikon percakapan beserta penanda jumlah belum dibaca | Membuka layar I-10 melalui `HalamanPercakapan.bukaDaftarPercakapan()`. |
+
+## 6.5 Rancangan Antarmuka I-05
+
+**Antarmuka:** I-05
+**Nama Layar:** Hasil Pencarian dan Filter
+
+<p align="center">
+<img alt="Hasil Pencarian dan Filter" src="./assets/layar05.png" width="80%">
+</p>
+<p align="center">
+<i>Gambar 6.5. Rancangan Antarmuka I-05 - Hasil Pencarian dan Filter</i>
+</p>
+
+<p align="center">
+<img alt="Barang Tidak Ditemukan" src="./assets/layar05b.png" width="80%">
+</p>
+<p align="center">
+<i>Gambar 6.5b. Rancangan Antarmuka I-05 - Keadaan "Barang tidak ditemukan" (KF29)</i>
+</p>
+
+Tabel 6.5. Spesifikasi Objek Antarmuka I-05
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| I05-O01 | *Label* judul | "Hasil pencarian untuk \"kalkulator\"" | Menampilkan atribut `kataKunci` yang sedang diterapkan. |
+| I05-O02 | *Label* | "37 barang ditemukan" | Menampilkan atribut `total` yang dikembalikan `KatalogController.getProduk()`. |
+| I05-O03 | *Chip* filter aktif | "Kalkulator ✕", "Rp0–Rp200.000 ✕", "Labtek V ✕" | Menjalankan `tampilkanFilterAktif(filterAktif)`. Menekan ikon silang melepas satu filter dan memuat ulang hasil dari halaman pertama. |
+| I05-O04 | *Button* (teks) | "Hapus Semua Filter" | Menjalankan `hapusSemuaFilter()` lalu `resetHalaman()` sehingga katalog penuh ditampilkan kembali. |
+| I05-O05 | *Grid* | Kartu produk hasil penyaringan | Sama dengan objek I04-O07, dengan kriteria kata kunci dan filter yang sedang aktif. |
+| I05-O06 | *Empty State* | "Barang tidak ditemukan" beserta tombol "Hapus Semua Filter" | Menjalankan `tampilkanPesanKosong(kodePesan)` (KF29). |
+| I05-O07 | *Label* galat | "Harga minimum tidak boleh melebihi harga maksimum" | Menjalankan `tandaiRentangHarga()` ketika `validasiRentangHarga()` bernilai salah. |
+
+## 6.6 Rancangan Antarmuka I-06
+
+**Antarmuka:** I-06
+**Nama Layar:** Detail Barang
+
+<p align="center">
+<img alt="Detail Barang" src="./assets/layar06.png" width="80%">
+</p>
+<p align="center">
+<i>Gambar 6.6. Rancangan Antarmuka I-06 - Detail Barang</i>
+</p>
+
+<p align="center">
+<img alt="Detail Barang Terjual" src="./assets/layar06b.png" width="80%">
+</p>
+<p align="center">
+<i>Gambar 6.6b. Rancangan Antarmuka I-06 - Keadaan listing terjual (KF26)</i>
+</p>
+
+Tabel 6.6. Spesifikasi Objek Antarmuka I-06
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| I06-O01 | *Image Gallery* | Foto utama beserta maksimum lima *thumbnail* | Menjalankan `pilihFoto(indeksFoto)`. Data diperoleh dari `BarangController.getBarang(idBarang, token, "detail")`. |
+| I06-O02 | *Lightbox* | Foto ukuran penuh beserta navigasi maju dan mundur | Menjalankan `tampilkanLightbox(indeksFoto)` memakai `daftarFoto` tanpa meminta data ulang. |
+| I06-O03 | *Label* judul | Nama barang | Ditampilkan oleh `tampilkanDetail(detail)` (KF17). |
+| I06-O04 | *Label* harga | "Rp120.000" | Ditampilkan oleh `tampilkanDetail(detail)`. |
+| I06-O05 | *Chip* | Kategori barang dan lokasi titik temu COD | Diperoleh dari *Model* DataReferensi melalui `BarangController`. |
+| I06-O06 | *Label* | "Diunggah 2 hari lalu" | Waktu relatif dari atribut `tanggalUnggah` pada *Model* Barang. |
+| I06-O07 | *Button* (primer) | "Hubungi Penjual" | Menjalankan `onClickContact()` yang diteruskan ke `PercakapanController.mulaiPercakapan(token, idBarang)` lalu membuka I-10 (UC16). |
+| I06-O08 | *Button* (teks) | "Laporkan" | Menjalankan `onClickLapor()` yang membuka I-12 dengan listing ini sebagai objek yang dilaporkan (UC19). |
+| I06-O09 | *RTF Box* | "Kondisi: Bekas, layak pakai" beserta deskripsi dari penjual | Ditampilkan oleh `tampilkanDetail(detail)`. |
+| I06-O10 | *Panel* penjual | Nama penjual beserta tautan profil | Menjalankan `bukaProfilPenjual(idPenjual)` yang membuka I-09 (UC05). |
+| I06-O11 | *Badge* | "Terjual" | Ditampilkan oleh `tampilkanArsipTerjual()`. Objek I06-O07 dinonaktifkan (KF26). |
+| I06-O12 | *Button Group* | "Ubah", "Hapus", "Tandai Terjual" atau "Batalkan Terjual" | Ditampilkan oleh `tampilkanAksiPemilik(status)` hanya bila pemohon adalah pemilik listing, sesuai algoritma Algo-001 pada subbab 5.7.1. |
+| I06-O13 | *Empty State* | "Listing tidak ditemukan" beserta tombol kembali ke katalog | Menjalankan `tampilkanTidakDitemukan()` lalu `arahkanKeKatalog()`. |
+
+## 6.7 Rancangan Antarmuka I-07
+
+**Antarmuka:** I-07
+**Nama Layar:** Formulir Listing (Buat dan Ubah)
+
+<p align="center">
+<img alt="Formulir Listing" src="./assets/layar07.png" width="80%">
+</p>
+<p align="center">
+<i>Gambar 6.7. Rancangan Antarmuka I-07 - Formulir Listing</i>
+</p>
+
+Tabel 6.7. Spesifikasi Objek Antarmuka I-07
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| I07-O01 | *File Uploader* | Area seret-dan-lepas foto, maksimum lima berkas | Menjalankan `pilihFoto(fotoBaru)` dan `validasiFotoSisiKlien()` yang memeriksa format JPG/PNG dan ukuran maksimum 5 MB (KF23, KF24). |
+| I07-O02 | *Thumbnail List* | Pratinjau foto beserta tombol hapus dan penanda foto utama | Urutan foto dapat diubah. Foto pertama menjadi foto utama pada kartu produk. |
+| I07-O03 | *Text Field* | "Judul barang" | Menyimpan atribut `judul`. Isian wajib, maksimum 80 karakter beserta penghitung karakter. |
+| I07-O04 | *Number Field* | "Harga (Rp)" | Menyimpan atribut `harga`. Diperiksa oleh `validasiTipeData(data)` yang menuntut angka positif. |
+| I07-O05 | *Dropdown* | "Kategori" | Menyimpan atribut `idKategori`. Pilihan diperoleh dari `BarangController.getDataFormulir()`. Isian wajib. |
+| I07-O06 | *Dropdown* | "Lokasi titik temu COD" | Menyimpan atribut `idLokasi`. Pilihan diperoleh dari `LokasiCOD.getDaftarLokasi()`. |
+| I07-O07 | *RTF Box* | "Deskripsi kondisi" | Menyimpan atribut `deskripsiKondisi`, maksimum 1000 karakter. |
+| I07-O08 | *Label* galat | Penanda merah pada isian wajib yang belum diisi | Menjalankan `tandaiIsianKosong()` ketika `validasiIsianWajib()` bernilai salah (KF18). |
+| I07-O09 | *Button* (primer) | "Publikasikan" atau "Simpan Perubahan" | Menjalankan `kirimFormulir()` ke `BarangController.buatBarang()` pada mode buat, atau `onClickUpdate()` ke `BarangController.updateBarang()` pada mode ubah. Berhasil menjalankan `arahkanKeDetail(idBarang)` menuju I-06. |
+| I07-O10 | *Button* (sekunder) | "Batal" | Kembali ke layar sebelumnya tanpa menyimpan. Menampilkan konfirmasi bila ada perubahan yang belum tersimpan. |
+| I07-O11 | *Preview Card* | Pratinjau kartu produk yang diperbarui mengikuti isian | Memakai komponen C06 KartuProduk sehingga penjual melihat tampilan listingnya pada katalog sebelum menyimpan. |
+| I07-O12 | *Toast* | "Listing berhasil dibuat" | Menjalankan `tampilkanNotifikasi(kodePesan)`. |
+
+## 6.8 Rancangan Antarmuka I-08
+
+**Antarmuka:** I-08
+**Nama Layar:** Listing Saya
+
+<p align="center">
+<img alt="Listing Saya" src="./assets/layar08.png" width="80%">
+</p>
+<p align="center">
+<i>Gambar 6.8. Rancangan Antarmuka I-08 - Listing Saya</i>
+</p>
+
+Tabel 6.8. Spesifikasi Objek Antarmuka I-08
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| I08-O01 | *Tab* | "Tersedia (4)" dan "Terjual (7)" | Menjalankan `pilihTab(namaTab)`. Jumlah diperoleh dari `kelompokkanBerdasarkanStatus(daftarListing)` (KF20). |
+| I08-O02 | *Card* beserta baris aksi | Kartu produk milik penjual beserta tombol aksinya | Data diperoleh dari `BarangController.getListingSaya(token)` lalu ditampilkan oleh `tampilkanDaftarListing()`. |
+| I08-O03 | *Button* | "Ubah" | Menjalankan `onClickUbah(idBarang)` yang meminta data ke `BarangController.getBarang(idBarang, token, "ubah")` lalu membuka I-07 mode ubah (UC09). |
+| I08-O04 | *Button* (merusak) | "Hapus" | Menjalankan `onClickHapus(idBarang)` yang meminta pemeriksaan kepemilikan ke `BarangController.siapkanPenghapusan()` sebelum dialog konfirmasi muncul (UC10). |
+| I08-O05 | *Button* | "Tandai Terjual" atau "Batalkan Terjual" | Menjalankan `onClickTandaiTerjual(idBarang)` atau `onClickBatalTerjual(idBarang)` yang meminta pemeriksaan ke `BarangController.siapkanPerubahanStatus()` (UC11, UC12). |
+| I08-O06 | *Modal Dialog* | "Hapus \"Jas Praktikum Kimia\"? Tindakan ini bersifat permanen." | Ditampilkan oleh `tampilkanKonfirmasi(barang, aksi)`. Tombol konfirmasi menjalankan `konfirmasiAksi()`, tombol batal menjalankan `batalkanKonfirmasi()`. |
+| I08-O07 | *Toast* | "Listing berhasil dihapus" | Menjalankan `tampilkanNotifikasi(kodePesan)` lalu `tutupDialog()`. |
+| I08-O08 | *Empty State* | "Anda belum punya listing" beserta tombol "+ Jual Barang" | Ditampilkan ketika `daftarTersedia` kosong. Tombol membuka I-07. |
+
+## 6.9 Rancangan Antarmuka I-09
+
+**Antarmuka:** I-09
+**Nama Layar:** Profil Akun
+
+<p align="center">
+<img alt="Profil Akun" src="./assets/layar09.png" width="80%">
+</p>
+<p align="center">
+<i>Gambar 6.9. Rancangan Antarmuka I-09 - Profil Akun</i>
+</p>
+
+Tabel 6.9. Spesifikasi Objek Antarmuka I-09
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| I09-O01 | *Panel* identitas | Avatar, nama, NIM, dan surel akun | Ditampilkan oleh `tampilkanProfil(data)` setelah `muatProfil()` meminta data ke `AkunController.getProfil(token)` (KF04). |
+| I09-O02 | *Grid* | Daftar listing milik akun | Ditampilkan oleh `tampilkanDaftarListing(daftarBarang)` yang memanggil `KartuProduk.render()` untuk setiap barang. |
+| I09-O03 | *Menu* | "Pengaturan akun", "Kebijakan Privasi", "Keluar" | Dibuka oleh `bukaPengaturanAkun()`. Hanya muncul pada profil milik akun yang sedang masuk. |
+| I09-O04 | *Link* | "Kebijakan Privasi" | Ditampilkan oleh `tampilkanTautanKebijakan(tautan)`. Membuka layar I-15. |
+| I09-O05 | *Button* | "Keluar" | Menjalankan `HalamanOtentikasi.kirimPermintaanLogout(token)` lalu `hapusTokenLokal()` dan `arahkanKeHalamanLogin()` menuju I-01 (UC04). |
+| I09-O06 | *Badge* | "Akun diblokir" | Ditampilkan ketika akun yang dilihat berstatus diblokir, misalnya saat admin menelusuri akun dari I-14. |
+
+## 6.10 Rancangan Antarmuka I-10
+
+**Antarmuka:** I-10
+**Nama Layar:** Percakapan
+
+<p align="center">
+<img alt="Percakapan" src="./assets/layar10.png" width="80%">
+</p>
+<p align="center">
+<i>Gambar 6.10. Rancangan Antarmuka I-10 - Percakapan</i>
+</p>
+
+Tabel 6.10. Spesifikasi Objek Antarmuka I-10
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| I10-O01 | *List* percakapan | Nama lawan bicara, cuplikan pesan terakhir, waktu, dan penanda jumlah pesan belum dibaca | Ditampilkan oleh `showDaftarPercakapan(daftar)` setelah `bukaDaftarPercakapan()` meminta data ke `PercakapanController.getDaftarPercakapan(token)` (UC18). |
+| I10-O02 | *Panel* kepala ruang | Nama lawan bicara beserta kartu ringkas barang yang dibicarakan | Ditampilkan oleh `showPercakapan(ruang)` setelah `bukaPercakapan(idPercakapan)`. |
+| I10-O03 | *Message List* | Gelembung pesan berurutan beserta waktu pengiriman | Ditampilkan oleh `tampilkanUrutanPesan(daftarPesan)` lalu `gulirKePesanTerakhir()`. Isi pesan didekripsi oleh `PercakapanController` melalui Kriptografi (KF36). |
+| I10-O04 | *RTF Box* | "Tulis pesan…" | Menyimpan atribut `isiTeksInput`. Diperiksa oleh `validasiInputKosong(isi)` sehingga pesan kosong tidak dikirim. |
+| I10-O05 | *Button* (primer) | Ikon kirim | Menjalankan `kirimPesan(isi)` yang diteruskan ke `PercakapanController.kirimPesan(token, idPercakapan, isi)` (UC17). |
+| I10-O06 | *Info Box* | "Isi percakapan ini terenkripsi dan tidak dapat diakses oleh admin maupun pengembang." | Ditampilkan oleh `tampilkanTautanKebijakan()` beserta tautan menuju I-15 (KF39). |
+| I10-O07 | *Empty State* | "Akses ditolak" | Ditampilkan oleh `tampilkanAksesDitolak()` bila pemohon bukan peserta percakapan, tanpa menampilkan isi pesan apa pun (KF35). |
+| I10-O08 | *Empty State* | "Belum ada percakapan" | Ditampilkan ketika `daftarPercakapan` kosong. |
+
+## 6.11 Rancangan Antarmuka I-11
+
+**Antarmuka:** I-11
+**Nama Layar:** Panel Notifikasi
+
+<p align="center">
+<img alt="Panel Notifikasi" src="./assets/layar11.png" width="80%">
+</p>
+<p align="center">
+<i>Gambar 6.11. Rancangan Antarmuka I-11 - Panel Notifikasi</i>
+</p>
+
+Tabel 6.11. Spesifikasi Objek Antarmuka I-11
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| I11-O01 | *List* notifikasi | Ikon jenis notifikasi, teks, dan waktu relatif | Ditampilkan oleh `tampilkanDaftarNotifikasi(daftar)` dengan data dari `NotifikasiController`. |
+| I11-O02 | *Badge* | Penanda titik pada baris dan angka pada ikon lonceng | Ditampilkan oleh `tampilkanPenandaBelumDibaca(jumlah)` yang nilainya berasal dari `Notifikasi.hitungBelumDibaca()`. |
+| I11-O03 | *List Item* | "Pesan baru dari Rani tentang Kalkulator FX-991" | Membuka layar I-10 pada percakapan terkait (KF34). |
+| I11-O04 | *List Item* | "Listing Anda dihapus admin beserta alasannya" | Pemberitahuan tindakan moderasi yang dikirim `NotifikasiController` melalui SurelAdapter dan notifikasi dalam aplikasi. |
+| I11-O05 | *Empty State* | "Belum ada notifikasi" | Ditampilkan ketika `daftarNotifikasi` kosong. |
+
+## 6.12 Rancangan Antarmuka I-12
+
+**Antarmuka:** I-12
+**Nama Layar:** Formulir Laporan
+
+<p align="center">
+<img alt="Formulir Laporan" src="./assets/layar12.png" width="80%">
+</p>
+<p align="center">
+<i>Gambar 6.12. Rancangan Antarmuka I-12 - Formulir Laporan</i>
+</p>
+
+Tabel 6.12. Spesifikasi Objek Antarmuka I-12
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| I12-O01 | *Label* konteks | "Melaporkan: Jas Praktikum Kimia" | Menampilkan atribut `objekDilaporkan` yang diterima dari layar pemanggil melalui `tampilkanFormulirLaporan(objekDilaporkan)`. |
+| I12-O02 | *Radio Group* | "Penipuan", "Konten tidak pantas", "Bug" | Menyimpan atribut `jenisPelanggaran`. Isian wajib. |
+| I12-O03 | *RTF Box* | "Alasan" | Menyimpan atribut `teksAlasan`. Isian wajib. |
+| I12-O04 | *File Uploader* | "Bukti tangkapan layar" | Menjalankan `unggahBukti(berkas)` yang menyimpan atribut `berkasBukti`. Minimal satu berkas. |
+| I12-O05 | *Label* galat | "Alasan dan bukti tangkapan layar wajib diisi" | Menjalankan `tandaiIsianKosong()` ketika `validasiIsianWajib()` bernilai salah. |
+| I12-O06 | *Button* (primer) | "Kirim Laporan" | Menjalankan `kirimLaporan()` yang diteruskan ke `LaporanController.buatLaporan(token, data, berkasBukti)`. Laporan tersimpan berstatus "Baru". |
+| I12-O07 | *Toast* | "Laporan berhasil dikirim" | Menjalankan `tampilkanNotifikasi(pesan)`. |
+
+## 6.13 Rancangan Antarmuka I-13
+
+**Antarmuka:** I-13
+**Nama Layar:** Dasbor Admin: Daftar Laporan
+
+<p align="center">
+<img alt="Dasbor Admin Daftar Laporan" src="./assets/layar13.png" width="80%">
+</p>
+<p align="center">
+<i>Gambar 6.13. Rancangan Antarmuka I-13 - Dasbor Admin: Daftar Laporan</i>
+</p>
+
+Tabel 6.13. Spesifikasi Objek Antarmuka I-13
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| I13-O01 | *Tab* filter | "Semua", "Baru", "Sedang Ditinjau", "Selesai" | Menjalankan `filterLaporan(status)` yang diteruskan ke `ModerasiController.filterByStatus(token, status)`. |
+| I13-O02 | *Table* | Kolom ID laporan, objek dilaporkan, kategori, pelapor, tanggal, status, dan aksi | Ditampilkan oleh `tampilkanDaftarLaporan(daftar)` setelah `bukaDaftarLaporan()` meminta data ke `ModerasiController.getAllLaporan(token)` (UC20). |
+| I13-O03 | *Badge* status | "Baru", "Sedang Ditinjau", "Selesai" | Menampilkan status penanganan setiap laporan. |
+| I13-O04 | *Button* | "Lihat Detail" | Menjalankan `bukaDetailLaporan(idLaporan)` yang membuka I-14. |
+| I13-O05 | *Dropdown* | Pengubah status langsung dari baris tabel | Menjalankan `onClickUbahStatus(idLaporan, statusBaru)` yang diteruskan ke `ModerasiController.ubahStatusLaporan()` (UC21). |
+| I13-O06 | *Empty State* | "Tidak ada laporan pada status ini" | Ditampilkan ketika hasil penyaringan kosong. |
+| I13-O07 | *Page* galat | "Akses Ditolak" | Ditampilkan oleh `tampilkanAksesDitolak()` bagi akun yang tidak berperan admin, lalu pengguna dialihkan ke beranda (KF56). |
+
+## 6.14 Rancangan Antarmuka I-14
+
+**Antarmuka:** I-14
+**Nama Layar:** Dasbor Admin: Detail Laporan dan Tindakan Moderasi
+
+<p align="center">
+<img alt="Dasbor Admin Detail Laporan" src="./assets/layar14.png" width="80%">
+</p>
+<p align="center">
+<i>Gambar 6.14. Rancangan Antarmuka I-14 - Dasbor Admin: Detail Laporan</i>
+</p>
+
+<p align="center">
+<img alt="Konfirmasi Tindakan Moderasi" src="./assets/layar14b.png" width="80%">
+</p>
+<p align="center">
+<i>Gambar 6.14b. Rancangan Antarmuka I-14 - Dialog konfirmasi tindakan moderasi beserta isian alasan</i>
+</p>
+
+Tabel 6.14. Spesifikasi Objek Antarmuka I-14
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| I14-O01 | *Panel* rincian | Pelapor, objek dilaporkan, kategori, alasan, dan waktu laporan | Ditampilkan oleh `tampilkanDetailLaporan(laporan)` dengan data dari `ModerasiController.getDetailLaporan(token, idLaporan)`. |
+| I14-O02 | *Image Gallery* | *Thumbnail* bukti tangkapan layar | Berkas diperoleh dari *Model* Laporan melalui PenyimpananBerkas. Klik menampilkan ukuran penuh. |
+| I14-O03 | *Panel* objek | Ringkasan listing atau akun yang dilaporkan | Menyediakan tautan menuju I-06 untuk listing atau I-09 untuk akun. |
+| I14-O04 | *Dropdown* | "Status penanganan" | Menjalankan `onClickUbahStatus(idLaporan, statusBaru)` (UC21). |
+| I14-O05 | *Button* (merusak) | "Hapus Listing" | Menjalankan `onClickHapusListing(idBarang)` yang menampilkan dialog konfirmasi beserta isian alasan (UC22). |
+| I14-O06 | *Button* (merusak) | "Blokir Akun" | Menjalankan `onClickBlokirAkun(idAkun)` yang menampilkan dialog konfirmasi beserta isian alasan (UC23). |
+| I14-O07 | *Button* | "Buka Blokir Akun" | Menjalankan `onClickBukaBlokir(idAkun)` yang menampilkan dialog konfirmasi (UC24). |
+| I14-O08 | *Modal Dialog* | Judul tindakan beserta isian "Alasan" yang wajib diisi | Ditampilkan oleh `tampilkanModalKonfirmasi(aksi)`. Konfirmasi menjalankan `konfirmasiTindakan(alasan)` yang diteruskan ke `ModerasiController.hapusListingDilaporkan()`, `blokirAkun()`, atau `bukaBlokirAkun()`. |
+| I14-O09 | *Info Box* | "Isi percakapan antarpengguna tidak tersedia bagi admin." | Menegaskan bahwa DasborAdminView tidak memiliki jalur menuju *Model* Percakapan (KF35, KF38). |
+| I14-O10 | *Toast* | "Akun berhasil diblokir" | Menjalankan `tampilkanStatusTerbaru(pesan)` setelah tindakan dicatat pada LogAdmin dan LogAudit. |
+
+## 6.15 Rancangan Antarmuka I-15
+
+**Antarmuka:** I-15
+**Nama Layar:** Dokumen Legal
+
+<p align="center">
+<img alt="Dokumen Legal" src="./assets/layar15.png" width="80%">
+</p>
+<p align="center">
+<i>Gambar 6.15. Rancangan Antarmuka I-15 - Dokumen Legal</i>
+</p>
+
+Tabel 6.15. Spesifikasi Objek Antarmuka I-15
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| I15-O01 | *Tab* | "Kebijakan Privasi" dan "Ketentuan Penggunaan" | Menjalankan `bukaDokumen(jenis)` yang diteruskan ke `DokumenLegalController.getDokumen(jenis)` (UC06). |
+| I15-O02 | *Label* judul | "Kebijakan Privasi — versi 1.0" beserta tanggal berlaku | Ditampilkan oleh `tampilkanDokumen(judul, isi)` dengan data dari `DokumenLegal.getVersiTerbaru()`. |
+| I15-O03 | *RTF Box* | Isi lengkap dokumen | Ditampilkan oleh `tampilkanDokumen(judul, isi)`. |
+| I15-O04 | *Info Box* | Klausul bahwa isi percakapan pribadi tidak dapat diakses admin maupun pengembang | Disorot oleh `sorotKlausaPrivasi(klausa)` (KF39). |
+| I15-O05 | *List* daftar isi | Tautan lompat antarbagian dokumen | Membantu penelusuran dokumen yang panjang. |
+
+## 6.16 Rancangan Antarmuka Keseluruhan
+
+Tabel 6.16 merangkum seluruh antarmuka ITBELI beserta ID uniknya. ID pada tabel ini sama dengan ID yang dipakai pada subbab 6.1 hingga 6.15.
+
+Tabel 6.16. Rancangan Antarmuka Keseluruhan
+
+| No | ID | Nama Layar | Tampilan Antarmuka |
+| :--- | :--- | :--- | :--- |
+| 1 | I-01 | Masuk (*Login*) | <img src="./assets/layar01.png" alt="I-01 Masuk" width="320"> |
+| 2 | I-02 | Daftar Akun | <img src="./assets/layar02.png" alt="I-02 Daftar Akun" width="320"> |
+| 3 | I-03 | Verifikasi Surel | <img src="./assets/layar03.png" alt="I-03 Verifikasi Surel" width="320"> |
+| 4 | I-04 | Katalog | <img src="./assets/layar04.png" alt="I-04 Katalog" width="320"> |
+| 5 | I-05 | Hasil Pencarian dan Filter | <img src="./assets/layar05.png" alt="I-05 Hasil Pencarian" width="320"> |
+| 6 | I-06 | Detail Barang | <img src="./assets/layar06.png" alt="I-06 Detail Barang" width="320"> |
+| 7 | I-07 | Formulir Listing | <img src="./assets/layar07.png" alt="I-07 Formulir Listing" width="320"> |
+| 8 | I-08 | Listing Saya | <img src="./assets/layar08.png" alt="I-08 Listing Saya" width="320"> |
+| 9 | I-09 | Profil Akun | <img src="./assets/layar09.png" alt="I-09 Profil Akun" width="320"> |
+| 10 | I-10 | Percakapan | <img src="./assets/layar10.png" alt="I-10 Percakapan" width="320"> |
+| 11 | I-11 | Panel Notifikasi | <img src="./assets/layar11.png" alt="I-11 Panel Notifikasi" width="320"> |
+| 12 | I-12 | Formulir Laporan | <img src="./assets/layar12.png" alt="I-12 Formulir Laporan" width="320"> |
+| 13 | I-13 | Dasbor Admin: Daftar Laporan | <img src="./assets/layar13.png" alt="I-13 Daftar Laporan" width="320"> |
+| 14 | I-14 | Dasbor Admin: Detail Laporan | <img src="./assets/layar14.png" alt="I-14 Detail Laporan" width="320"> |
+| 15 | I-15 | Dokumen Legal | <img src="./assets/layar15.png" alt="I-15 Dokumen Legal" width="320"> |
+
+Seluruh 12 kelas *boundary* pada Tabel 2.3 terwujud pada rancangan di atas, yaitu C01 pada I-01 hingga I-03, C02 pada I-09, C03 pada I-08, C04 pada I-07, C05 pada I-04 dan I-05, C06 pada I-04, I-05, I-08, dan I-09, C07 pada I-06, C08 pada I-10, C09 pada I-11, C10 pada I-12, C11 pada I-13 dan I-14, serta C12 pada I-15. Dengan demikian, rancangan antarmuka pada bab ini menutup seluruh jalur interaksi pengguna yang dirinci pada BAB 3 dan BAB 5.
 
 <br>
 
