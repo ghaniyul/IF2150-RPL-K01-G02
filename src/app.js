@@ -16,6 +16,7 @@ app.use(express.json());
 
 // ───────────── API (satu baris per modul) ─────────────
 app.use('/api/akun', akunRoutes);
+app.use('/api/barang', require('./routes/barangRoutes')); // UC07–UC12
 app.use('/api/dokumen-legal', dokumenLegalRoutes);
 app.use('/api/laporan', laporanRoutes);
 app.use('/api/admin', moderasiRoutes);

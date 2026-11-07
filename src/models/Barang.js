@@ -76,26 +76,6 @@ class Barang {
     return this.dariBaris(rows[0]);
   }
 
-  // Seluruh listing milik penjual berstatus Tersedia dan Terjual, terbaru lebih dulu (KF20).
-  // Foto utama (urutan terkecil) ikut diambil sebagai fotoUtama untuk kartu produk.
-  static async getListingPenjual(idPenjual, client = db) {
-    const { rows } = await client.query(
-      `SELECT b.id_barang, b.id_penjual, b.judul, b.harga, b.deskripsi_kondisi,
-              b.id_kategori, b.id_lokasi, b.status, b.waktu_unggah, b.waktu_ubah,
-              (SELECT f.path_berkas FROM foto_barang f
-               WHERE f.id_barang = b.id_barang ORDER BY f.urutan LIMIT 1) AS foto_utama
-       FROM barang b
-       WHERE b.id_penjual = $1 AND b.status IN ($2, $3)
-       ORDER BY b.waktu_unggah DESC`,
-      [idPenjual, STATUS.TERSEDIA, STATUS.TERJUAL],
-    );
-    return rows.map((baris) => {
-      const barang = this.dariBaris(baris);
-      barang.fotoUtama = baris.foto_utama;
-      return barang;
-    });
-  }
-
   // Menghapus baris rekaman listing barang dari tabel barang pada basis data (KF21, KF50)
   static async hapus(idBarang, client = db) {
     const { rowCount } = await client.query(
@@ -103,28 +83,6 @@ class Barang {
       [idBarang],
     );
     return rowCount > 0;
-  }
-
-  // Mengubah status seluruh barang milik pengguna yang diblokir menjadi "Dinonaktifkan" (KF54)
-  static async nonaktifkanByPemilik(idPenjual, client = db) {
-    const { rowCount } = await client.query(
-      `UPDATE barang
-       SET status = $1, waktu_ubah = now()
-       WHERE id_penjual = $2 AND status = $3`,
-      [STATUS.DINONAKTIFKAN, idPenjual, STATUS.TERSEDIA],
-    );
-    return rowCount >= 0;
-  }
-
-  // Memulihkan status barang milik pengguna yang blokirnya dibuka (UC24)
-  static async pulihkanKatalog(idPenjual, client = db) {
-    const { rowCount } = await client.query(
-      `UPDATE barang
-       SET status = $1, waktu_ubah = now()
-       WHERE id_penjual = $2 AND status = $3`,
-      [STATUS.TERSEDIA, idPenjual, STATUS.DINONAKTIFKAN],
-    );
-    return rowCount >= 0;
   }
 
   // Mengembalikan status barang

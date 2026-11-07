@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Detail Barang · ITBELI</title>
+<link rel="stylesheet" href="/css/tokens.css"><link rel="stylesheet" href="/css/components.css"><link rel="stylesheet" href="/css/app.css"><link rel="stylesheet" href="/css/listing-penjual.css">
+<script defer src="/js/api.js"></script><script defer src="/js/PenjualUI.js"></script><script defer src="/js/KartuProduk.js"></script><script defer src="/js/DetailListingPenjual.js"></script>
+</head><body><div class="page"><div data-topbar></div>
+<div class="shell"><aside data-rail-penjual></aside><main class="content"><div class="content__inner col gap-5"><p class="t-caption muted"><a href="/listing-saya">Listing Saya</a> · Detail barang</p><div id="pesan-halaman" role="alert" hidden></div><p id="memuat">Memuat listing…</p>
+<div id="detail" class="detail-listing" hidden><section class="col gap-3"><div class="gal-main"><img id="foto-utama" alt=""><span id="status-barang" class="badge card__badge"></span></div><div class="gal-thumbs" id="galeri"></div></section>
+<aside class="col gap-4"><h1 class="h-sec" id="judul-barang"></h1><div class="t-price-lg" id="harga-barang"></div><div class="row gap-2"><span class="chip" id="kategori-barang"></span><span class="chip" id="lokasi-barang"></span></div><p class="t-caption muted" id="waktu-barang"></p><div class="row gap-3"><a class="btn btn--primer" id="ubah-barang">Ubah Listing</a><a class="btn btn--sekunder" href="/listing-saya">Listing Saya</a></div><div class="divider"></div><h2 class="h-sec">Deskripsi kondisi</h2><p class="description muted" id="deskripsi-barang"></p><div class="divider"></div><h2 class="h-sec">Penjual</h2><p id="nama-penjual"></p></aside></div>
+</div></main></div></div><div id="toast" class="listing-toast" role="status" hidden></div></body></html>

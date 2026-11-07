@@ -8,6 +8,8 @@ async function main() {
   // BOM (U+FEFF) dari editor yang menyimpan "UTF-8 with BOM" ditolak PostgreSQL, jadi dibuang.
   const skema = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8').replace(/^﻿/, '');
   await db.query(skema);
+  // Referensi kategori/lokasi listing; aman untuk database lama maupun baru.
+  await db.query(fs.readFileSync(path.join(__dirname, 'migrations', '001_listing_penjual.sql'), 'utf8'));
   console.log('Skema basis data berhasil dibuat.');
 }
 

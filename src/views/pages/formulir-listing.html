@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jual Barang · ITBELI</title>
+<link rel="stylesheet" href="/css/tokens.css"><link rel="stylesheet" href="/css/components.css"><link rel="stylesheet" href="/css/app.css"><link rel="stylesheet" href="/css/listing-penjual.css">
+<script defer src="/js/api.js"></script><script defer src="/js/PenjualUI.js"></script><script defer src="/js/KartuProduk.js"></script><script defer src="/js/FormulirBarang.js"></script>
+</head><body><div class="page"><div data-topbar></div>
+<main class="form-wrap">
+<section class="col gap-5"><div><p class="t-caption muted"><a href="/listing-saya">Listing Saya</a> · <span id="breadcrumb">Buat listing baru</span></p><h1 class="h-page mt-2" id="judul-halaman">Jual Barang</h1></div>
+<div id="pesan-halaman" role="alert" hidden></div>
+<form id="formulir-barang" class="col gap-5" novalidate>
+<fieldset id="isian-listing" class="col gap-5" style="border:0;min-width:0" disabled>
+<div class="field"><label class="field__label" for="foto">Foto barang <span class="muted">(maksimum 5, JPG atau PNG, maksimum 5 MB)</span></label>
+<input id="foto" type="file" accept="image/jpeg,image/png" multiple hidden>
+<div class="fotos" id="daftar-foto"></div><div id="dropzone" class="dropzone" tabindex="0" role="button">Seret foto ke sini atau klik untuk memilih foto</div>
+<div class="field__hint">Seret foto untuk mengubah urutan, atau gunakan tombol panah. Foto pertama dipakai sebagai foto utama pada katalog.</div><p id="error-foto" class="field__error" hidden></p></div>
+<div class="field"><label class="field__label" for="judul">Judul barang</label><input class="field__input" id="judul" name="judul" maxlength="80" required aria-describedby="hitung-judul error-judul"><div class="field__hint" id="hitung-judul">0 / 80 karakter</div><p class="field__error" id="error-judul" hidden></p></div>
+<div class="two"><div class="field"><label class="field__label" for="harga">Harga (Rp)</label><input class="field__input" id="harga" name="harga" type="number" min="0.01" max="9999999999.99" step="0.01" inputmode="decimal" required><p class="field__error" id="error-harga" hidden></p></div>
+<div class="field"><label class="field__label" for="idKategori">Kategori</label><select class="field__input" id="idKategori" name="idKategori" required><option value="">Pilih kategori</option></select><p class="field__error" id="error-idKategori" hidden></p></div></div>
+<div class="field"><label class="field__label" for="idLokasi">Lokasi titik temu COD</label><select class="field__input" id="idLokasi" name="idLokasi" required><option value="">Pilih lokasi titik temu</option></select><p class="field__error" id="error-idLokasi" hidden></p></div>
+<div class="field"><label class="field__label" for="deskripsiKondisi">Deskripsi kondisi</label><textarea class="field__area" id="deskripsiKondisi" name="deskripsiKondisi" maxlength="1000" rows="4" aria-describedby="hitung-deskripsi"></textarea><div class="field__hint" id="hitung-deskripsi">0 / 1000 karakter</div></div>
+<div class="row gap-3"><button class="btn btn--primer" id="simpan" type="submit">Publikasikan</button><button class="btn btn--sekunder" id="batal" type="button">Batal</button></div>
+</fieldset></form></section>
+<aside class="preview col gap-3"><div class="rail__title">Pratinjau di katalog</div><div id="pratinjau"></div><div class="infobox infobox--netral">Beginilah tampilan listing Anda pada halaman katalog. Judul yang melebihi dua baris akan dipotong secara otomatis.</div></aside>
+</main></div><div id="toast" class="listing-toast" role="status" hidden></div></body></html>

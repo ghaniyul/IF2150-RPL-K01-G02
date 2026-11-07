@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Listing Saya · ITBELI</title>
+<link rel="stylesheet" href="/css/tokens.css"><link rel="stylesheet" href="/css/components.css"><link rel="stylesheet" href="/css/app.css"><link rel="stylesheet" href="/css/listing-penjual.css">
+<script defer src="/js/api.js"></script><script defer src="/js/PenjualUI.js"></script><script defer src="/js/KartuProduk.js"></script><script defer src="/js/HalamanListingPenjual.js"></script>
+</head><body><div class="page"><div data-topbar></div>
+<div class="shell"><aside data-rail-penjual></aside><main class="content"><div class="content__inner col gap-5">
+<div><h1 class="h-page">Listing Saya</h1><p class="muted mt-2">Kelola barang yang Anda jual di ITBELI</p></div><div id="pesan-halaman" role="alert" hidden></div>
+<div class="tabs" role="tablist" aria-label="Status listing"><button type="button" role="tab" id="tab-tersedia" data-status="Tersedia" aria-selected="true" aria-controls="daftar-listing" class="is-active">Tersedia (0)</button><button type="button" role="tab" id="tab-terjual" data-status="Terjual" aria-selected="false" aria-controls="daftar-listing">Terjual (0)</button></div>
+<p id="memuat" role="status">Memuat listing…</p><div id="daftar-listing" class="grid listing-grid" role="tabpanel" aria-labelledby="tab-tersedia"></div>
+<div id="kosong" class="empty-listing" hidden><h2 class="h-sec" id="judul-kosong">Anda belum punya listing</h2><p class="muted" id="teks-kosong">Mulai jual barang preloved Anda di ITBELI.</p><a class="btn btn--primer" href="/formulir-listing">+ Jual Barang</a></div>
+</div></main></div>
+<dialog id="konfirmasi" class="listing-dialog" aria-labelledby="judul-dialog" aria-describedby="teks-dialog"><h2 id="judul-dialog" class="dialog__title"></h2><p id="teks-dialog" class="dialog__text"></p><p id="error-dialog" class="field__error" role="alert" hidden></p><div class="dialog__actions"><button id="batal-dialog" class="btn btn--sekunder" type="button">Batal</button><button id="setuju-dialog" class="btn btn--primer" type="button">Konfirmasi</button></div></dialog></div><div id="toast" class="listing-toast" role="status" hidden></div></body></html>
